@@ -1,0 +1,5278 @@
+=== PAGE 190 ===
+Le moniteur du M06 Page 1
+LE MONITEUR DU M06
+SOMMAIRE
+1 INTRODUCTION ......,.,,.,...sssssressosesocsesnroesosesesee sl
+1,1 Le moniteur du MD6 ..,.,,,,,,..,....s..sssssesresocverert
+1.2 Accès aux routines du moniteur ..,.,.,,,... sos
+2 GESTION DES INTERRUPTIONS ...,..,,.,,,,.... serres serreert
+3 INITIALISATION ...,,.,.,.,....ssorseessesssereererensouserese 8
+4 GENERATEURS DE CARACTERES ...,.,..,,.,,,.,...ereserserveres
+4,1 Alphabet standard G0...,.,,..,..,.....sessvesrrsenresre
+4.2 Alphabet G2.....,............esesessoseseenrenereeereere)
+4,3 Caractères utilisateur ...,.,,.,.,..,..»e.ss.sssssrecsse.
+5 PRIMITIVES DE GESTION D'ECRAN ....,,.,,,.....srerervereee 11
+5.1 Le mode 40 colonnes ..,.,,.,ss»e»90»»srress.vees 11
+5.2 Le mode 80 colonnes .....,,......s..sssssssssvseseresee 12
+5.3 Le mode Bitmap 4 couleurs ,.,.,,.,,,.svs»e.0r»90, 1
+5.4 Les modes Page, Page2 et Overlay ...,,..,,,.,,,see13
+5.5 Le mode Bitmap 16 couleurs ..,,,..,..se»osvvevsesse 13
+5,6 Le mode Triple overlay .........ssssssvessssressessee 13
+5.7 L'incrustation ..,.,,.,,,,....e.sssssesssrssrssossesses 14
+5.8 Mise en mémoire COULEUR .,..,....ssssesssensrervesssese 14
+5,9 Mise en mémoire FORME ,.,..,,....ssss0sssvsvsssessssss 14
+5,10 Bip sonore ,....,..,sererersresesserssoeessesreorsns se 15
+5.11 Gestion des caractères alphanumériques .,...,,,..,,.,,15
+5.11.1 Séquence normale .......,.ssssonsesessverervrssssse 15
+5.11,1.1 Codes affichables .,,,.,,,,.,..sssss..ss%90s9s 15
+5.11.1.2 Codes interprétables ,..,,,,,.ssres»vesvr9se15
+5.11,1.3 Caractères utilisateur .....,,,,..,,.,..s.s0999s00 16
+5.11.2 Séquence de curseur ou de fenêtre ...,.,..s,.»+eee17
+5.11.2.1 Positionnement du bas de la fenêtre ,.,,,...,.,99e17
+5.11.2.2 Positionnement du haut de la fenêtre .,.,...,.,,,17
+5.11.2.3 Positionnement du curseur ,,.,.,.,sss»svsvesosesses 17
+5.11,3 Séquence accent ,,,,,.,sss0sse.ss0svsnvorsosvese 18
+5,11.,4 Séquence "d'échappement" ,,.,,.,.,.ssss.s9999990re99s 10
+5.11.4,1 Attributs de couleur .,.,.,,..ssssss0s0ess0.000s19
+5,11.4,2 Attributs divers ,,.,,,ss.s.ssse#99°vs9:,999921
+6 CLAVIER ......sssssssssoessersssseussesssnesesenenssssss 23
+6.1 Lecture rapide du clavier ,,.,ssss0ssne00nse.erss9ss 23
+6.2 Décodage du clavier .,.,,..ss»s00s#ss0»99e.00.9s0.23
+7 PRIMITIVES GRAPHIQUES ..,...s.es.ssssssreosenseessss es 26
+7.1 Allumage ou extinction d'un point .,...,»»»»s°##»5:9 26
+7.1.1 Mode graphique .......0sss9s99esse0ssesesssesssssses C6
+7.1.2 Mode caractère ..,..ss.ssssssssssenesssssessessssesT
+7.2 Tracé d'un segment de droite .,....s...esssssssesssesee 28
+7.2.1 Mode graphique ,...s...sesonsrsssessensessssssesesee 20
+7.2.2 Mode caractère .....ssesssssersenssesenessssseseneee 28
+
+=== PAGE 191 ===
+Le moniteur du M06 Page 2
+7.3 Segments horizontaux .....sseesesssssesresssssesssssse 29
+7.4 Leoture de la oouleur d'un point ..,,,sss9sse9s0909.029
+8 LECTURE DE L'ECRAN .,..s..sssessssssssssssssssessss.esess 30
+8.1 Caractère normal ..sss.seossossossssessoseossssssessee 30
+8.2 Minuscule aocentuée ou ç s.sssesssssessesesssss009s9ee 30
+8.3 Caraotère du G2 ..,..ssssse00s0sssse0000ss0.0.99s 30
+9 GENERATION DE MUSIQUE .....ssss0n09sve99999s000000e31
+10 LECTURE DES MANETTES DE JEU ,...s.s.s.s5909995.99 33
+11 CRAYON OPTIQUE ..sossosssssssssooessnsessessesesessssee 3
+11.1 Test du bouton du crayon optique ,.s,,0s,ss0s9:959955 34
+11.2 Leoture de la zone pointée .,...ss-ss#0.0.ss55900 34
+12 SOURIS ,s..sonsso0oonossessssesssesscsseesesesssesessss 35
+12,1 Test des boutons de la souris .,.,,.ss009995095,35
+12.2 Leoture de la souris ...sss000600e0»s0.000099s 35
+13 GESTION DE L'INTERFACE PARALLELE ,,...s...ss00s59099e 36
+14 GESTION DE L'INTERFACE DE COMMUNICATION ,,..,°95099999s 37
+15 GESTION DU LECTEUR-ENREGISTREUR DE CASSETTES ,,,,,,9»9 39
+15,1 Lecture et écriture de la bande sosososssssssesssses 39
+15,2 Moteur : marche/arrêt nos sosssoseesssseeseses HO
+16 CONTROLEUR DE DISQUETTES .,,s..0ss09099ss990.es050999 41
+16.1 Entrées/Sorties disque physiques Sn00000005099900141
+16,2 Le format Basio Microsoft(R) .,..,,,.,,,»590s00».:43
+16.2,1 La table d'allocation des fichiers ,,,.,,,,s5s5000s43
+16.2.2 Le catalogue ,,.,,sss0000ss009999.90104
+17 PROGRAMMATION DE LA PALETTE ...,..,ss.0905995:0.:°46
+17,1 Lecture ou écriture d'une oase de la palette ....,,.,..46
+17,2 Programmation oomplète de la palette ..,,.,,,,»99»999047
+17.3 Couleurs utilisées selon le mode d'affichage ..,,,..,.47
+17.4 Contenu du fiohier PALETTE.CFG ,..sssssss0000047
+18 APPEL DE L'EXTRA-MONITEUR ,..sssss.0.0ss»999990.49
+19 INFORMATIONS COMPLEMENTAIRES ,,..,,sss»s9s9.s5999.99,s.50
+19.1 Organisation de la mémoire ,,.,.,.ss.s00s099999:50
+19.2 Points d'entrée standard du moniteur ...,..ss5eres0.51
+19.3 Registres utilisés par le moniteur ,..............e52
+19.4 Adresses d'Entrées/Sorties .,.,,ssse0.0...esss0se:e56
+19.4.1 Le PIA système 6821 ,...,,......ssssosessossssssess 56
+19,4,2 Le PIA jeu ,,,.,,,,,ss0s0sss0srsosenressssesesese +56
+19,4.3 Le PIA imprimante ,,......s..ss.ss.ossssssesnssseee57
+19.4.4 Le PIA souris .....0ssesses2s9..ss00000.0.er57
+19.4.5 La palette EF 9369 ...,.....sss.sessssssess.e0sss57
+19.4.6 Le gste mode page ....,ss.r00»s»29.92000s0s00001 + SÛ
+19.4,7 L'interfaoe de oommunication SY6551 ..,..,,990»:58
+20 PRISE DE LA SOURIS ,.,,,,es...essossssesossseossssss 59
+
+=== PAGE 192 ===
+Le moniteur du M06 Page 3
+21 DIFFERENCES ENTRE LE MO5 ET LE M06 ...,.,........99060
+21.1 Différences des points d'entrée ...,.s.».%9%%00..90 «60
+21.2 Différences des registres de la page Zéro ....,0 60
+21.3 Différences des PIA et registres mémoire ...,%0+0»:61
+21.3,1 Le PAI système 6821 ..,..,s.s.s.usssesssssssssssense6
+21.3.2 Le PIA jeu ,,,s.s.s0ssss0essessssssssesesssesssss ee 62
+21.3.3 L'interface de communication .,.,,..,ss».%%9.0:62
+21.3.4 Les banques RAM et ROM .,..,,..s..sssssssssssssssee62
+
+=== PAGE 193 ===
+Le moniteur du M06 Page À
+1 INTRODUCTION
+1.1 Le moniteur du M06
+
+Le moniteur du M06 est formé de différentes "routrines"
+(programmes) ayant chacune une fonction bien précise: gestion de
+l'écran, du clavier, lecture du crayon optique, des manettes de
+jeu, génération de musique, gestion de l'interface de
+communication, du lecteur-enregistreur de programmes, etc,,.,
+
+Les programmes d'applicarion en ROM, comme le Basic résident
+ou l'Assembleur, utilisent ces routines pour leurs propres
+besoins et vous pouvez faire de même. Le principe est le
+suivant:
+
+1) Vous chargez avec des valeurs ayant une signification
+précise certains registres du 6809, et éventuellement certains
+registres en RAM (mots-mémoire sur un ou deux octets): ce sont
+les paramètres d'entrée.
+
+2) Vous appelez la routine du moniteur qui effectue
+l'opération demandée, en utilisant le méoanisme explicité au $
+1.2
+
+3) Vous récupérez s'il ÿ a lieu le résultat de l'opération
+dans certains registres du 6809, et/ou dans des registres en RAM:
+ce sont les paramètres de retour.
+
+Dans certains cas, il n'y a pas de paramètres d'entrée, ou
+pas de paramètres de retour, mais le schéma général est toujours
+le même.
+
+Dans ce qui suit, certains nombres ou adresses-mémoire
+seront écrits en hexadécimal pour plus de oommodité: dans ce cas
+11s seront suivis par la lettre "H", Sauf avis contraire, tout
+nombre non suivi par un "H" est à lire en décimal.
+
+Exemple: 10H = 16, 16H = 22, etc...
+
+Les registres en RAM sur deux octets seront notés de la
+façon suivante: XXXXH-XXXXH où X représente un chiffre
+hexadécimal. Pour une meilleure compréhension, nous avons donné
+des noms à certains registres-mémoire: à chacun d'entre eux
+correspond l'adresse en mémoire du premier octet du registre.
+
+Exemple: mettre la valeur 4BOH dans le registre 205AH-205BH
+signifie: mettre la valeur O4 dans le mot-mémoire d'adresse
+205AH et mettre la valeur BOH dans le mot-mémoire d'adresse
+205BH,
+
+Les nombres en binaire seront précédés du symbole "#", Les
+bits notés bi sont numérotés de droite à gauche, le bit de poids
+le plus faible étant le bit O0, et celui de poids le plus fort
+étant le bit 7.
+
+=== PAGE 194 ===
+Le moniteur du MO6 Page 5
+
+Exemple: %11001100
+
+b7 = 1
+
+b0O = 0
+1,2 Accès aux routines du moniteur
+
+L'sccès normalisé à une routine du moniteur se fait en
+utilisant l'instruotion "SWI" suivie d'un code (sur un octet),
+Ces oodes sont au nombre de 66, répartis en deux groupes
+différenciés par l'état du bit 7, les 7 bits de poids faible
+formant le code proprement dit de la routine à laquelle on veut
+aocéder, Le bit 7 a la signifioation suivante: s'il est à O, un
+"JSR" à la routine est simulé, o'est-à-dire que le retour se fait
+à l'instruotion suivant l'appel; s'il est à 1, un "JMP" est
+simulé, c'est-à-dire que le retour se fera à l'instruction qui
+suit l'appel du programme où se trouve l'appel au moniteur.
+
+EXEMPLE
+PROG1 EQU #
+SWI
+FCB 08H
+Instruction suivante 1
+
+Le bip sonore se fera entendre, puis “instruction suivante
+1" sera exécutée.
+
+Mais si l'on rencontre dans un programme:
+
+PROG1 EQU »
+JSR PROG2
+Instruction suivante 1
+PROG2 EQU D
+SWI
+FCB 88H
+Instruction suivante 2
+
+Le bip sonore se fera entendre, puis “instruction suivante
+1" sera exécutée, et non "instruotion suivante 2".
+
+L'instruotion SWI sauvegarde tous les registres du 6809. Au
+retour, tous les registres sont remis dans l'état qu'ils avaient
+lors de l'appel, sauf le registre code oondition du 6809 et bien
+sûr les registres devant oontenir des paramètres de retour (le
+plus souvent B, X et Y).
+
+Il est OBLIGATOIRE d'appeler les routines du moniteur en
+utilisant l'accès normalisé, En effet, ces routines ne peuvent
+fonotionner correotement qu'avec le pointeur de pile et oertains
+registres du 6809 dans un état bien précis.
+
+=== PAGE 195 ===
+Le moniteur du M06 Page 6
+La liste des codes des routines du moniteur est résumée dans
+le $ 19,2, .
+
+=== PAGE 196 ===
+Le moniteur du M06 Page 7
+2 GESTION DES INTERRUPTIONS
+
+Les interruptions IRQ et FIRQ du 6809 sont programmables,
+c'est-à-dire qu'à ohacune oorrespond un registre en RAM contenant
+l'adresse du programme qui doit les traiter, À la mise sous
+tension ou après un redémarrage "à ohaud", ces registres ont été
+initialisés avec l'adresse d'un programme du moniteur,
+
+Le moniteur utilise les interruptions IRQ (50 Hertz) pour
+gérer le clignotement du curseur, la souris et la répétition du
+clavier. Ces interruptions peuvent être aiguillées sur vos
+propres programmes en mettant dans le registre 2063H une valeur
+quelconque non nulle, et en mettant dans le registre TIMEPT
+(2061H-2062H) l'adresse de votre programme de traitement.
+
+Pour gérer les FIRQ, vous devez mettre l'adresse de votre
+programme dans FIRQPT (2067H-2068H).
+
+Pour gérer les IRQ, vous devez mettre l'adresse de votre
+programme dans IRQPT (2064H-2065H),
+
+Votre programme d'interruption doit se terminer par un RTI,
+
+Pour récupérer les SWI, 11 faut sauver le pointeur SWIIPT
+(205EH-205FH) et y ranger l'adresse de votre traitement, Ensuite
+3i le SWI ne vous concernait pas, 11 convient de finir en allant
+à l'ancienne routine, ceci sans avoir modifié les registres
+divers,
+
+Attention cependant: certaines routines du moniteur sont
+interrupribles, et vos programmes ne doivent pas modifier leurs
+paramètres,
+
+=== PAGE 197 ===
+Le moniteur du M06 Page 8.
+3 INITIALISATION
+
+À la mise sous tension ou après un "reset", le moniteur
+éxécute un certain nombre de tests et d'initialisations.
+
+Le test de démarrage à chaud ou à froid est effectué pour ne
+pas modifier, en cas de redémarrage:
+
+- le réglage du orayon optique
+
+- la latence du olavier
+
+Dans les deux cas:
+
+Les registres d'aiguillage d'interruptions sont initialisés
+aveo les adresses des routines moniteur correspondantes,
+
+Les registres oontenant les adressea des différentes tables
+(table de décodage du olavier, générateur de caractères standard,
+générateur de caractères utilisateur) sont réinitialisés de
+manière à pointer sur les tables standard.
+
+Si la souris est reconnue, elle est sélectée si le crayon
+optique n'a pas été explioitement demandé.
+
+La cassette est mise à 2400 bauds.
+
+Les interruptions sont ouvertes et le curseur éteint,
+
+La première banque Ram est sélectée,
+
+Les bits du registre CONFIG (2079H) sont positionnés,
+
+La palette de couleur est initialisée au démarrage à froid.
+À chaud, aon oontenu est préaervé.
+
+Tous les autres registres sont remis aux valeurs standard,
+le plus souvent à zéro.
+
+=== PAGE 198 ===
+Le moniteur du M06 Page 9
+4 GENERATEURS DE CARACTERES
+4.1 Alphabet standard GO
+
+Le générateur de caraotères GO est une suite de oaractères
+affichables, correspondant au standard ASCII.
+
+Chaque caractère est composé de 8 ootets, qui forment une
+matrice de 8x8 points représentant le caractère. Le premier
+octet du oaractère oorrespond à la ligne inférieure de la
+matrice,
+
+Exemple: matrice definissant le "A"
+
+00000000
+00011000
+00100100
+01000010
+01111110
+01000010
+01000010
+00000000
+
+Dans le générateur, À sera donc défini par la liste des
+octets suivants: OOH, 42H, 42H, 7EH, 42H, 24H, 18H, OOH
+
+Dans le MO06, l'adresse du début du générateur GO est
+oontenue en RAM dans le registre GENPTR (2073H-2074H). Vous
+pouvez redéfinir l'alphabet standard en créant votre propre
+générateur selon le principe énoncé ci-dessus, puis en chargeant
+le registre GENPTR (2073H-2074H) avec l'adresse de ce générateur.
+Ce générateur oommence en décrivant le caractère 20H et finit au
+caractère 7FH.
+
+Dans la version QWERTY, le caractère 60H représente la livre
+Sterling.
+
+4,2 Alphabet G2
+
+L'alphabet G2 oontient 6 caractères, dont les accents aigu,
+grave et circonflexe, le tréma, la cédille et le degré. Ces
+caractères sont définis suivant le principe décrit ci-dessus, et
+les accents sont destinés à être combinés avec des caractères
+minuscules. Cet alphabet suit l'alphabet précédent.
+
+4.3 Caraotères utilisateur
+
+Outre le registre contenant l'adresse du générateur
+standard, un registre USERAF (2070H-2071H) est destiné à oontenir
+l'adresse de début d'un générateur de oaraotères utilisateur. Ce
+générateur sera organisé comme expliqué ci-dessus, 8 octets étant
+néoéssaires pour définir un caraotère. Quant aux oodes, ils
+
+=== PAGE 199 ===
+Le moniteur du M06 Page 10
+seront pris séquentiellement à partir de 80H. Cela veut dire que
+le code 80H correspondra au caractère défini par les 8 premiers
+octets, le code B1H au caractère défini par les 8 octets
+suivants, et ainsi de suite jusqu'au code FFH oorrespondant au 8
+derniers octets du générateur. Vous pouvez ainsi définir jusqu'à
+128 caractères en plus de l'alphabet standard,
+
+=== PAGE 200 ===
+Le moniteur du MO6 Page 11
+5 PRIMITIVES DE GESTION D'ECRAN
+5,1 Le mode 40 colonnes
+
+Le M06 peut gérer un écran pleine page de 320x200 points,
+avec 16 couleurs de forme, 16 couleurs de fond, et 16 oouleurs de
+tour choisies parmi 4096. En mode alphanumérique oompatible MO5,
+11 peut afficher 25 lignes de 40 caractères, définis par une
+matrice de 8x8 points, et ce dans une oouleur au choix parmi 16,
+quelles que soient les couleurs du fond. En mode graphique,
+l'unité centrale contrôle 8000 segments de 8 points chacun, et à
+chaque segment correspondent deux octets, situés à la même
+adresse logique. L'un est situé en mémoire dite "FORME", l'autre
+en mémoire dite "COULEUR", un bit de PIA permettant d'adresser
+physiquement l'une ou l'autre mémoire.
+
+Dans un segment, un point peut prendre au ohoix deux
+couleurs: une oouleur dite de "forme", auquel oas le bit
+correspondant dans l'octet en mémoire FORME est à 1, et un bit
+dit de "fond", auquel oas le bit correspondant en mémoire FORME
+est à 0. L'octet se trouvant à la même adresse mais en mémoire
+COULEUR complète oette information: les 4 bits de poids faible
+donnent la couleur du fond, c'est-à-dire la oouleur que devront
+prendre les points mis à 0, et les 4 bits de poids fort donnent
+la couleur de la forme, c'est-à-dire la oouleur que devront
+prendre les points mis à 1. Les 4 bits donnant la oouleur sont
+pBVR où p est le bit de pastel (couleurs claires, sauf pour le
+orange) et où B, V, R indiquent la présence de bleu, de vert, ou
+de rouge (les trois couleurs de base pour la T,.V.) dans la
+oouleur.
+
+Il est dono parfois imprécis de parler de points ‘"“allumés"
+ou "éteints": on peut avoir des points olairs appartenant au
+fond (dono de codage 0) et des points foncés appartenant à Ja
+forme (dono de codage 1).
+
+Pour mémoire, sachez que:
+
+Rouge + vert = jaune
+
+Rouge + bleu = magenta
+
+Bleu + Vert = cyan
+
+Rouge + vert + bleu = blanc
+
+et que bien sûr, ni rouge, ni bleu, ni vert donne du noir.
+
+=== PAGE 201 ===
+Le moniteur du MO6 Page 12
+
+Exemple: xxxx0000
+
+R = 0: pas de rouge
+
+V = 0: pas de vert
+
+B = 0: pas de bleu
+
+p = 0: couleur sombre
+
+Le résultat est un fond noir,
+
+Autre exemple: 1111xxxx
+
+R = 1: rouge présent
+
+V = 1: vert présent
+
+B = 1: bleu présent
+
+p = 1: couleur olaire
+
+Le résultat devrait être une forme "blano olair", Cette
+couleur faisant double emploi avec le blano, une exception à été
+faite: c'est l'orange,
+
+5,2 Le mode 80 colonnes
+
+Dans ce mode, le M06 dispose de 80 oolonnes de caraotères et
+donc passe à 640x200 points pour le graphique. Par contre, il ne
+dispose plus que de 2 couleurs, une pour la forme, l'autre pour
+le fond. Ces deux couleurs sont les numéros 0 et 1. Dans oe cas
+la mémoire FORME oontient les bits des points des oaraotères des
+colonnes paires, tandis que la mémoire COULEUR oontient oeux des
+colonnes impaires,.
+
+5.3 Le mode Bitmap # oouleurs
+
+Dans ce mode, le M06 possède toujours 40 colonnes de
+oaâraotères, donc 320 points de large, mais ne dispose plus que de
+H couleurs, Cependant, chaoune des couleurs est indépendante de
+sa voisine, On a donc une page écran sans rigidité oouleur à
+l'intérieur des segments de 8 points.
+
+Pour ohaque point de l'écran, deux bits codent sa couleur,
+Chacun de ces bits se situent dans un plan mémoire écran. Le
+plan FORME contient le bit de numéro 1, et le plan COULEUR
+contient le bit numéro 0. A l'aide de ces 2 bits on peut donc
+ooder ! couleurs qui sont les ! premières couleurs de la palette.
+
+=== PAGE 202 ===
+Le moniteur du M06 Page 13
+
+Le point situé en 0,0 (0000H) est oodé dans les bits 7 du
+premier octet des mémoires écran. Le point suivant est codé dans
+les bits 6, er ainsi de suite jusqu'au point 319,199 codé dans
+les bits O0 des octets situés en 1F3FH.
+5.4 Les modes Page1, Page2 et Overlay
+
+Dans ce mode identique au mode 40 oolonnes, seules 2
+couleurs dont une transparente sont utilisables dans ohaque page.
+Cependant il vous offre 2 pages écrans distinotes, Pendant
+l'affiohage d'une page, l'autre peut être éorite et affichée
+ensuite par simple commutation. Le mode OVERLAY permet de
+superposer les 2 pages en continuant d'écrire dans l'une ou
+l'autre.
+
+La page 1 travaille dans la mémoire FORME et ohaque bit à 1
+représente la oouleur 1, ohaque bit à 0, la couleur 0,
+
+La page 2? travaille dans la mémoire COULEUR et ohaque bit à
+1 représente la oouleur 2, ohaque bit à 0, la oouleur 0.
+
+En mode overlay, la page 1 est superposée à la page 2,
+5,5 Le mode Bitmap 16 couleurs
+
+Ce mode offre une résolution de 160x200 points sur 16
+couleurs sans rigidité. Chaque point de l'écran est donc codé
+sur 4 bits,
+
+Par groupe de H pixels éorans, on retrouve l'organisation
+suivante :
+
+P.0 : codé sur les bits 7,6,5,4 de l'octet du plan FORME
+
+P.1 : codé sur les bits 3,2,1,0 de l'ootet du plan FORME
+
+P.2 : oodé sur les bits 7,6,5,4 de l'ootet du plan COULEUR
+
+P.3 : codé sur les bits 3,2,1,0 de l'ootet du plan COULEUR
+
+Les 4 premiers pixels sont donc oodés dans les ootets O0
+(adresse O00O0H) de la mémoire écran, tandis que les quatre
+derniers sont codés en 1F3FH.
+5,6 Le mode Triple overlay
+
+Dans oe mode similaire au mode overlay, 4 pages sont
+superposées aveo une priorité à l'affichage, mais on ne dispose
+plus que d'une résolution de 160x200 points sur l'écran.
+
+=== PAGE 203 ===
+Le moniteur du M06 Page 14
+
+A l'affichage, le plan 1 est prioritaire sur le plan 2 qui
+est prioritaire sur le plan 3, lui-même sur le plan 4.
+
+Comme pour le bitmap 16 couleurs, 4 pixels sont codés dans
+les 2 ootets de la même adresse de la mémoire écran.
+
+Les bita 7,6,5,4 du plan FORME repréaentent quatre points
+oonséoutifs du plan 1.
+
+Les bits 3,2,1,0 du plan FORME représentent quatre points
+consécutifs du plan 2.
+
+Les bits 7,6,5,4 du plan COULEUR représentent quatre points
+oonsécutifs du plan 2
+
+Les bits 3,2,1,0 du plan COULEUR représentent quatre points
+consécutifs du plan 4.
+
+La couleur du fond de tous les plans est la oouleur logique
+0, et les couleurs respectives de la forme de chaque plan (du
+premier à l'arrière-plan) sont les numéros logiques 1,2,4 et 8
+respeotivement.
+5.7 L'incrustation
+
+Le M06 offre également la possibilité d'inorustation de
+l'image T.V. dans l'image : si votre M06 est équipé de la carte
+d'incrustation, la mise en mode ‘"inorustation" (expliquée au
+$ 5.11.4) laissera apparaître l'image T.V. à la plaoe de toutes
+les oouleurs incrustables (voir $ 17), comme si oes couleurs
+devenaient transparentes.
+
+Le M05 ne peut inoruster que sur sa oouleur noire.
+5.8 Mise en mémoire COULEUR
+
+# code du point d'entrée: 04 pour un JSR, 84H pour un JMP
+
+Cette routine vous permet d'aller séleotionner la mémoire
+couleur: tout ce que vous éorirez entre l'adresse 0 et l'adresse
+1FFFH modifiera la oouleur des points correspondants.
+5.9 Mise en mémoire FORME
+
+# oode du point d'entrée: 06 pour un JSR, 86H pour un JMP
+
+Cette routine vous permet d'aller séleotionner la mémoire
+oâraotère: tout ce que vous écrirez entre l'adresse O0 et
+l'adresse 1FFFH modifiera l'état (fond ou forme) des points
+correspondants,
+
+=== PAGE 204 ===
+Le moniteur du MO06 Page 15
+5.10 Bip sonore
+
+# oode du point d'entrée: 08 pour un JSR, 88H pour un JMP
+
+# paramètre d'entrée:
+
+- registre STATUS (2019H)
+
+Cette routine teste l'état du bit 3 du registre STATUS.
+
+S'il est à 0, elle génère le bip sonore, sinon elle retourne sans
+rien faire,
+5,11 Gestion des oaraotères alphanumériques
+# oode du point d'entrée: 02 pour un JSR, 82H pour un JMP
+# paramètre d'entrée:
+- registre 6809 B
+5,11.1 Séquenoe normale
+51111 Codes affiohables
+
+Les oodes affiohables sont oompris entre 20H et 7FH, Le
+caractère est affiohé à la position oourante du curseur, Si vous
+avez modifié le oontenu du pointeur sur le générateur de
+caractères atandard, les oaraotères affiohés seront oeux que vous
+avez défiris (entre 20H et 7FH),
+5.11.1.2 Codes interprétables
+
+Les oodes interprétables sont compris entre 07 et 1FH, À la
+
+réoeption du oode, l'une des opérations suivantes est effectuée:
+
+- 07H : BEL--> "Bip" sonore,
+
+- 08H : BS --> Déplaoement d'une position vers la gauche ou
+reoopie à gauohe du caractère courant, si le
+registre COPCHR (202FH) oontient la valeur
+FFH,
+
+- 09H : HT --> Déplaoement d'une position vers la droite ou
+reoopie à droite du caraotère oourant, si le
+registre COPCHR (202FH) oontient la valeur
+FFH,
+
+- OAH : LF --> Desoente d'une ligne.
+
+=== PAGE 205 ===
+Le moniteur du MO06 Page 16
+- OBH : VT --> Remontée d'une ligne.
+- OCH : FF --> Effaoement de la fenêtre courante.
+- ODH : CR --> Rerour au début de la ligne courante.
+- DOEH : SO --> Rien.
+- OFH : SI --> Rien,
+- 10H : DLE--> Rien,
+- 11H : DC1--> Allumage du curseur.
+- 12H : DC2--> Rien.
+- 13H : DC3--> Rien.
+- 14H : DCH--> Extinotion du curseur,
+- 15H : NAK--> Rien.
+- 16H : ACC--> Séquence caraotère du G2.
+- 17H : ETB--> Rien,
+- 18H : CAN--> Effacement de la fin de la ligne à partir de
+la position oourante du curseur,
+- 19H : EM --> Rien.
+- 1AH : SUB--> Rien.
+- 1BH : ESC--> Séquenoe "d'échappement".
+- 1CH : FS --> Rien,
+- 1DH : GS --> Rien,
+- 1EH : RS --> Retour du ourseur dans le ooin supérieur
+gauohe de la fenêtre courante.
+- 1FH : US --»> Séquence de positionnement ourseur ou de
+définition de fenêtre.
+5,11.1.3 Caraotères utilisateur
+Les codes compris entre 80H et FFH sont des caractères
+utilisateur. Avant d'appeler la routine pour faire affioher le
+caractère oorrespondant au code, vous devrez avoir chargé le
+registre USERAF (2070H-2071H) avec l'adresse de votre générateur
+de oaraotères, comme cela est expliqué au $ 4.3,
+
+=== PAGE 206 ===
+Le moniteur du M06 Page 17
+5,11,.2 Séquence de curseur ou de fenêtre
+
+Le code US (1FH) définit une séquenoe de positionnement du
+curseur ou de définition de la fenêtre. Trois appels à la
+routine sont néoessaires, et peuvent être schématisés comme suit:
+US/N1/N2
+5.11.2.1 Positionnement du bas de la fenêtre (N1,N2 C <10H,19H>)
+
+Cette séquence définit le bas de la fenêtre courante, où le
+numéro de ligne est égal à 10 x n1 + n2, n1 et n2 (chiffre des
+dizaines et ohiffre des unités) étant respectivement les quatre
+bits de poids faible de Ni et N2.
+
+EXEMPLE :
+
+Pour définir le bas de la fenêtre en ligne 21, on doit
+envoyer dans B:
+
+1° appel: oode 1FH dans B
+
+2° appel: code 12H dans B
+
+3° appel: code 11H dans B
+5.11.2.2 Positionnement du haut de la fenêtre (N1,N2 CC
+
+<20H,29H>)
+
+Cette séquenoe définit le haut de la fenêtre oourante, où le
+numéro de ligne est égal à 10 X n1 + n2, ni et n2 étant
+respectivement les quatre bits de poids faible de N1 et N2.
+5.11.2.3 Positionnement du ourseur (N1,N2 C <H0H,90H>)
+
+Le curseur est positionné en ligne n1, colonne n2, où ni et
+n2? sont respectivement N1-4OH et N2-U0H , avec : n1 C <0,24> et
+n2 C <1,40>, ou n2 C <1,80> en mode 80 oolonnes.
+
+EXEMPLE:
+
+Pour positionner le curseur en ligne 3, colonne 20, ïil
+faudra mettre sucoessivement dans B avant chaque appel:
+
+- 1° appel: code 1FH dans B
+
+- 2° appel: code 43H dans B
+
+- 3° appel: oode 54H dans B
+
+=== PAGE 207 ===
+Le moniteur du M06 Page 18
+5.11.3 Séquenoe aooent
+
+La séquenoe ACC est utilisée pour permettre l'affichage
+d'une minusoule aooentuée ou d'un oaraotère du G2. On peut
+schématiser oette séquenoe oomme suit:  ACC/CODE/L.
+
+Envoi d'un oaractère aooentué :
+
+1° appel: envoyer ACC, oode d'une séquenoe aooent (16H)
+
+2° appel: envoyer CODE qui est le oode de l'aooent :
+1H (A) pour l'acoent grave
+42H (B) pour l'aooent aigu
+43H (C) pour l'aooent oiroonflexe
+48H (H) pour le tréma
+BH (K) pour la oédille
+
+3° appel: envoyer L qui est le oode de la minusoule à
+aooentuer. Si oe oode ne oorrespond pas à un oode de minusoule,
+alors la lettre dont le oode est L est affiohée, et l'aooent est
+éffaoé.
+
+Envoi d'un oaraotère du G2 :
+
+1° appel : envoyer ACC (16H), code d'une séquenoe G2
+
+2° appel : envoyer CODE qui est le oode du oaraotère :
+30H (0) pour le degré
+5.11.4 Séquenoe "d'éohappement"
+
+Cette séquence est utilisée pour positionner les attributs
+de oouleur de l'éoran, et d'autres attributs de la vidéo oomme la
+taille des oaraotères, la mise en mode incrustation pour les MO6
+équipés de la oarte oorrespondante, le type de soroll, etc...
+Ces attributs peuvent être de deux types: oourant ou plein
+écran. Dans le oas d'attributs de type courant, la séquenoe est
+de la forme: ESC/ATT, et dans le cas d'attributs de type plein
+éoran, la séquenoe est de la forme: ESC/ESPACE/ATT où ESC (1BH)
+est le code de la séquenoe d'échappement, ESPACE le code de la
+barre d'espacement (20H), et ATT le oode de l'attribut. Les
+codes d'attributs sont identiques, qu'ils soient de type oourant
+ou plein écran, mais oertains attributs (couleur du tour,
+attributs divers sauf la vidéo inverse) n'ont pas de
+signification en plein écran, et sont alors ignorés.
+
+=== PAGE 208 ===
+Le moniteur du M06 Page 19
+5.11.4.1 . Attributs de couleur
+ATT C <HOH,6F> :
+# } bits de poids fort:
+4 --»> modification de la couleur de la forme.
+5 --> modification de la couleur du fond.
+6 --> modifioation de la couleur du tour.
+# 4 bits de poids faible:
+00 => noir
+01 --> rouge
+02 => vert
+03 --> jaune
+o4 =» bleu
+05 => magenta
+06 =» oyan
+07 --> blano
+08 --> gris
+09 > rose
+10 >» vert clair
+11 --> sable
+12 > bleu clair
+13 --> parme
+14 > bleu ciel
+15 > orange
+EXEMPLE:
+Après la séquence suivante, vous obtiendrez un fond vert :
+LDB É#$1B code ESC
+SWI
+FCB 02 Code du PUTCH
+LDB É#$52 5 pour le fond, 2 pour vert
+SWI
+FCB 02
+
+=== PAGE 209 ===
+Le moniteur du M06 Page 20
+Vous obtiendriez un tour orange aveo :
+LDB #$1B oode ESC
+SWI
+FCB 02
+LDB 4$6F 6 pour le tour, F pour orange
+SYI
+FCB 02
+La oouleur du tour ne pouvant être relue, elle est
+sauvegardée dans le registre SAVTOUR (2086H).
+
+=== PAGE 210 ===
+Le moniteur du M06 Page 21
+
+5,11.4,2 Attributs divers
+
+ATT C <70H,87H>
+
+70H ==> caractères en taille normale,
+
+71H =-»> double hauteur, largeur normale.
+
+72H --> double largeur, hauteur normale,
+
+73H --> double taille,
+
+74H --> écriture du caractère dans la couleur courante.
+
+75H --»> écriture du oaractère sans modifier la couleur,
+
+76H --> suppression de l'incrustation.
+
+774 --> mise en mode incrustation,
+
+78H --> scroll à vitesse normale.
+
+79H --> scroll doux,
+
+TAH --> mode page (pas de scroll).
+
+7BH --> inversion de la vidéo.
+
+7CH --> mode 40 colonnes.
+
+7DH --> mode 80 oolonnes,
+
+TEH --> mode Bitmap 4 couleurs,
+
+7FH --> mode Bitmap 16 couleurs.
+
+80H --> mode Page.
+
+81H --> mode Page2.
+
+82H --> Overlay écriture Page?,
+
+83H --> Overlay écriture Pagel,
+
+8UH --> mode Triple overlay sélection pagei.
+
+85H --> mode Triple overlay sélection page2.
+
+86H --> mode Triple overlay sélection page3.
+
+87H --> mode Triple overlay sélection page.
+
+=== PAGE 211 ===
+Le moniteur du M06 Page 22
+
+PUTC$ ne gère pas l'affichage des caractères dans les modes
+suivants: Bitmap 16 couleure et Triple overlay.
+
+L'inverse vidéo plein écran ne fonctionne qu'en mode 40
+colonnes, L'inversion vidéo ne fonctionne qu'en mode 40 colonnes
+et en bitmap 4 couleurs.
+
+Si un code supérieur à 87H est envoyé, rien ne se passera.
+Si l'on envoie un code inférieur à HOH, rien ne se passera; même
+chose si l'on envoie dans une séquence plein écran le code d'un
+attribut qui n'a de sens qu'en attribut courant.
+
+EXEMPLE:
+
+Après la séquence suivante, et si le M06 est équipé de
+l'extension incrustation, toutes les couleurs incrustables de
+l'écran seront remplacées par l'image T.V. (voir $ 17).
+
+LDB 4$1B code de la séquence d'échappement.
+SWI
+FCB 02
+LDB 4#$7T code de la mise en mode incrustation.
+SWI
+FCB 02
+
+EXEMPLE:
+
+Apres la séquence suivante, les couleurs de la partie
+d'écran selectionnée seront inversées,
+
+LDB 4$1B code de la séquence d'échappement
+SYI
+
+FCB 02
+
+LDB #$20 deuxième code de pleine page
+
+SWI
+
+FCB 02
+
+LDB 4$7B code d'inversion vidéo
+
+SYI
+
+FCB 02
+
+=== PAGE 212 ===
+Le moniteur du M06 Page 23
+6 CLAVIER
+6.1 Leoture rapide du clavier
+
+# code du point d'entrée: OCH pour un JSR, 8CH pour un JMP.
+
+#* paramètres de retour:
+
+- registres 6809 A, B et CC
+
+Cette routine effectue une lecture rapide du clavier, pour
+tester si une touche a été enfoncée ou non. Si aucune touche n'a
+été enfoncée, B contient la valeur 3AH at le bit Z du registre CC
+est mis à 1; sinon il est mis à 0. Dans ce cas, B contient le
+code de la touche enfoncée, et l'état des bits 0, 1 et 2 de A
+indique si la touche SHIFT, BASIC, ou CNT a été enfoncée:
+
+- bitO0: touche BASIC
+
+- bit1: touche CNT
+
+- bit2: touche SHIFT
+
+Si le bit correspondant à la touche est à 1, la touche a été
+enfoncée, sinon le bit est à 0.
+
+6.2 Décodage du clavier
+
+# code du point d'entrée: OAH pour un JSR, 8AH pour un JMP.
+
+# paramètres d'entrée:
+
+- registres CHRPTR (206DH-206EH), STATUS (2019H), LATCLV
+
+(2076H)
+
+# paramètres de retour:
+
+- registres 6809 B et CC
+
+Cette routine effectue le décodage du clavier, et gère la
+répétition d'une touche après un certain délai. Ce délai est
+programmable via le registre LATCLV: en modifiant le contenu de
+ce registre, vous modifiez la latence du clavier. De la même
+facon, la répétition clavier peut être inhibée en chargeant ce
+registre avec une valeur suffisamment élevée. Le bip sonore qui
+se fait entendre chaque fois qu'une touche est frappée peut être
+inhibé lui-aussi, de deux façons: la première, classique,
+consiste à baisser le son de votre récepteur T.V., la seconde à
+forcer à 1 le bit 3 du registre STATUS.
+
+B retourne soit le code ASCII du caractère, soit le code
+numérique de la touche (au cas où la touche BASIC a été
+enfoncée). Si aucune touche n'a été enfoncée, ou si l'une des
+trois touches BASIC, SHIFT, ou CNT a été enfoncée seule, ou si
+plusieurs touches parmi les touches BASIC, SHIFT, ou CNT ont été
+
+=== PAGE 213 ===
+Le moniteur du MO06 Page 24
+enfoncées simultanément, B retourne la valeur zéro.
+
+Quand la touche SHIFT LOCK est éteinte, la touche SHIFT
+géleotionne le caraotère imprimé en vert sur la touche et les
+minuscules. Quand elle est allumée, SHIFT sélectionne les
+caraotères imprimés en vert et les caractères associés aux
+chiffres; par contre les ohiffres sont accessibles directement.
+
+La touche CNT force à 0 le bit 6 du code ASCII du caractère
+inprimé en noir sur la tcuche. La touche BASIC retourne le code
+numérique de la touche (qui dépend du matriçage du clavier), tout
+en forçant le bit 7 à 1 (ccdes retcurnés de 80H à B9H).
+
+L'accès aux minuscules accentuées nécessite en général trois
+frappes consécutives:
+
+- 1° frappe: tcuche accent.
+
+- 2° frappe: touche représentant l'accent.
+
+- 3° frappe: lettre minuscule,
+
+Cependant sur le M06, l'accès à certaines minuscules
+accentuées ceuramment utilisées en Francais peut être fait en une
+frappe : é, è, ç, à, ù.
+
+De même, l'accent tréma peut ne pas être précédé de la
+touche ACC; dans ce cas deux frappes suffisent.
+
+Dans la version QWERTY, les caractères A, O, U majuscule ou
+minuscule avec un tréma peuvent être cbtenus en une frappe.
+
+Mais dans tous les cas, vous devrez faire trceis appels
+consécutifs à cette routine:
+
+- le 1° appel retcurne dans B le code ACC, soit 16H.
+
+- le 2° appel retourne dans B le code de l'accent ou de la
+
+cédille.
+
+- le 3° appel retourne dans B le ccde de la minuscule.
+
+Dans le cas du degré, seuls les ccdes ACC (16H) et 30H sent
+renvoyés : deux appels suffisent.
+
+Le M06 dispose de 10 touches de fcencticns. Les codes
+enveyés par ces touches vent de COH à C9H.
+
+Le code ASCII du caractère est lu dans une table dont
+l'adresse se trouve dans le registre CHRPTR. Si veus veulez
+redéfinir votre clavier, 11 suffira de mettre dans ce registre
+l'adresse de la table contenant ves propres ccdes ASCII, mais les
+séquences "accent" peuvent donner des résultats imprévisibles ...
+
+Voici la liste des valeurs retournées quand la touche BASIC
+est enfcncée simultanément avec une touche.
+
+=== PAGE 214 ===
+Le moniteur du M06 Page 25
+
+CODE RETOURNE TOUCHE ENFONCEE
+
+82H STOP
+
+83H °
+
+85H ENTREE
+
+86H Crochet ouvrant
+
+87H C
+
+88H Flèche haut
+
+89H W
+
+84H 1
+
+8BH =
+
+8CH A
+
+8DH $
+
+8EH Q
+
+8FH V
+
+90H Flèche gauche
+
+91H x
+
+92H 2
+
+93H -
+
+guH Z
+
+95H :
+
+96H S
+
+97H B
+
+98H Flèche bas
+
+99H )
+
+JAH 3
+
+9BH 0
+
+gcH E
+
+9DH P
+
+9EH D
+
+9FH M
+
+AOH Flèche droite
+
+ATH #4
+
+A°H 4
+
+A3H 9
+
+AUH R
+
+ASK 0
+
+A6H F
+
+A7H L
+
+A8H >
+
+A9H ;
+
+AAH 5
+
+ABH 8
+
+ACH T
+
+ADH I
+
+AEH G
+
+AFH K
+
+BOH u accent
+
+B1H ,
+
+B2H 6
+
+B34 7
+
+BUH YŸ
+
+B5H U
+
+B6H H
+
+B7H J
+
+B8H Crochet fermant
+
+B9H N
+
+=== PAGE 215 ===
+Le moniteur du M06 Page 26
+7 PRIMITIVES GRAPHIQUES
+7.1 Allumage ou extinction d'un point
+
+# code du point d'entrée: 10H pour un JSR, 90H pour un JMP
+
+#* paramètres d'entrée:
+
+- registres 6809 X et Y
+
+- registres FORME (2029H), CHDRAW (2036H), COLOUR (202BH) et
+
+STATUS (2019H)
+
+#* paramètres de retour:
+
+- registres PLOTX (2032H-2033H) et PLOTY (2034H-2035H)
+7.1.1 Mode graphique
+
+Pour tous les modes d'affichsge la façon de passer les
+paramètres est identique ,il faut seulement veiller à ne pas
+dépasser le nembre maximal de points affichables en horizontal
+dans le mode choisi (320 points en 40 colonnes, Page1, Page,
+Overlay, Bitmap 4 couleurs ; 640 points en 80 colonnes; 160
+points en Bitmap 16 couleurs et Triple cverlay).
+
+Cette routine met en couleur le point de coordonnées passées
+par X et Y, où XxcC <0,319 ou 639 ou 159> et Y C <0,199>. La
+couleur du point est déterminée par le contenu du registre FORME
+(2029H), qui doit être compris entre -16 et +15.
+
+En mode HO colonnes, si le code de la couleur est négatif,
+le point sera écrit en fond, c'est-à-dire que le bit
+oorrespondant dans l'octet en mémoire FORME Sera mis à zéro. Si
+le code est positif, le point sera écrit en forme, c'est-à-dire
+que le bit correspondant dans l'octet en mémoire FORME sera mis à
+1 Si le bit 4 du registre STATUS (2019H) est à 1, seul le bit
+en mémoire FORME sera modifié, la couleur ne sera pas changée.
+
+En mode Page, Page2, Overlay et Triple overlay, un code
+positif écrit dans la couleur de la page sélectionnée, un cede
+négatif écrit dans la couleur fond.
+
+En mode Bitmap 4 couleurs, seuls les 4 codes positifs de O0 à
+3 sont utilisables; seule la forme est écrite, le fond n'a pas de
+sens,
+
+En mode 80 colonnes, un code positif écrit en forme, un
+nombre négatif écrit en fond.
+
+k En mode Bitmap 16 couleurs, seuls les 16 ccdes positifs de 0
+à 15 sont utilisables; seule la forme est écrite, le fond n'a pas
+de sens.
+
+=== PAGE 216 ===
+Le moniteur du MO06 Page 27
+
+Voici les codes des couleurs forme ou fond:
+
+COULEUR CODE FORME CODE FOND
+NOIR 0 -1
+ROUGE 1 -2
+VERT 2 -3
+JAUNE 3 _l
+BLEU 4 -5
+MAGENTA 5 -6
+CYAN 6 -7
+BLANC 7 -8
+GRIS 8 -9
+ROSE 9 -10
+VERT CLAIR 10 -11
+SABLE 11 -12
+BLEU CLAIR 12 -13
+PARME 13 -14
+BLEU CIEL 14 -15
+ORANGE 15 -16
+
+Un code de couleur fond se déduit donc d'un code de couleur
+forme en ajoutant 1 et en prenant l'opposé.
+
+Le registre CHDRAW (2036H) doit être mis à zéro, sinon l'on
+est dans le mode caractère, explicité ci-dessous.
+
+7.1.2 Mode caractère
+
+Seuls les modes M05, 80 colonnes, Pagel, Page2, Overlay,
+Bitmap 4 couleurs sont traités. Il ne faut pas accéder à cette
+routine dans les modes Bitmap 16 couleurs et Triple overlay.
+
+Si le contenu du registre CHDRAW (2036H) est non nul, il est
+supposé contenir le code ASCII d'un "point caraotère" à afficher
+à l'endroit défini par les registres X et Y. Dans ce cas, on
+doit avoir X C <1,40 ou 80> et Y C <0,24>.
+
+La couleur du "point caractère" est fournie non plus par le
+registre FORME (2029H), mais par le registre COLOUR (202BH), qui
+contient les couleurs courantes de fond et de forme.
+
+On peut accèder directement à l'écriture du caractère du
+registre CHDRAW (2036H) en faisant un appel à CHPL$ (12H pour JSR
+et 92H pour JMP).
+
+Dans les deux modes, les registres X et Y seront recopilés
+respeotivement dans les registres PLOTX (2032H-2033H) et PLOTY
+(2034H-2035H) qui gardent l'abscisse et l'ordonnée du dernier
+point traité.
+
+=== PAGE 217 ===
+Le moniteur du M06 Page 28
+7.2 Tracé d'un segment de droite
+
+# code du point d'entrée: OEH pour un JSR, 8EH pour un JMP
+
+#* paramètres d'entrée:
+
+- registres 6809 X et Y
+
+- registres PLOTX (2032H-2033H), PLOTY (2034H-2035H), CHDRAW
+
+(2036H), FORME (2029H), COLOUR (202BH) et STATUS (2019H)
+
+#* paramètres de retour:
+
+- registres PLOTX (2032H-2033H) et PLOTY (2034H-2035H)
+7.2.1 Mode graphique
+
+Les divers modes d'affichage sont gérés d'une manière
+identique à PLOT$.
+
+Cette routine trace un segment de droite entre le point
+défini par aon abscisse en PLOTX et son ordonnée en PLOTY,
+(dernier point traité si vous n'avez pas modifié ces registres
+depuis), et le point dont les coordonnées sont passées par X et
+Y, avec X C <0,319 ou 639 ou 159> et Y C <0,199>. L'état du
+point spécifié en PLOTX, PLOTY n'est pas modifié. La couleur du
+segment est définie par le contenu du registre FORME, suivant les
+conventions explicitées ci-dessus. Le contenu du registre CHDRAW
+doit être nul, sinon le segment tracé est un "segment caractère".
+7.2.2 Mode caractère
+
+Seuls les modes M05, 80 colonnes, Pagel, Page2, Overlay,
+Bitmap 4 couleurs sont traités. Il ne faut pas accéder à cette
+routine dans les modes Bitmap 16 couleurs et Triple overlay.
+
+Si le contenu du registre CHDRAW n'est pas nul, il est
+interprèté comme le code ASCII du caractère servant au tracé.
+Dans ce cas, la couleur est la couleur courante donnée par le
+registre COLOUR, et les ooordonnées X et Y doivent être comprises
+respectivement dans les intervalles <1,40 ou 80> et <0,24>.
+
+Dans les deux modes, les registres X et Y seront recopiés
+respectivement dans les registres PLOTX et PLOTY, qui gardent
+l'abscisse et l'ordonnée du dernier point traité, ce qui permet
+de tracer un contour polygonal sans avoir à préciser à chaque
+fois le point de départ.
+
+=== PAGE 218 ===
+Le moniteur du M06 Page 29
+
+7.3 Segments horizontaux
+
+Dans le cas où le segment à tracer est horizontal, un
+algorithme de tracé rapide est mis en oeuvre, ce qui peut être
+utile pour remplir des contours par une série de segments
+horizontaux.
+7.4 Lecture de la couleur d'un point
+
+# code du point d'entrée: 14H pour un JSR, 94H pour un JMP
+
+#* paramètres d'entrée:
+
+- registres 6809 X et Y
+
+* paramètre de retour:
+
+- registre 6809 B
+
+Dans le mode MO5 cette routine retourne la couleur d'un
+point dans l'accumulateur B de -16 à -1 si le point est en fond,
+et de O à +15 si le point est en forme. Les ooordonnées du point
+sont passées par X C <0,319 ou 639 ou 159> et par Y C <0,199>,.
+La couleur est Codée comme décrit au $ 7.1.1.
+
+Dans le mode Bitmap 4 couleurs, elle retourne la couleur du
+point entre 0 et 3.
+
+Dans le mode Bitmap 16 couleurs, elle retourne la couleur
+entre 0 et 15.
+
+Dans les modes Page, Page2, Overlay, 80 colonnes, Triple
+overlay, la routine retourne 0 si le point est en forme et -1
+pour un point en fond.
+
+=== PAGE 219 ===
+Le moniteur du M06 Page 30
+8 LECTURE DE L'ECRAN s
+# code du point d'entrée: 14H pour un JSR, 9AH pour un JMP
+# paramètres d'entrée:
+- registres 6809 A et X
+* paramètre de retour:
+- registre 6809 B
+Cette routine retourne dans l'accumulateur B le code ASCII
+du caractère dont les coordonnées sont passées par X C <1,80> et
+A C <0,24».
+S'il n'y a pas de caractère oonnu en (X,A) alors B retourne
+la valeur zéro. Sinon, trois oas peuvent se produire:
+8.1 Caractère normal
+Seuls les modes MO05, 80 colonnes, Page, Page2, Overlay sont
+traités, Il ne faut pas accéder à cette routine dans les modes
+Bitmap 16 couleurs et Triple overlay. Dans le mode Bitmap {4
+couleurs seuls les caractères de couleur 2 ou 3 sur fond 0 ou 1
+peuvent être relus.
+Si le caractère appartient à l'alphabet GO, alors B retourne
+le code ASCII du caractère reconnu.
+8.2 Minuscule aooentuée ou ç
+Dans ce Cas, trois appels à la routine sont nécessaires:
+- 1° appel: une minuscule accentuée est détectée; le code
+ACC (accent) soit 16H est retourné dans B.
+- 2° appel: B retourne le code de l'accent.
+- 3° appel: B retourne le code ASCII de la minuscule,
+8.3 Caractère du G2
+Dans ce cas, deux appels à la routine sont nécessaires:
+- 1° appel: un caractère du G2 est détecté; B retourne le
+code ACC (accent), soit 16H.
+- 2° appel: B retourne le code du caractère.
+
+=== PAGE 220 ===
+Le moniteur du M06 Page 31
+9 GENERATION DE MUSIQUE
+
+#* code du point d'entrée: 1EH pour un JSR, 9EH pour un JMP
+
+* paramètres d'entrée:
+
+- registre 6809 B
+
+- registres OCTAVE (203EH-203FH), DUREE (203BH-203CH), TEMPO
+
+(2039H-203AH) et TIMBRE (203DH)
+
+La note à jouer est passée par l'accumulateur B. Il y a 13
+notes de base, de DO à UT, plus le silence. Voici la table des
+valeurs correspondant aux notes:
+
+NOTE: CODE:
+SILENCE 30H
+DO 31H
+DO# 32H
+RE 33H
+RE# 34H
+MI 35H
+FA 36H
+FA# 37H
+SOL 38H
+SOL# 39H
+LA 3AH
+LA# 3BH
+SI 3CH
+UT 3DH
+
+I1 faut ensuite préciser les paramètres suivants: tempo,
+octave, timbre et durée. Aucune inttialisation définie n'est
+faite sur ces registres. Attention aux registres sur 2 octets.
+
+# l'octave: 11 y a 5 octaves possibles, de l'octave 1 qui
+est la plus grave, à l'octave 5. L'octave 4 correspond à
+l'octave du LA 44O.
+
+Voici la liste des valeurs à mettre dans le registre OCTAVE
+(203EH-203FH):
+
+OCTAVE: VALEUR :
+1 16
+è 08
+3 o4
+4 02
+5 01
+
+# la durée: 11 s'agit de la durée relative de chaque note,
+pouvant aller de la ronde à la triple croche. La valeur de la
+durée est à charger dans le registre DUREE (203BH-203CH). La
+valeur pour la ronde est 96, et l'on obtient les valeurs
+relatives en divisant par des puissances de 2, ou de 3 pour des
+
+=== PAGE 221 ===
+Le moniteur du M06 Page 32
+triolets ou les notes pointées. Voioi la liste des valeurs:
+NOTES: VALEURS:
+RONDE 96
+BLANCHE pointée 72
+BLANCHE 48
+NOIRE pointée 36
+NOIRE 24
+CROCHE pointée 18
+CROCHE 12
+DOUBLE croche pointée 09
+DOUBLE oroche 06
+TRIPLE croche pointée 05
+TRIPLE croche 03
+DANS UN TRIOLET: VALEURS:
+NOIRE 16 (car 3x16 = 48)
+CROCHE 08 (car 3x8 = 24)
+DOUBLE CROCHE O4 (car 3x4 = 12)
+TRIPLE CROCHE 02 (car 3x2 = 06)
+
+# le tempo: c'est le mouvement auquel doit être joué le
+morceau. La durée réelle d'une note est égale au tempo x la
+durée. La valeur du tempo, de 1 à 255, doit être chargée dans le
+registre TEMPO (2039H-203AH),
+
+# le timbre: cette valeur (de O0 à 5) doit être chargée dans
+le registre TIMBRE (203DH). Le rapport cyclique est modifié en
+conséquence, ce qui donne à la note une attaque différente. Pour
+une note continue, il faut mettre la valeur 0 dans le registre.
+
+=== PAGE 222 ===
+Le moniteur du M96 Page 33
+
+10 LECTURE DES MANETTES DE JEU
+
+# code du point d'entrée: 1CH pour un JSR, 9CH pour un JMP
+
+# paramètre d'entrée:
+
+- registre 6809 A
+
+# paramètres de retour:
+
+- registres 6809 B et CC
+
+Le numéro de la manette de jeu dont on veut oonnaître l'état
+(0 ou 1) est passé par l'accumulateur A.
+
+B retourne une valeur de O0 à 8 donnant l'état de la manette
+de jeu, suivant la convention que voici:
+
+0 ==> Centre
+
+1 ==> Nord
+
+2 ==> Nord Est
+
+3 ==> Est
+
+4 ==> Sud Est
+
+5 ==> Sud
+
+6 ==> Sud Ouest
+
+7 ==> Ouest
+
+8 ==> Nord Ouest
+
+Le bit de retenue du registre CC esr mis à 1 si le bouton a
+été enfoncé, sinon il est mis à zéro, Il n'y a pas
+d'anti-rebond.
+
+=== PAGE 223 ===
+Le moniteur du M06 Page 34
+
+11 CRAYON OPTIQUE
+11.1 Test du bouton du crayon optique
+
+# code du point d'entrée: 16H poir un JSR, 96H pour un JMP
+
+# paramètre de retour:
+
+- registre 6809 CC
+
+Cette routine teste l'état du bouton du crayon optique. Si
+celui-ci a été enfoncé, le bit de retenue est forcé à 1, sinon il
+est forcé à 0. Un antirebond de 10 millisecondes est effectué.
+Le bit Z est toujours forcé à O. Au cas où la souris est
+sélectée, se reporter au $ 12.1.
+11.2 Lecture de la zone pointée
+
+# code du point s'entrée: 18H pour un JSR, 98H pour un JMP
+
+# paramètres de retour:
+
+- registres 6809 X, Y et CC
+
+Cette routine lit les coordonnées du point visé par le
+crayon optique, et retourne l'abscisse dans X <0,319 ou 639 ou
+159> et l'ordonnée dans Y <0,199>. La capture se fait sur une
+trame TV. La valeur maximale contenue dans le regiatre X dépend
+du mode d'affichage. En mode 80 colonnes, l'abscisse est
+obligatoirement paire. Si la mesure est correcte, le bit de
+retenue du registre CC est forcé à zéro. En cas de mauvaiae
+lecture (luminosité trop faible, crayon trop éloigné de l'écran),
+ce bit est forcé à 1. Au cas où la souris est sélectée, se
+reporter au $ 12,2.
+
+=== PAGE 224 ===
+Le moniteur du M06 Page 35
+
+12 SOURIS
+
+Le bit 6 de l'octet CONFIG (2079H) indique la présence de la
+souris. Le bit 7 de l'octet CONFIG (2079H) indique que la souris
+remplace le crayon optique. Dans ce cas, les appels au crayon
+optique sont déroutés sur la souris.
+12.1 Test des boutons de la souris
+
+# code du point d'entrée: 3EH pour un JSR, BEH pour un JMP
+
+# paramètre de retour:
+
+- registre 6809 CC
+
+Cette routine teste l'état des boutons de la souris.Si le
+bouton de gauche est enfoncé, le bit de retenue est forcé à 1,
+sinon il est forcé à 0, Le bouton de droite correspondra au bit
+Z à 1 s'il est enfoncé, ou à O0 s'il ne l'est pas. :
+12.2 Lecture de la aouris
+
+# code du point d'entrée: UHOH pour un JSR, COH pour un JMP
+
+# paramètres de retour:
+
+- registres 6809 X, Y et CC
+
+Cette routine lit les coordonnées du point où se aitue la
+souris et retourne l'abscisse dans X <0,319 ou 639 ou 159> et
+l'ordonnée dans Y <0,199>. Si la mesure est correcte, le bit de
+retenue du regiatre CC est forcé à zéro. En cas de mauvaise
+lecture, ce bit est forcé à 1.
+
+=== PAGE 225 ===
+Le moniteur du MO6 Page 36
+13 GESTION DE L'INTERFACE PARALLELE
+
+# code du point d'entrée: 24H pour un JSR, AH pour un JMP
+
+# paramètres d'entrée:
+
+- registre 6809 B
+
+- registres PR.OPC (2042H)
+
+* paramètres de retour:
+
+- registre 6809 CC
+
+- registres PR.STA (2043H)
+
+Cette routine gère l'interface parallele. Le contenu du
+registre sélectionne l'une des opérations suivantes:
+
+CONTENU DE PR,OPC OPERATION DEMANDEE
+
+4100000001 Eoriture d'un octet en parallèle.
+4900000010 Copie graphique d'écran,
+4100000100 Ouverture pour écriture en parallèle.
+00010000 Fermeture,
+
+Dans le cas d'un octet à écrire en parallèle, B doit
+contenir l'octet à envoyer.
+
+En cas de copie graphique de l'écran, seuls les modes 40 et
+89 colonnes fonctionnent.
+
+Sur la version QWERTY, si B contient la valeur 60H, celle-ci
+est automatiquement transformée par le moniteur en 23H, afin de
+générer le code correct de la livre Sterling sur l'imprimante.
+
+Le registre PR.STA retourne le code de l'opération réalisée:
+CONTENU DE PR.STA ETAT DE LA COMMUNICATION
+4000000100 Ouvert pour écriture en parallèle.
+#400001000 Périphérique non prêt
+00010000 Fermé.
+
+Le bit de retenue du registre CC est forcé à zéro si ‘tout
+
+s'est passé normalement, sinon il est forcé à 1.
+
+=== PAGE 226 ===
+Le moniteur du M06 Page 37
+14 GESTION DE L'INTERFACE DE COMMUNICATION
+
+# code du point d'entrée: 42H pour un JSR, C2H pour un JMP
+
+* paramètres d'entrée:
+
+- registre 6809 B
+
+- registres RS.OPC (20824) ,VITESSE (2085H) et MODE (2084H)
+
+# paramètres de retour:
+
+- registre 6809 CC
+
+- registre RS,STA (2083H)
+
+Cette routine gère l'interface de communication, Le contenu
+du reglstre RS.OPC (2082H) sélectionne l'une des opérations
+suivantes:
+
+CONTENU DE RS.OPC OPERATION DEMANDEE
+4100000001 Ecriture d'un caractère
+$00000010 Lecture d'un caractère
+$00000100 Ouverture en leoture écriture
+4000010000 Fermeture
+
+En cas d'écriture, B doit oontenir l'octetr à envoyer,
+
+Le registre RS,STA (2082H) rerourne le code de l'opération
+réalisée, er en cas d'erreur, rerourne un des codes suivants :
+
+CONTENU DE RS,.STA ETAT DE LA COMMUNICATION
+00000100 Ouvert en lecture écriture
+00010000 Fermé
+
+$ 10000000 Périphérique non prêt
+
+Le bit de rerenue du registre CC est forcé à zéro si voutr
+s'est passé normalement, sinon il est forcé à 1.
+
+=== PAGE 227 ===
+Le moniteur du M06 Page 38
+Pour les transmissions série, le registre MODE (2084H)
+contient certaines valeurs qui permettent de programmer la ligne
+selon son choix:
+- Bit 7-6 : 11 --> 5 bits
+10 --> 8 bits
+01 --> 7 bits
+00 --> 6 bits
+- Bit 5 : 0 --> Générateur interne
+1 --> Horloge externe
+- Bit 4-3-2 : 111 --> Space bit
+191 --> Mark bit
+011 --> Parité paire
+001 --> Parité impaire
+000 --> Pas de parité
+- Bit 1: 0 --> Mode modem
+1 --> Mode terminal
+- Bit O0 : 0 --> 2 Stop bits
+1 --> 1 Stop bit
+La vitesse de transmission est sélectable de 50 à 19200
+bauds, par un paramètre mis dans le registre VITESSE (2085H):
+50 bauds : O001H
+75 bauds : 0002H
+110 bauds : 0003H
+135 bauds : 0004H
+150 bauds : 0005H
+300 bauds : 0006H
+600 bauds : 0007H
+1200 bauds : 0008H
+1800 bauds : 0009H
+2400 bauds : OOOAH
+3600 bauds : 000BH
+4800 bauds : O00CH
+7200 bauds : OO0DH
+9600 bauds : OOOEH
+19200 bauds : O00FH
+
+=== PAGE 228 ===
+Le moniteur du M06 Page 39
+15 GESTION DU LECTEUR-ENREGISTREUR DE PROGRAMMES (LEP)
+15.1 Lecture et écriture de la bande
+
+# code du point d'entrée: 20H pour un JSR, AOH pour un JMP
+
+#* paramètres d'entrée;
+
+- registres 6809 A, B et Y
+
+- registres K7DATA (2040H), K7LENG (2041H) et CONFIG (2079H)
+
+# paramètres de retour:
+
+- registres 6809 A et B.
+
+Cette routine permet de lire ou d'écrire des blocs de 253
+octets de données au maximum. En lecture une reconnaissance
+automatique de la vitesse d'enregistrement est effectuée. En
+écriture le bit 2 de CONFIG (2079H) définit la vitesse: O0 = 2400
+bauds, 1 = 1200 bauds,
+
+Ces blocs peuvent être de trois types, le type étant codé de
+la façon suivante:
+
+- 00: bloc d'en-tête du Fichier.
+
+- 01: bloc de données.
+
+- FFH: bloo de fin de fichier.
+
+Si A est non nul, la routine effeotue une lecture de la
+bande magnétique. Y doit contenir l'adresse de la zone mémoire
+où sera rangé le bloo lu. Au retour, B contiendra le type de
+bloc, et A le "ohecksum" calculé d'après les données lues (somme
+des données et du checksum lu). A l'adresse pointée par Y, l'on
+trouvera:
+
+- un octet donnant la longueur du bloc.
+
+- n octets de données,
+
+- un octet donnant le "checksum" lu.
+
+SL À = 0, il s'agit d'une écriture. B doit contenir le type
+du bloc, et Y doit oontenir l'adresse de la zone mémoire où se
+trouvent les données à écrire sur la bande. Cette zone doit
+avoir la structure suivante:
+
+=== PAGE 229 ===
+Le moniteur du MO06 Page 40
+1° octet: longueur du bloc = nombre d'octets de données +2,
+2° octet: première donnée.
+
+, {Longueur du bloc - 2)données
+
+n° octet: (n-1)° donnée.
+
+n+1° octet: checksum de contrôle (opposé de la somme des
+données si l'on veut en cas de lecture valide avoir un checksum
+lu qui soit nul).
+
+15.2 Moteur: marche/arrêt
+
+# code du point d'entrée: 22H pour un JSR, A2H pour un JMP
+
+# paramètre d'entrée:
+
+- registre 6809 A
+
+#* paramètre de retour:
+
+- registre 6809 CC
+
+Si le bit O0 de À est à zéro, le moteur est arrêté après une
+demi-seconde de délai.
+
+Si le bit O et le bit 1 de A sont chacun à 1, le moteur est
+mis en route, et il y a ensuite une seconde de délai.
+
+Si le bit O de A est à 1, et le bit 1 de A est à zéro, le
+aoteur est mis en route mais il n'y à pas d'attente ensuite.
+
+La fiabilité sera augmentée si vous suivez les conseils que
+voici:
+
+# mise en route du moteur pour une écriture: lancement du
+moteur, puis attente d'une seconde, afin d'être sûr que la
+vitesse du moteur s'est stabilisée avant d'écrire sur la bande.
+A doit alors contenir la valeur #xxxxxx11,
+
+#* mise en route du moteur pour une lecture: lancement du
+aoteur, pas d'attente. A doit alors contenir la valeur
+Zxxxxxx0 1.
+
+# arrêt du moteur après une lecture ou une écriture:
+attente d'une demi-seconde pour être sûr qu'aucune partie de la
+bande contenant des données ne se trouvera sous le cabestan, puis
+arrêt du moteur. A doit alors contenir la valeur #xxxxxx10.
+
+=== PAGE 230 ===
+Le moniteur du M06 Page 41
+16 CONTROLEUR DE DISQUETTES
+
+Vous pouvez gérer les entrées/sorties disque à deux niveaux:
+au niveau physique en utilisant le point d'entrée du moniteur, ou
+à un niveau logique en manipulant des fichiers au format Basic
+Microsoft(R).
+
+Rappelons que les disquettes sont divisées en 25 (QDD), 40
+(lecteur 5"1/4) ou 80 (lecteur 3"1/2) pistes de 16 secteurs
+ohacune, Un secteur contient lui-même 128 octets en simple
+densité ou sur QDD, ou 256 en double densité.
+
+De plus, le contrôleur double densité peut fonctionner dans
+les 2 modes : simple ou double densité. Au démarrage, sa
+densité de travail doit être sélectionnée après l'initialisation
+du contrôleur,
+
+16.1 Entrées/Sorties disque physiques
+
+# code du point d'entrée: 26H pour un JSR, A6H pour un JMP
+
+# code du formattage : 2AH pour un JSR, AAH pour un JMP
+
+#* paramètres d'entrée:
+
+- registres DK.O0PC (2048H), DK.DRV (2049H), DK.SEC (2O0UCH),
+
+DK,.TRK (20UAH-204BH), DK.BUF (204FH-2050H)
+
+# paramètres de retour:
+
+- registre 6809 CC
+
+- registre DK.STA (204EH)
+
+En cas d'erreur pendant une opération le bit de retenue du
+CC est forcé à 1, sinon il est forcé a O0.
+
+Le registre DK.OPC oontient le code de l'opération à
+réaliser:
+
+- Code 00: doit être mis pour le  formattage sans
+vérification.
+
+- Code 01: demande l'initialisation du oontrôleur. Dans ce
+cas, si l'initialisation a pu avoir lieu sans erreurs, le bit de
+retenue du registre code condition (CC) est mis à 0, et le type
+de contrôleur "D" est retourné dans le registre DK.STA. Sinon,
+le bit de retenue est mis à 1, et le code d'erreur OH est mis
+dans le registre DK.STA. (voir ci-après les codes d'erreur),
+
+- Code 02: lecture d'un secteur, Les codes d'erreur
+possibles sont 02, Où, 08, 10H. Si une erreur a eu lieu, son
+code est retourné dans le registre DK.STA.
+
+=== PAGE 231 ===
+Le moniteur du M06 Page 42
+
+- Code 04: Passage du contrôleur en simple densité, pas
+d'erreur possible.
+
+- Code 08: écriture d'un secteur. Les codes d'erreur
+possibles sont 01, 02, O0, 08, 10H, 20H. Si une erreur a eu
+lieu, son code est retourné dans le registre DK.STA.
+
+- code 10H: Passage du contrôleur en double densité, pas
+d'erreur possible,
+
+- Code 20H: recherche de la piste zéro. Le code d'erreur
+possible est 10H.
+
+- Code 40H: recherche la piste dont le numéro est donné par
+le registre DK.TRK, Le code d'erreur possible est 10H.
+
+- Code 80H: option de vérification en écriture. Il faut
+faire un "OU" logique entre ce code et le code de l'opération que
+l'on veut vérifier. Les codes d'erreur retournés sont les mêmes
+que ceux de l'operation specifiée augmentés du code 20H.
+
+Paramètres à passer suivant l'opération demandée:
+
+#* registre DK.DRV (2049H): ce registre doit contenir le
+numéro du lecteur oonoerné, soit une valeur entre 0 et 3. Les
+numéros 0 et 1 correspondent aux deux faoes du lecteur interne et
+les numéros 2 et 3 aux deux faces du disque externe. Les
+lecteurs simple densité peuvent être au nombre de 4.
+
+# registre DK.TRK (204HAH-20U4BH): ce registre doit contenir
+le numéro de piste, les pistes étant numérotées de O0 à 24, 39 ou
+79.
+
+#* registre DK.SEC (204CH): ce registre doit contenir le
+numéro de secteur où l'on veut lire ou écrire. Ce numéro doit
+être compris entre 1 et 16.
+
+* registre DK . NUM (204DH): ce registre contient
+l'entrelacement des secteurs logique sur la disquette lors du
+formattage. Ceci permet d'accélérer les vitesses d'accès au
+disque. Sur le M06, l'entrelaoement utilisé par le Basic est de
+7. Une lecture rapide des secteurs peut être optimale avec un
+entrelacement de 2.
+
+# registre DK.BUF (204FH-2050H): ce registre doit contenir
+l'adresse de début d'une zone tampon en RAM de 128 octets en
+simple densité, ou de 256 octets en double densité, soit pour y
+lire les données à écrire sur disque, soit pour y écrire les
+données lues sur le disque,
+
+# registre DK.STA (204EH): ce registre contient le code
+d'erreur, ou le type de contrôleur après une initialisation
+correcte,
+
+=== PAGE 232 ===
+Le moniteur du M96 Page 43
+
+Voici les différentes erreurs possibles:
+
+- code O1: disquette protégée; cette erreur ne peut
+apparaître qu'après une demande d'écriture.
+
+- code 02: il y a des problemes de timings ou des données
+ont été perdues.
+
+- code 04: erreur de secteur; l'identificateur de secteur
+est incorrect (secteur ne pouvant être lu ou erreur sur le
+checksum), cependant la piste peut être correote.
+
+- code 08: erreur sur les données; l'identificateur de
+secteur est correct, mais les données ne peuvent être lues, ou le
+checksum est inoorrect.
+
+- code 10H: lecteur non prêt; le moteur n'est pas en route,
+ou le lecteur specifié est inexistant.
+
+- code 20H: erreur sur vérifioation; la zone tampon en
+mémoire et la zone correspondante écrite sur la disquette ne sont
+pas identiques.
+
+16.2 Le format Basic Microsoft(R)
+
+Pour assurer la compatibilité entre les diverses
+applications, les fichiers créés par le M06 suivent le standard
+Basic Microsoft(R).
+
+La piste 20 est une zone réservée destinée à rendre compte
+de l'état de la disquette, Elle est organisée oomme suit:
+
+# secteur 1: réservé
+
+#* secteur 2: table d'allocation des fichiers ou "FAT"
+
+# secteurs 3 à 16: catalogue
+16.2.1 La table d'allocation des fichiers
+
+Les fichiers sont organisés en blocs de 1K octets en simple
+densité, ou 2K ootets en double densité, On a donc dans tous les
+cas 2 bloos par piste. Les blocs sont numerotés à partir de O0.
+Chaque octet de la table d'allocation des fiohiers, à partir de
+l'octet 1, représente un blco physique.
+
+=== PAGE 233 ===
+Le moniteur du M06 Page 44
+
+Organisation de la "FAT":
+
+# Jetet 0: 0.
+
+# Octet 1: bloc 0, piste 0, secteurs 1 à 8,
+
+# Octet 2: bloc 1, piste 0, secteurs 9 à 16.
+
+# Octet 3: bloc 2, piste 1, secteurs 1 à 8.
+
+# Octet 4: bloc 3, piste 1, secteurs 9 à 16.
+
+# nono sms nee eee seen e
+
+# Octet 2j-1: bloc 2-2, piste j-1, secteurs 1 à 8,
+
+# Octet 2j: bloc 2-1, piste j-1, secteurs 9 à 16.
+
+# 000400000000 160000000000...
+
+# Octet 160: bloc 159, piste 79, secteurs 9 à 16.
+
+Remarque : En simple densité la FAT est limitée à 127
+blocs.
+
+Un octet de la "FAT" représentant un bloc physique peut
+avoir comme valeurs:
+
+# FFH, qui signifie bloc non alloué,
+
+# FEH, qui signifie bloc réservé.
+
+# Tout nombre de O0 à BFH, signifie bloc alloué. Dans ce
+cas, le nombre représente le numéro du bloc logique suivant du
+même fichier.
+
+# Tout nombre de C1H à C8H, signifie dernier bloc d'un
+fichier, Les 4 bits de poids faible indiquent le nombre de
+secteurs utilisés dans ce dernier bloc.
+
+16.2.,2 Le catalogue
+
+Le catalogue donne la liste des fichiers, et occupe 14
+secteurs, Chaque fichier est répertorié sur 32 octets. Il y a
+donc à fichiers répertoriés par secteur en simple densité, et 8
+fichiers par secteur en double densité. Au total, le catalogue
+peut donc répertorier 56 fichiers en simple densité, et 112 en
+double densité.
+
+=== PAGE 234 ===
+Le moniteur du M96 Page 45
+
+Chaque fichier est répertorié de la façon suivante:
+
+Octets 00 à 07: Nom du fichier, oadré à gauche, complété
+par des blancs.
+
+Octets 08 à OAH: Suffixe du fichier (.BAS, .BIN, etc...),
+oadré à gauohe, oomplété par des blancs,
+
+Octet O0BH: Type de fichier: 0 pour un programme Basic
+ASCII ou binaire, 1 pour des données Basic en ASCII, 2
+pour un programme en langage machine (binaire), 3 pour
+un fiohier assembleur édité en ASCII.
+
+Octet OCH: Sémaphore: FFH pour de l'ASCII, 00 pour du
+binaire.
+
+Octet ODH: Numéro du premier bloc logique du fichier.
+
+Octets OEH-0FH: Nombre d'octets utilisés dans le dernier
+secteur du fichier,
+
+Octets 10H-17H: Commentaire associé au fichier,
+
+Octets 18H-1AH: Date : jj-mm-aa
+
+Octets 1BH-1FH: Réservés.
+
+Le premier octet de chaque entrée dans le catalogue indique
+
+son état:
+
+# 00H: entrée non allouée, pas de fichier répertorié pour
+
+cette entrée,
+
+# 20H-7FH: code ASCII du premier caractère du nom de
+
+fichier, donc entrée allouée,
+
+# FFH: fin logique du catalogue,
+
+Lers de la oréation du catalogue, ces octets sont mis à
+FFH, Chaque fois qu'un fiohier est créé, la fin logique du
+catalogue est déplaoée dans le premier octet de l'entrée
+suivante, jusqu'à ce que le catalogue soit plein. Lorsqu'un
+fichier est détruit, le premier octet de son entrée est mis à
+zéro (entrée non allouée). Dans ce cas, tout fichier
+nouvellement créé se verra attribuer en priorité oette entrée,
+
+=== PAGE 235 ===
+Le moniteur du M96 Page 46
+17 PROGRAMMATION DE LA PALETTE
+
+# code du point d'entrée: 3CH pour un JSR, BCH pour un JMP
+
+# paramètres d'entrée:
+
+- registres 6809 À, X et Y
+
+# paramètre de sortie:
+
+- registre 6809 X
+
+Cette routine permet de définir la valeur de chacune des 16
+couleurs affichables parmi une palette de 4096 couleurs.
+
+Les couleurs sont définies par les trois composantes Rouge,
+Vert et Bleu, ainsi qu'un bit qui définit si la couleur est
+transparente en incrustation, Le codage est le suivant :
+
+XXxMBBBB VVVVRRRR codés sur 2 octets,
+
+où M représente la transparence en incrustation (1:
+opaque, 0: transparent), BBBB le codage du bleu, VVVV le codage
+du vert et RRRR le codage du rouge, Chaque composante étant
+codée sur 4 bits, elle peut donc prendre 16 valeurs. Trois
+composantes permettent donc d'avoir 16x16x16, soit 4096
+couleurs,
+
+17.1 Lecture ou écriture d'une case de la palette
+
+Le numéro de la couleur que l'on veut modifier est rangée
+dans le registre A .,
+
+Le registre X est un masque ET. Il permet de choisir les
+bits que l'on veut modifier. Les bits à 0 seront modifiés, ceux
+à 1 conservés,
+
+Le registre YŸ est un masque OU, Il permet de fixer l'état
+des bits qui sont à 0, ou qui sont mis à 0 par le masque ET,
+
+En sortie, X contient la valeur rangée dans la palette,
+
+L'opération réalisée est : Palette = (palette ET X) OU Y.
+
+Remarque : cette opération est effectuée avec attente de
+retour ligne.
+
+Exemple: si on veut mettre le vert à une demi-intensité
+sans toucher aux autres composantes pour la couleur 2 , on
+charge:
+
+À avec 2
+X avec #111 1 1111 0000 1111 (FFOFH)
+Y avec 4000 O0 0000 0111 00900 (0070H)
+
+=== PAGE 236 ===
+Le moniteur du M06 Page 47
+En sortie X contient la valeur de la case 2 de la palette,
+Exemple : si on veut mettre la couleur 5 transparente pour
+l'incrustation, on charge :
+A avec 5
+X avec #111 O 1111 1111 1111 (EFFFH)
+Y avec 3000 O0 0000 0000 0000 (0000H)
+En sortie X contient la valeur de la case 5 de la palette.
+Exemple : pour lire le contenu d'une case sans la
+modifier, 11 est évident que X doit être à OFFFFH et Y à 0, En
+sortie, le résultat est dans X.
+17.2 Programmaticn complète de la palette
+Le registre À dans ce cas doit contenir OFFH, Le registre
+X doit pointer une table de 32 octets qui contiennent les 16
+valeurs des 16 oouleurs oodées comme décrit préoédemment,.
+Les 2 premiers octets oodent la couleur 0, tandis que les 2
+derniers codent la couleur 15.
+Remarque : oette opération est effectuée avec attente de
+retour trame,
+17.3 Couleurs utilisées selon le mode d'affichage
+En mode UO oolonnes et Bitmap 16 couleurs les 16 couleurs
+sont accessibles.
+En mcde 80 colonnes la couleur de fond est le numéro O0,
+oelle de forme le numéro 1.
+En mode Bitmap 4 couleurs, les couleurs de O0 à 3 sont
+utilisées,
+En mede Pagel, Page? et Triple Overlay, les oouleurs 0 à 2
+sont utilisées.
+En mode Triple overlay, les oouleurs 0 à 4 sont utilisées,
+Dans tous les modes les 16 couleurs sont disponibles pour
+le tour.
+17.4 Centenu du fichier PALETTE.CFG
+Le fichier PALETTE.CFG contient les données d'une palette
+sauvegardée par l'utilitaire "REGLAGE DE LA PALETTE",
+
+=== PAGE 237 ===
+Le moniteur du M96 Page 48
+Il s'agit d'un fichier binaire de 32 octets (16 mots de 16
+bits) décrivant les 16 couleurs de la palette depuis la couleur
+0 jusqu'à la couleur 15.
+Chaque mot a le format suivant :
+XXxXxMBBBB VVVVRRRR
+M représente le bit d'incrustation,
+BBBB est la quantité de bleu
+VVVV est la quantité de vert
+RRRR est la quantité de rouge.
+x sans importance
+
+=== PAGE 238 ===
+Le moniteur du MO6 Page 49
+
+18 APPEL DE L'EXTRA-MONITEUR
+
+# code du point d'entrée : SWI2
+
+# paramètres d'entrée:
+
+- registre 6809 B
+
+- registres pages 2100H-22FFH selon routine
+
+# paramètres de sortie :
+
+- registre 6809 B
+
+- registres pages 2100H-22FFH selon routine
+
+Ce point d'entrée permet d'accéder aux routines de
+l'extramoniteur. En entrée, B contient le numéro de la routine
+à exécuter, les registres nécessaires des pages 2100H-22FFH
+devant être positionnés selon la routine appellée.
+
+En sortie, le registre B contient un numéro d'erreur, les
+registres des pages 2100H-22FFH étant modifiés si néoessaire,
+
+Vous référer au document concernant l'extramoniteur pour la
+description complète des routines,
+
+=== PAGE 239 ===
+Le moniteur du M96 Page 50
+19 INFORMATIONS COMPLEMENTAIRES
+19.1 Organiaation de la mémoire
+ADRESSES (HEXADECIMAL)
+0000-1FFF 2 x 8 K-0ctets de mémoire écran
+2000-20FF Registres du moniteur
+2100-5FFF Ram utilisateur banque fixe
+6000-9FFF 6 Banques Ram 16 Ko en parallèle
+AOOO-A7AF 19 K rom pour le disque
+A7BO-A7BF 16 adresses non utilisées ni decodées
+A7CO-A7C3 PIA 6821 système
+A7CH-A7CB Réservés
+A7CC-A7CF PIA 6821 extension jeu
+A7DO-A7D9 Contrôleur de floppy
+A7DA-A7DB Palette
+A7DC-A7DD Gate affichage et QDD
+A7DE-A7E3 Réservés
+A7TEU-A7E7 Compteurs crayon optique ou gate
+A7EB8-A7EB Interface RS232
+A7FO-A7F7 Interface IEEE
+A7F8-A7FD Interface Modem
+A7FE-A7FF Réservés
+ABOO-AFFF Libre
+BOOO-EFFF Cartouche ROM ou Basic 128
+FO00-FFFF Moniteur 2 x UK
+
+La partie de mémoire située entre 6000H et 9FFFH est
+commutable avec d'autres partie de RAM. Vous disposez de 6
+banques commutables plus 16 K stables (de 2000H à SFFFH) soit
+112 K au total, dont 32 K accessibles en même temps.
+
+Il est aussi possible de commuter une banque RAM dans
+l'espace cartouche pour y exécuter des programmes. Pour
+commuter une banque dans l'espace donnée ou l'espace cartouche,
+voir la documentation du gate mode page.
+
+=== PAGE 240 ===
+Le moniteur du M96 Page 51
+
+19.2 Points d'entrée standard du moniteur
+
+Les codes qui suivent sont les codes sur 7 bits. Le bit 7
+doit être mis à zéro pour simuler un JSR, à 1 pour simuler un
+JMP. Les autres sont réservés à l'usage interne du moniteur.
+
+00 : Retour au menu,
+
+02 : Affichage d'un caraotère.
+
+04 : Mise en mémoire couleur.
+
+06 : Mise en mémoire forme.
+
+08 : Emission d'un bip sonore,
+
+OAH : Lecture du clavier,
+
+OCH : Lecture rapide du clavier,
+
+OEH : Tracé d'un segment de droite,
+
+10H : Allumage ou extinction d'un point.
+
+12H : Ecriture d'un point "caractères",
+
+14H : Lecture de la couleur d'un point.
+
+16H : Lecture du bouton du crayon optique,
+
+18H : Lecture du crayon optique.
+
+1AH : Lecture de l'éoran.
+
+1CH : Lecture des manettes de jeu.
+
+1EH : Génération de musique.
+
+20H : Lecture/écriture sur la cassette,
+
+22H : Mise en route/arrêt du moteur.
+
+2UH : Gestion de l'interface parallèle,
+
+26H : Contrôleur de disquette.
+
+24H : Formattage disquette,
+
+3CH : Programmation de la palette.
+
+3ER : Lecture des boutons de la souris,
+
+LOH : Lecture de la souris.
+
+42H : Gestion de la RS232.
+
+=== PAGE 241 ===
+Le moniteur du MO06 Page 52
+
+19.3 Registres utilisés par le moniteur
+
+Les registres sont donnés par leur nom et leur adresse en
+
+HEXADECIMAL,.
+
+# 2000-2018 (TERMIN) : Table des terminateurs de lignes
+logiques,
+
+# 2019 (STATUS) : Différents sémaphores:
+
+b7: 0:Majuscule, 1:minuscule (lecture seule),
+b6: 1: scroll caractère sans couleur,
+
+b5: Clavier export 0: QWERTZ. 1:QWERTY
+
+b4: 1: graphiques sans écriture de couleur.
+b3: 1: inhibition buzzer,
+
+b2: curseur 1: visible. 0: invisible.
+
+b1: sémaphore de répétition clavier,
+
+bO: touche clavier déjà lue.
+
+8# 2014-201B (TABPT) : Pointeur dans la table des terminateurs
+de lignes,
+
+# 201B (RANG) : Ligne logique courante,
+
+# 201C (COLN) : Colonne logique courante.
+
+# 201D-201E (TOPTAB) : Pointeur sur le sommet logique de la
+tsble des terminateurs de lignes,
+
+# 201E (TOPRAN) : Première ligne logique de la fenêtre,
+
+# 201F-2020 (BOTTAB) : Pointeur sur la fin logique de la table
+des terminateurs de ligne.
+
+# 2020 (BOTRAN) : Dernière ligne logique de la fenêtre.
+
+# 2021-2022 (SCRPT) : Pointeur courant dsns l'écrsn,
+
+# 2023-2024 (STADR) : Adresse du premier octet de la fenêtre.
+
+# 2025-2026 (ENDDR) : Adresse + 1 du dernier octet de la
+fenêtre,
+
+# 2027-2028 (BLOCZ) : Registre de contenu toujours nul, pour
+les initialisations.,
+
+# 2029 (FORME) : Contient le code de la couleur (de -16 à
++15) pour la mise en couleur d'un point
+ou le tracé d'un segment de droite,
+
+# 2024 (ATRANG) : Sémaphores pour la gestion d'écran:
+
+b7: 1: fond plein écran.
+
+b6: 1: forme plein écran,
+
+b5: réservé,
+
+b4: réservé,
+
+b3: réservé,
+
+b2: réservé.
+
+b1: largeur 0: simple, 1: double.
+bO: hauteur 0: simple. 1: double.
+
+# 202B (COLOUR) : Couleur courante; les 4 bits de poids
+faible donnent la couleur du fond, les 4
+bits de poids fort la couleur de la
+forme, suivant le codage vidéo pBVR où p
+est le bit de couleur pastel,
+
+# 202C (PAGFLG) : Si ce registre contient la valeur O0, on
+est en mode scroll; s'il contient 255, on
+est en mode "page" (pas de scroll).
+
+=== PAGE 242 ===
+Le moniteur du M06 Page 53
+
+# 202D (SCROLS) : Si ce registre est à O0, le scroll est
+normal; s'il contient 255, le scroll est
+lent,
+
+# 202E (CURSFL) : Sémaphore de mouvement curseur, qui, s'il
+contient la valeur 255, indique qu'il ne
+faut pas lier logiquement la ligne
+courante à la suivante,
+
+# 202F (COPCHR) : Sémaphore qui, s'il contient la valeur
+255, indique que le déplacement à droite
+ou à gauche doit être interprété comme
+une recople à droite ou à gauche du
+caractère courant,
+
+*# 2030 (EFCMPT) : Conpteur d'effacement du curseur pour la
+gestion du clignotement,
+
+* 2031 (ITCMPT) : Compteur d'interruptions JRQ.
+
+# 2032-2033 (PLOTX) : Abscisse du dernier point allumé ou
+éteint par une routine graphique.
+
+# 2034-2935 (PLOTY) : Ordonnée du dernier point allumé ou
+éteint par une routine graphique.
+
+# 2036 (CHDRAW) : Code ASCII du caractère pour un tracé de
+point ou de droite en mode "caractères",
+Si ce registre contient la valeur O0, le
+tracé est fait en mode "points",
+
+# 2037 (KEY) : Code de la dernière touche enfoncée au
+clavier
+
+# 2038 (CMPTKB) : Compteur de répétitions olavier,
+
+# 2039 : Réservé,
+
+# 203A (TEMPO) : Tempo général pour la génération de
+musique,
+
+#* 203B : Réservé,
+
+# 203C (DUREE) : Durée de la note (de 1 à 96),
+
+# 2032 (TIMBRE) : Attaque de la note,
+
+# 203E-203F (OCTAVE) : Octave (1, 2, 4, 8 ou 16)
+
+# 2040 (K7DATA) : Octet à écrire sur la bande magnétique du
+LEP,
+
+# 20471 (K7LENG) : Nombre d'octets consécutifs à écrire sur
+la bande magnétique du LEP,
+
+# 2042 (PR.OPC) : Mot de commande pour la gestion
+imprimante.
+
+# 2043 (PR,STA) : Etat courant de la liaison imprimante,
+
+# 2044-2045 (TEMP) Registre temporaire,
+
+# 2046-2047 (SAVEST) : Sauvegarde du pointeur de pile.
+
+# 2048 (DK.O0OPC) : Mot de commande pour le contrôleur de
+disques,
+
+# 2049 (DK,DRV) : Numéro de lecteur de disquettes.
+
+# 20UA-204B (DK,TRK) : Numéro de piste.
+
+# 204C (DK,.SEC) : Numéro de secteur,
+
+*# 204D (DK.NUM) : Entrelacement de secteurs,
+
+# D2OUE (DK.STA) : Etat courant du contrôleur de disquettes.
+
+* 204F-2050 (DK,BUF) : Pointeur sur la zone-tampon réservée aux
+entrées-sorties disquette,
+
+# 2051-2052 (TRACKO) : Position de la tête, lecteur 0,
+
+# 2053-2054 (TRACK1) : Position de la tête, lecteur 1.
+
+# 2055-2056 (TRACK2) : Position de la tête, lecteur 2,
+
+# 2057-2058 (TRACK3) : Position de la tête, lecteur 3.
+
+=== PAGE 243 ===
+Le moniteur du M06 Page 51
+# 2059 (SEQUCE) : Code indiquant dans quelle séquence de
+gestion d'écran on se trouve.
+# 2054 (US1) : Sémaphore pour les séquences "unit
+separator”".,
+# 205B (ACCENT) : Sémaphore pour les séquences accent.
+# 205C (SS2GET) : Registre pour l'impression ou la lecture
+d'une minuscule accentuée.
+# 205D (SS3GET) : Registre pour l'impression ou la lecture
+d'une minuscule accentuée,
+8 205E-205F (SWI1PT) : Pointeur sur la routine de traitement de
+appels au moniteur.
+# 2060 : Réservé.
+8# 2061-2062 (TIMEPT) : Pointeur sur la routine utilisateur de
+traitement des interruptions IRAQ.
+# 2063 : Sémaphore d'aiguillage des IRQ.
+# 2064-2065 (IRQPT) : Pointeur sur la routine moniteur de
+traitement des interruptions JRQ.
+# 2066 : Réservé,
+# 2067-2068 (FIRQPT) : Pointeur sur la routine de traitement des
+interruptions rapides FIRQ.
+# 2069 : Réservé.
+# 2064-206B (SIMUL) : Pointeur sur la table des points d'entrée
+du moniteur,
+# 206C : Réservé,
+# 206D-206E (CHRPTR) : Pointeur sur la table de décodage du
+clavier,
+# 206F : Réservé,
+# 2070-2071 (USERAF) : Pointeur sur le générateur de caractères
+utilisateur,
+# 2072 : Réservé,
+# 2073-2074 (GENPTR) : Pointeur sur le générateur de caractères.
+# 2075 : Réservé.
+# 2076 (LATCLV) Latence clavier,
+# 2077 (SCRMOD) : Mode d'affichage:
+Tout à O0 : 40 colonnes,
+b7: 80 colonnes,
+b6: Bitmap 16 couleurs,
+b5: Triple Overlay.
+b4 : Réservé.
+b3: Overlay,
+b2: Page2,.
+b1: Pageï,
+bo: Bitmap À couleurs,
+# 2078 (DECALG) : Ajustement pour le crayon optique,
+# 2079 (CONFIG) : Configuration de la machine :
+b7: 1: souris. O:crayon optique.
+b6: 1: souris présente.
+b5: Réservé.
+bA : Réservé.
+b3: Réeervé,
+b2: Cassette : O0: 2400 bauds, 1: 1200 bauds,
+b1-0: Numéro du plan en Triple Overlay.
+
+=== PAGE 244 ===
+Le moniteur du M05 Page 55
+
+# 2074-207B (XMOUSE) : Position de la souris en X,
+
+# 207C-207D (YMOUSE) : Position de la souris en Y.
+
+# 207E (CPMUTE) : Chronomètre pour faire taire la souris.
+
+# 207F (DEFDST) : Sémaphore de simple ou double densité,
+
+# 2080 (DKFLG) : Sémaphore de présence du contrôleur de
+disques,
+
+* 2081 (MA7ET) : Copie du registre du gate en A7E7.
+
+# 2082 (RS.OPC) : Registre de commande de la RS232.
+
+# 2083 (RS.STA) : Registre d'état de la RS232.
+
+# 2084 (MODE) : Programmation de la RS232.
+
+# 2085 (VITESSE) : Vitesse de la RS232,
+
+# 2086 (SAVTOUR) : Sauvegarde de la couleur du tour.
+
+# 2087-20CC : Pile système,
+
+# 20CD-20£2 (LPBUFF) : Zone-tampon pour la lecture du crayon
+optique.
+
+* 20E3 (DXMOUSE) : Déplacement relatif en X de la souris,
+
+# 20E4 (DYMOUSE) : Déplacement relatif en Y de la souris,
+
+# 20E5-20FD : Réservés,
+
+# 2O0OFE-20FF (TSTRST) : Sémaphore de démarrage à chaud ou à
+froid.
+
+=== PAGE 245 ===
+Le moniteur du M06 Page 56
+19,4 Adresses d'Entrées/Sorties
+Les adresses qui suivent sont données en hexadécimal.
+19.4,1 Le PIA système 6821
+# A7CO (PRA): Registre de données, port 4,
+bitO (sortie): commutation mémoire écran caractères et
+mémoire écran couleur,
+bit1 (entrée): bouton crayon optique
+bit? (sortie): mute souris
+bit3 (sortie): ligne 8 du clavier
+bit4 (sortie): LED de SHIFT-LOCK
+bit5 (sortie): Rom: 0: banque 0, 1: banque 1
+bit6 (sortie): écriture cassette
+bit7 (entrée): lecture cassette
+# A7C1 (PRB): Registre de données, port B:
+bitO (sortie): son
+bits 1-6: (sortie): matriçage/dematriçage clavier.
+bit7 (entrée): lecture clavier,
+# A7C2 (CRA): Registre de contrôle, port A:
+CAT (entrée): information code barre
+CA2 (sortie): moteur du L,E.P.
+# A7C3 (CRB): Registre de contrôle, port B:
+CB1 (entrée): interruptions 50 Hertz
+CB2 (sortie): commande incrustation
+19,4,2 Le PIA jeu
+# A7CC (PRAT): Registre de données, port A:
+bit 0-7 (entrée): lecture des manettes de jeu.
+# A7CD (PRB1): Registre de données, port B:
+bit 0-5 (entrée): convertisseur digital/analogique.
+bit 6 (entrée): action manette de jeu 0.
+bit 7 (entrée): action manette de jeu 1.
+# ATCE (CRAl): Registre de contrôle, port A:
+CAT (entrée): action manette de jeu 0.
+# A7CF (CRB1): Registre de centrôle, port B:
+CcB1 (entrée): action manette de jeu 1.
+
+=== PAGE 246 ===
+Le moniteur du M06 Page 57
+Attention : ce PIA est partagé avec ie PIA imprimante et
+le PJIA souris,
+19,4,3 Le PIA imprimante
+# A7CC (PRA2): Registre de données, port A:
+bits 7-4 et 1-0 (sortie): données en parallèle.
+#* A7CD (PRB2): Registre de données, port B:
+bit 1-0 (sortie) données en parallèle (bit 3-2 de PRA2)
+#* A7CF (CRB2): Registre de contrôle, port B:
+CB1 (entrée): Busy
+CB2 (sortie): Strobe
+Attention : ce PIA est partagé avec le PIA souris et le
+PIA jeu.
+19.4.4 Le PIA souris
+# A7CC (PRA3): Registre de données, port A:
+bitO (entrée): bouton gauche de la souris
+bit1 (entrée): bouton droit de la souris
+bit2 (entrée): encodeur rotatif X
+bit3 (entrée): encodeur rotatif Y
+# A7CE (CRA3): Registre de contrôle, port A:
+CAT (entrée): interrupt encodeur X
+CA2 (entrée): interrupt encodeur Y
+Attention : ce PIA est partagé avec le PIA imprimante et
+le PIA jeu.
+19,4,5 La palette EF 9369
+# A7DA (DREG) (Lec/Ecr) Registre de données
+*# A7DB (AREG) (Ecriture) Registre d'adresses
+ATTENTION : Ne pas lire la case A7DB car il en résultera
+une recople parasite de certaines cases de la palette dans
+d'autres,
+
+=== PAGE 247 ===
+Le moniteur du MO06 Page 58
+19.4,6 Le gate mode page
+Voir la documentation qui lui est consacrée.
+19.4,7 L'interface de communication SY6551
+# A7E8 (SIOTRANSM) (Ecriture) Registre de transmission des données
+(SIORECEPT) (Lecture) Registre de réception des données
+# A7E9 (SIORESET) (Ecriture) Registre de RESET
+(SIOSTATUS) (Lecture) Registre d'état
+# ATEA (SIOCMDE) Registre de commande
+# A7EB (SIOCNTRL) Registre de contrôle |
+
+=== PAGE 248 ===
+Le moniteur du M06 Page 59
+20 PRISE DE LA SOURIS
+Au niveau du MO6, la souris est connectée sur la prise jeu
+0. Désignons par I toute entrée sur la prise jeu et par 0 toute
+sortie vers la souris. Le schéma de la prise est le suivant:
+mm directions
+15 4 3 2 11 > X+
+1 9 8 7 6 1! !
+mms V
+Y+
+Pin 1:I1 Gachette 1 XB/YB _—— ——
+Pin 2:J Gachette 2
+Pin 3:1 XB XA/YA _——— —…— —…—
+Pin 4:]I YB
+Pin 5:0 (+5v) sens(+) sens(-)
+Pin 6:1 YA
+Pin 7:1 XA
+Pin 8:0 Pull down de 20 Ohms.
+Pin 9:0 (Gnd)
+Analyse: Toute gachette relachée renvoie un niveau "1",
+Lors de son fonctionnement la souris fournit 2 signaux en
+quadrature pour chaque direction X et Y. La fréquence dépend de
+la vitesse de rotation de la boule, Le logiciel doit tester les
+variations de niveau des sorties À et B, en déduire le sens de
+rotation et incrémenter ou décrémenter les compteurs.
+Les deux prises jeu sont connectées au PIA jeu selon les
+affectations suivantes :
++5v PA3 PA2 PAT PAO +5v PA7 PA6 PAS PAU
+15 4 3 2 T1 1 5 [| 3 2 11
+1 9 8 7 6 ! 1 9 8 7 6 1!
+GND PBO PB2 PB6 GND PB1 PB3 PB7
+CAT CA2
+Prise 0 Prise 1
+La souris doit être connectée sur la prise jeu ©. Par
+ailleurs sur chacune, chaque bit peut être programmé pour
+fonctionner en entrée ou en sortie. Ainsi on peut facilement,
+d'une part détecter le type de périphérique branché et d'autre
+part s'adapter à ce dernier,
+
+=== PAGE 249 ===
+Le moniteur du M06 Page 60
+
+21 DIFFERENCES ENTRE LE MO5 ET LE MO6
+
+Ce chapitre résume les différences entre le M05 et le M06.
+I1 reprend ces différences tant au niveau de la page zéro et des
+points d'entrée qu'au niveau des PIA et gate mode page. Les
+différentes machines sont différenciables au niveau de la
+lecture de l'octet FFFOH :
+0 : MO5
+1 : M06
+
+11 s'entend qu'une maohine de numéro d'ordre n supporte
+tous les points d'entrée des machines de numéro 0 à n.
+21.1 Différences des points d'entrée
+
+Les initialisations sont faites selon la machine,
+
+PUTC$ permet d'accéder aux divers modes d'affichage.
+
+Le générateur de caraotère du G2 a été étendu au degré.
+
+GETSC peut lire le degré,
+
+PLOT$ et DRAW$ gèrent les modes du M06.
+
+KTST rend des valeurs supplémentaires pour les nouvelles
+touohes,
+
+Une fermeture des interruptions interdit la lecture de la
+souris,
+
+GETS$ gère les caractères du G2.
+
+RSCO$ est nouveau : gestion de la RS232.
+
+GEPE$ et PEIN$ sont nouveaux : lecture de la souris.
+
+SETP$ est nouveau : programmation de la palette,
+
+L'instruction SWI2 permet d'appeler l'extramoniteur,
+21.2 Différences des registres de la page zéro
+
+STATUS : le bit 5 donne la version QWERTY/QWERTZ sur la
+version export.
+
+GRCODE (1 octet : code graphique imprimante) est remplacé
+par SCRMOD (1 octet : mode d'affichage),
+
+=== PAGE 250 ===
+Le moniteur du M06 Page 61
+Les octets réservés de 2077H à 207EH sont occupés par:
+CONFIG (1 octet : configuration de la machine).
+XMOUSE (2 octets : position de la souris en X),
+YMOUSE (2 octets : position de la souris en Y),
+CPMUTE (1 octet : compteur pour faire taire la souris),
+Le sommet de la pile système est réservé pour les registres
+suivants :
+MA7E7 (1 octet : copie du registre du gate A7E7H).
+RS.OPC (1 octet : registre de commande de la RS232),
+RS.STA (1 octet : registre d'état de la RS232),
+MODE (1 octet : type de transmission de la RS232).
+VITESSE (1 octet : vitesse de la RS232).
+SAVTOUR (1 octet : sauvegarde de la couleur du tour),
+Les 2 derniers octets de LPBUFF sont récupérés pour la
+souris:
+DXMOUSE (1 octet : X relatif de la souris),
+DYMOUSE (1 octet : Y relatif de la souris),
+21.3 Différences des PIA et registres mémoire
+Cette partie donne les différences matérielles entre le MO5
+et le M06.
+21.3.1 Le PIA système 6821
+# A7CO (PRA): Registre de données, port A,
+MO5 biti-4 (sortie) : couleur du tour
+MO5 bit5 (entrée) : bouton crayon optique
+MO6 birti (entrée) : bouton crayon optique
+MO6 bit2 (sortie) : mute souris
+MO6 bit3 (sortie) : ligne X8 du clavier
+MO6 bit (sortie) : LED de SHIFT LOCK
+M06 bit5 (sortie) : Commutation banque ROM
+# A7C2 (CRA): Registre de contrôle, port A:
+MO6 CAT (entrée) : signal code barre
+
+=== PAGE 251 ===
+Le moniteur du M06 Page 62
+
+21,32 Le PIA jeu
+
+Le PIA jeu est partagé avec la souris et l'imprimante.
+Voir les affectations au $ 19,1,
+21:33 L'interface de communication
+
+Le MO6 gère la nouvelle interface de communication RS232.
+Il ne peut gèrer l'ancienne interface qui fonctionne sur les
+systèmes MO5. Ces mêmes systèmes ne peuvent accepter la
+nouvelle interface.
+21.3.4 Les banques RAM et ROM
+
+Le MO6 est équipé du gate mode page qui permet une gestion
+complète des banques RAM ec ROM. Voir la documentation du gate
+mode page pour utiliser pleinement cette machine,
+
+=== PAGE 252 ===
+L'Extramoniteur du MO6 Page 1
+DESCRIPTIF DE L'EXTRAMONITEUR DU M06
+SOMMAIRE
+1 GENERALITES ET INITIALISATION ............ssessesssoesesss3
+1.1 Principes généraux .....sorossssesesnesssesmmseseeeess.e
+1.2 Initialisation d'EXTRAMON .........s..sssssosoosssssu.ee
+2 LE GRAPHIQUE ......s.sscrssenssenssmsemesenssssssosseosses
+2.1 Généralités ....ssssssnenmresese sense ssseneos ee
+2.2 La fenêtre de travail .........ssoessesosessseonsessecese
+2.3 Choix du type de tracé .....ssessenrsssessssesecnesoses.l
+2.4 Le tracé d'un point ........sssesssesssesensessssses...S
+2.5 Le tracé de droites ..........ssessessvesesssssseseseee. 06
+2.6 Le motif de remplissage ........ssessess.sereessssess.ee6
+2.7 Le tracé de rectangles .........secsesssessesessessos se
+2.8 Le tracé d'ellipses ...........esssssessessssseesoeses 8
+2.9 Le remplissage d'une zone ....,.....ssvesssssesssssssse 10
+2.10 Le Micro-Interprèteur Graphique MIG ...........se...s 10
+2.11 Codage et décodage d'images ....,.....sesvsnsesssesese 12
+3 LES TORTUES ..... suce sceceseons seems sssseonessesss 14
+3.1 Généralités .. secs sneresssessssenessssesssesesese 14
+3.2 L'initialisation ............sossesssresmssneuressecse 14
+3.3 La visibilité .......s.osseneeresssssesssesesssssesesee 14
+3.4 Le déplacement .......sssssresssesmesssessssssemseseees 15
+3.5 La direction .....ossssssesseseosesssuesssssssesssressee 15
+3.6 La rotation .........ssessssssssssssssssesssssouesss.se 15
+3.7 La taille sus ssssoscessessessessssssessseeee 16
+3.8 La trace .....ssesssesosssssssseesssssesesssussssressee 16
+3.9 La vitesse .. osseuse sssseses ee 16
+3.10 Le positionnement ......sssssssussssssessessssessesese 17
+3.11 La compilaticen d'une forme ......ess.ssscsscsocsssses 17
+4 LES MATHEMATIQUES ......sooscosossssssssessssucssesssseses 19
+4,1 Généralités .......coososssesssesssssssesscessssesesess 19
+4,2 Les opérations unaires ......scosessssssessssseucsss esse 19
+4,3 Les opérations binaires .......eseessssessessssuocsese 19
+4.4 Description de l'accumulateur .......s00%%%.+ 19
+4,5 Les échanges mémoire avec accumulateur .....ssssessee es 20
+4,6 La liste des fonctions ......ssessessssssssssssceseces 21
+5 LE DOS ....ssoscsssscssssessssess secs ssssssessseeos ess 24
+5.1 L'initialisation du DOS «see ssesesssseessseuseesss see 24
+5.2 Le cache disque css sensor serons so eee 24
+5.3 L'ouverture d'un fichier ..ccccssereseeeeeeeeseseeee se 25
+5.4 La lecture d'un caractère .eccccecceseeeeeseeseeesseese 26
+5,5 L'écriture d'un caractère ...ccecesececesseereceeereeee 26
+
+=== PAGE 253 ===
+L'Extramoniteur du MO6 Page 2
+5.6 L'accès direct .....ss.sssssesssseroseneresenssroresere2T
+5,7 La fermeture d'un fichier ..,,,.,,,,,..ssssssssssssseorss2t
+5.8 La lecture du catalogue .,.,,,,,,,,,s»ssevsesrrvsss 20
+5.9 La lecture du nom d'une disquette .,,,,.,,,,,,»»»v9 20
+5.10 Le backup d'une disquette ..,,,,,,,..,...r»resss»vrrre29
+5.10.1 Lecteur source différent du lecteur destination ...,29
+5,10.2 Lecteur source = lecteur destination .,,,,,,,,,»999»29
+5.10.3 New-Backup ..... ses esssvonnennenensessesneress 29
+5.11 La copie d'un fichier ..,.,.....».osess»essserssessees 30
+5.12 La destruction d'un fichier ,,.,,,,,,,sss»rvennsserrse3
+5,13 Le changement de nom d'un fichier ,,,,,,,,,,ss»»s99.31
+5,14 L'initialisaticen d'une disquette .,.,,.,,.,..,.,,,,,,,,,31
+5,15 La place libre sur une disquette ,.,,.,.,,,,,,e,e»»vvnee 32
+5.16 La taille d'un fichier ..,,..,.,..,»s»esr»enresrrrssres 3
+5,17 Le numéro d'enregistrement courant ,,,,,..,..sss.seee 33
+6 L'EDITEUR ..,...,,,.,.s.sssssssecesnmenessrenvesssssossess 34
+7 L'INTERPRETEUR MUSICAL ,.,..,.,,,,,,...»erseeerrrersesseses 35
+8 LES MESSAGES D'ERREUR EN ANGLAIS ..,,,,,,,,...,es.»se9ee 36
+9 UTILISATION DE L'EXTRAMONITEUR SOUS BASIC 128 ...,,,,,.,,,937
+10 LES EQUATES .,,,.,.,,.,,,.ssesssssosensessesecesssvessess 30
+
+=== PAGE 254 ===
+L'Extramoniteur du MO6 Page 3
+1 GENERALITES ET INITIALISATION
+1,1 Principes généraux
+
+On peut utiliser EXTRAMON sur tout M06. L'appel se fait à
+l'aide de l'instruction SWI2 du microprocesseur 6809, IL suffit
+d'utiliser l'instruction SWI2 avec le registre B contenant le
+numéro de la fonction veulue (voir la liste des fonctions dans le
+$10). Quelques précautions d'emploi sont indispensables :
+
+a/ Ne pas avoir de sous-programmes d'interruption dans
+l'espace BOOOH-EFFFH.
+
+b/ Avoir resété EXTRAMON avant toute chose avec RESETC (à
+froid) ou RESETW (à chaud) .
+
+e/ Si on utilise le disque, il faut avoir indiqué les zones
+tampons grâce à FCBINI.
+
+d/ Il est important de penser à rattraper les erreurs
+rendues par EXTRAMON. A la sortie de toute routine (sauf si on
+est trés sûr de soi) 11 faut tester le registre B, celui-ci
+indique un code d'erreur ou zéro si tout c'est bien passé. Les
+codes d'erreur correspondent au code d'erreur de Basic (Voir
+table des codes d'erreur),
+
+e/ Les paramètres d'entrée passent par les registres du
+6809, d'autres par la ram dans la zone 2100H-22FFH,. Les
+paramètres de retour sont tous en ram. Tous les registres sauf B
+sont préservés.
+
+1.2 Initialisation d'EXTRAMON
+# point d'entrée : RESETC (00)
+#* paramètres de retour :
+- NBANK (218CH) Nombre de banques (toujours 6).
+- MODELE (227BH) Numéro de modèle
+00H sur MO6
+- TYPDSK (2219H) Type de contrôleur
+00H contrêleur simple densité 80K
+01H contrôleur double densité 5"1/4
+02H contrôleur double densité 3"1/2
+03H contrôleur QDD 50K
+
+Le premier appel d'EXTRAMON doit être l'appel à RESETC.
+Cette routine initialisera la zone mémoire d'EXTRAMON et fera un
+test (non destructif) de la RAM. En retour la variable NBANK
+contiendra le nombre de banques ram présentes dans le système.
+La densité des drives est initialisée en fonction du type de
+contrôleur, simple densité sur un contrôleur simple densité et
+double sur un contrôleur double. Lors d'un démarrage à chaud, il
+faut appeler RESETW (01)
+
+=== PAGE 255 ===
+L'Extramoniteur du MO6 Page 4
+2 LE GRAPHIQUE
+2.1 Généralités
+Avant d'appeler les routines graphiques, 11 faut au moins
+appeler une fois la routine CHOIX pour choisir son mode de tracé
+et avoir défini sa fenêtre de travail. La plupart des routines
+graphiques travaillent à partir du point (XXXXX,YYYYY) qui est le
+curseur graphique. Le curseur graphique est le centre des
+ellipses, le 1er coin des rectangles et des drecites etc...
+2.2 La fenêtre de travail
+Il n'y a pas d'appel à faire pour régler la fenêtre de
+travail, 11 suffit de modifier les registres XL,YB et XR,YT
+(XLeft, YBottom, XRight, YTop). Mais attention, 11 n'y a pas de
+vérification de la part d'EXTRAMON. Il faut absolument
+initialiser la fenêtre car il n'y en a pas par défaut et aucun
+graphique ne serait affiché.
+XL (21A5H-21A6H) la marge gauche.
+YB (21A7H-21A8H) la marge haute.
+XR (21A9H-21AAH) la marge droite.
+YT (21ABH-21ACH) la marge basse.
+Ces 4 registres 16 bits sont en pixels.
+Pour travailler sur l'écran complet en 40 colonnes, 11 faut
+mettre : XL=0, XR=319, YB=0, YT-=-199.
+2.3 Choix du type de tracé
+#* peint d'entrée : CHOIX (28)
+#* paramètres d'entrée :
+- TRATYP (21A0H) Type de tracé de 0 à 3
+- COULEUR (219FH) Couleur de -16 à +15
+- WITH (2288H) Flag avec ou sans couleur
+00H ==> avec la couleur
+FFH ==> sans la couleur(forme seule)
+EXTRAMON a initialisé un maximum de choses pour que les
+futures opérations graphiques scient le plus rapide possible.
+h Il y a 4 types d'écran gérés par EXTRAMON, ceux ci doivent
+être choisis préalablement grâce à PUTC$ par une séquence ESC :
+
+=== PAGE 256 ===
+L'Extramoniteur du MO6 Page 5
+
+Le plan 320x200, 16 couleurs, dit mode MO5
+
+Le plan 640x200, bicolore, dit 80 colennes
+
+Le plan 320x200, 4 couleurs, dit Bitmap 4 couleurs
+
+Le plan 160x200, 16 cceuleurs, dit Bitmap 16 couleurs
+
+Les modes Page, Page2 et Overlay sont vus par EXTRAMON
+comme le Bitmap4. Le mode Triple Overlay n'est absolument pas
+géré.
+
+À chaque fois que vous voulez changer un de ces paramètres,
+il faut appeler la routine CHOIX. Le type de tracé doit être
+dans TRATYP, la couleur dans COULEUR.
+
+TRATYP = O ==> tracé normal
+
+TRATYP = 1 ==> transparent (ou logique)
+TRATYP = 2 ==> inversion (ou exclusif)
+TRATYP = 3 ==> mode "et"
+
+Dans le mode M05, des couleurs négatives feront tracer en
+fond au lieu de forme. Si WITH est à FFH seul le plan mémoire
+FORME est affecté.
+
+En mode Bitmap 4 couleurs, seuls les 2 bits de poids faibles
+de COULEUR sont pris en compte. L'octet WITH à FFH fait que l'on
+n'écrit plus que dans le plan FORME (ici plan ROUGE).
+
+En mode 80 colonnes, seul le signe de COULEUR agira sur le
+tracé (trace de 1 ou de 0). L'octet WITH n'a pas d'effet.
+
+2.4 Le tracé d'un point
+# point d'entrée : PSETXY (25)
+#* paramètres d'entrée :
+- registres 6809 X et Y Point à afficher
+
+#* paramètres de retour :
+
+- XXXXX, YYYYY Prend la valeur du point affiché
+
+Le point n'est tracé que s'il est à l'intérieur de la
+fenêtre,
+
+Exemple :
+
+LDX 4100
+
+LDY 450 Le point (100,50)
+
+LDB #PSETXY Appel la routine PSETXY
+SYI2
+
+=== PAGE 257 ===
+L'Extramoniteur du M06 Page 6
+2.5 Le tracé de droites
+* point d'entrée : LINE (26)
+* paramètres d'entrée :
+- XXXXX (21A1H-21A2H) Point de départ du tracé
+- YYYYY (2143H-21A4H) ,
+- registres 6809 X et Y Point d'arrivée
+#* paramètres de retour :
+- XXXXX,YYYYY Prend la valeur du point d'arrivée.
+. La portion de droite située à l'intérieur de la fenêtre est
+tracée.
+Exemple :
+LDX 4100
+LDY 450
+STX XXXXX Du point (100,50)
+STY YYYYY
+LDX #200
+LDY #150 Au point (200,150)
+LDB LINE Trace la ligne (100,50)-(200, 150)
+SWI2
+LDX 4300
+LDY 423
+LDB ÉLINE Puis la ligne (200,150)-(300,23)
+SW12
+e.e XXXXX x
+YYYYY
+rea X
+rea T
+Y
+2.6 Le motif de remplissage
+Pour tout remplissage, 11 faut fournir un motif, Un motif
+est une suite de 8 octets avec les mêmes conventions que les
+caractères graphiques de PUTC$. Il faut fournir dans MACP
+(227DH-227EH) un pointeur vers ce motif.
+
+=== PAGE 258 ===
+L'Extramoniteur du MO6 Page 7
+ON °°°
+a
+MU E=
+1
+ads 19 18£ine [RTL
+la forme du NTI
+caractère AE:
+HUE
+ITU
+El
+UE
+TE
+LU rrrr
+2,7 Le tracé de rectangles
+* point d'entrée : BOX (27)
+#* paramètres d'entrée :
+- XXXXX (214A1H-21A2H) Point de départ du tracé
+- YYYYY (21A3H-21A4H)
+- registres 6809 X et Y Point d'arrivée
+- FILFLG (21EFH) 00H ==> rectangle vide
+FFH ==> rectangle plein (BOXF)
+- MACP (227DH-227EH) Motif de remplissage
+
+#* paramètres de retour :
+
+— XXXXX,YYYYY Prend la valeur du point d'arrivée.
+
+La portion de rectangle située à l'intérieur de la fenêtre
+est tracée.
+
+La procédure d'appel est identique au tracé de droite, 11
+suffit d'appeler BOX à la place de LINE. Mais il y a un plus, le
+registre FILFLG permet d'obtenir un rectangle plein s'il est
+différent de oO. Le remplissage se fera avec le motif que vous
+aurez choisi (pour cela, il faut mettre dans MACP un pointeur
+vers les 8 octets de votre motif). Le remplissage se fait dans
+le mode courant d'affichage choisi lors de l'appel à la routine
+CHOIX (normal, transparent ou inversion).
+
+=== PAGE 259 ===
+L'Extramoniteur du MO6 Page 8
+0.0 XXXXX x
+YYYYY
+reg X
+reg Y
+Y
+e.e XXXXX x
+TTYYY MERLLRL LS
+es reg XX
+reg Y
+Y
+fi1f19=S8rr
+2.8 Le tracé d'ellipses
+# point d'entrée : CIRCLE (24)
+# paramètres d'entrée :
+= XXXXX (21A1H-2142H) Centre de l'ellipse
+= YYYYY (2143H-2144H)
+- AXEH (21F1H) Rayon horizontal
+- AXEV (21FOH) Rayon vertical
+- FILFLG (21EFH) 00H ==> Ellipse vide
+FFH ==> Ellipse pleine (CIRCLEF)
+- CAMFLG (21F2H) 00H ==> Ellipse complète
+FFH ==> Portion d'ellipse (camembert)
+- ALPHA1 (21F3H-21F6H) Angle départ
+- ALPHA2 (21F7H-21FAH) Angle fin
+
+La portion d'ellipse située à l'intérieur de la fenêtre est
+tracée.
+
+Le centre de l'ellipse est le curseur graphique
+(XXXXX,YYYYY). Les rayons horizontal et vertical sont les octets
+AXEH et AXEV. Le registre CAMFLG à OFFH permet le tracé d'arc
+d'ellipse (c'est le camembert). Il faut alors donner en radian
+
+=== PAGE 260 ===
+L'Extramoniteur du MO6 Page 9
+(réel 4 : voir $3) les 2 angles de l'arc (dans ALPHA1 et ALPHA2:
+4 octets chacun), Pour terminer 11 suffit d'appeler CIRCLE,
+FILFLG a ici le même sens que dans BOX.
+XXXXX x
+a.0
+fee
+TYYYY
+axen
+Y +
+XXXXX x
+6.0
+D ÉÉRRRRNRRED fev
+YYYYY CRE Faire
+Y axen
+fi1f1a=srr
+XXXXX x
+e.0
+bre
+TYYYT
+alphai
+alpha
+Le
+axen
+++
+FITF18-8rr
+
+=== PAGE 261 ===
+L'Extramoniteur du M06 Page 10
+2.9 Le remplissage d'une zone
+
+# poinr d'entrée : PAINT (29)
+
+#* paramètres d'entrée :
+= XXXXX (21A1H-21A2H) Point de départ
+- YYYYY (21A3H-21AUH)
+- DEBZON (216BH-216CH) Zone mémoire de travail
+- FINZON (216EH-216FH) Fin de cette zone
+- MACP (227DH-227EH) Motif de remplissage
+
+La routine PAINT d'EXTRAMON permet de peindre une surface,
+Le curseur graphique (XXXXX,YYYYY) est le point de départ du
+remplissage. La couleur de remplissage sera celle définie par le
+dernier appel à la routine CHOIX. Toute la zone (de la fenêtre)
+ccennexe de même couleur que le point (XXXXX,YYYYY) sera peinte.
+I1 faur fournir une zone de travail entre DEBZON et FINZON, Si
+cette place est insuffisante pour la complexité du dessin, une
+erreur Out of Memory est rendue, Le motif de remplissage est
+celui fourni par MACP (227DH-227EH),
+
+2.10 Le Micro-Interprèteur Graphique MIG
+
+# point d'entrée : MIG (30)
+
+# paramètres d'entrée :
+
+- registre 6809 X Pointe vers le deasin à interpréter
+- XXXXX (21A1H-21A2H) Point de départ
+- YYYYY (21A3H-21AUH)
+
+La rouvrine MIG permet de tracer des figures complexes en un
+minimum de place, si ce n'est de temps. Vous avez choisi votre
+type de tracé par la routine CHOIX, ainsi que votre fenêtre
+d'affichage,
+
+MIG est capable de tracer des points, des droites, des
+rectangles et des ellipses. Le code à passer est du type code
+opération suivi des opérandes. La liste des macros nécéssaires
+pour générer le bon code est fourni dans le $10,
+
+Exemple :
+
+LDX #OBJET Le code est en OBJET
+
+LDB ÉMIG Appel à MIG
+
+SwWI2
+D Liste des macros
+OBJET FCB $06 REL
+
+FCB $0C,#$20,$30 LINEC 32,48
+
+FCB $11,$20,$32 ROND 32,50
+
+FCB $o STOP
+
+=== PAGE 262 ===
+L'Extramceniteur du M06 Page 11
+
+D'ceù en huit octets, en peut à partir du curseur courant
+
+tracer une dreite de manière relative de (32,48) de long, puis
+une ellipse de rayon horizontal 32 et vertical 50,
+Ceci donnerait en Basic,
+REM Si X,Y est le curseur graphique.
+LINE (X,Y)-(X+32,Y+48)
+X=X+32 : Y=Y+48
+CIRCLE (X,Y)32,50
+RETURN
+La plupart des commandes de MIG sont doublées de façon à
+pouvoir travailler sur des opérandes de 8 ou 16 bits, ceci afin
+de gagner de la place et du temps. Les commandes 16 bits
+ccmmencent par L (pour Long).
+
+Voici la liste des macros graphiques de MIG. Le code généré
+
+par ces macros sera interprèté par MIG.
+
+REL Paase en relatif.
+
+ABS Passe en absolu (ces 2 commandes permettent
+de passer des coordonnées de manière
+relative ou absolue, au cheix,..).
+
+LFCUR x,y Pesitionne le curseur graphique en Xx,y. X,y
+sont ici sur 2 cctets chacun,
+
+FCUR x,y identique à FCURL, mais x,y sont sur un
+octet chacun seulement, Utile peur les
+petits déplacements,
+
+LPOIN x,y Ecrit un point en x,y,
+
+POIN x,y Idem mais x,y sur 8 bits
+
+LLINE x,y Trace une ligne jusqu'en x,y.
+
+LINE x,y Idem mais 2 x 8 bits.
+
+LBOX x,y Trace un rectangle,
+
+BOX X,Y Idem mais 2 x 8 bits,
+
+LBOXF x,y Trace un rectangle plein,
+
+BOXF x,y Idem mais 2 x 8 bits.
+
+ROND a,b Trace une ellipse de rayon horizontal a et
+de rayon vertical b. Les 2 rayons acnt des
+cctets,
+
+RONDF a,b Idem mais l'ellipse est pleine.
+
+=== PAGE 263 ===
+L'Extramcniteur du M06 Page 12
+
+MOTIF ad Fournit un nouveau motif de remplissage :
+ad pointe sur les 8 octets décrivant le
+motif.
+
+RMOTIF ad idem mais permet d'adresser le motif de
+manière relative au compteur de programme de
+MIG. Ceci permet de générer des suites de
+commandes relogeables,.
+
+LRMOTIF ad Idem à RMOTIF mais en relatif 16 bits.
+
+En plus des commandes graphiques, vous disposez de quelques
+
+instructions de contrôle.
+
+CALL ad Permet l'appel à un sous-programme. Ce scus
+programme est bien entendu écrit lui aussi
+en MIG et doit se terminer par STOP qui est
+un retour de sous programme.
+
+RCALL ad Idem mais relatif au compteur de programme
+de MIG.
+
+LRCALL ad Idem mais relatif 16 bits
+
+DO n Permet de répéter n fois la séquence qui
+suit jusqu'au LOOP associé.
+
+MULTIP n Permet de multiplier l'appel à une fenction.
+Si vous devez appeler 18 fois LINEC de
+suite, 11 vaut mieux appeler :
+
+MULTIP 18
+LINEC x1,y1 ,x2,y2 ,.,. ,x18,y18
+L'écenomie ici réalisée est de 15 octets...
+2.11 Codage et décodage d'images
+
+# point d'entrée : CODE (69)
+
+Tout d'abord peur coder un dessin :
+
+#* paramètres d'entrée :
+
+- PUTFLG (2249H) 00H
+- XO0COD (21D6H), YOCOD (21D7H) Coin supérieur gauche
+- X1COD (21D8H), Y1COD (21D9H) Coin inférieur droit
+- DEBZON (216BH-216DH) Début de la zone résultat
+- WITH (2288H) O0H ==> avec la couleur
+FFH ==> sans la couleur
+- PASSCD (21DBH) 00H ==> Codage virtuel
+FFH ==> Code, range en mémoire
+# paramètres de retour :
+- LSTBYT (21DCH-21DEH) le 1er octet libre après le codage
+
+=== PAGE 264 ===
+L'Extramoniteur du M06 Page 13
+
+La zone mémoire est remplie si PASSCD était à FFH, sinon
+seul le registre LSTBYT est mis à jour. Ceci permet de tester si
+une Zone mémoire est suffisante pour coder l'image de l'écran.
+
+Les coins de l'image sont donnés en coordonnées caractères,
+
+Pour décoder :
+
+* paramètres d'entrée :
+
+- PUTFLG (2249H) FFH
+
+- DEBZON (216BH-216DH) Adresse début du dessin
+
+- X0COD (21D6H), YOCOD (21D7H) Coin supérieur gauche
+
+- WITH (2288H) 00H ==> avec la couleur
+FFH ==> sans la couleur
+
+Le troisième octet de DEBZON contient le numéro de banque
+logique (de 1 à 6).
+
+Si le coin supérieur gauche est trop à droite ou trop bas
+pour que le dessin soit affiché, rien n'est tracé, Le décodage
+se fait dans le mode choisi par la routine CHOIX et permet donc
+le "ou exclusif" ainsi que d'autres gadgets (voir CHOIX).
+
+=== PAGE 265 ===
+L'Extramonireur du M06 Page 14
+3 LES TORTUES
+3.1 Généralités
+
+Une tortue est un objet graphique (f11 de fer) que l'on peut
+déplacer, agrandir, déformer et j'en passe. De manière générale
+pour parler à une tortue en appelant EXTRAMON, 11 suffit de
+choisir la fonction désirée dans B (comme d'habitude) et de
+fournir un pointeur vers le descripteur de la trortue dans le
+registre 6809 Y.
+
+Ce descripteur a une longueur de 1l4+n octets, n dépendant de
+la complexité de la forme de la tortue, La plupart des choses
+que l'on peut faire avec une tortue se font grâce à un appel
+d'EXTRAMON. Les quelques exceptions seront traitées en finale.
+
+La première chose à faire pour uriliser une tortue est de
+l'initialiser,. Ceci se fait avec la routine INITORTUE.
+
+La manipulation de ces commandes est très proche de celle du
+Basic 128,
+
+3.2 L'initialisation
+# point d'entrée : INITORTUE (39)
+* paramètres d'entrée :
+- registre 6809 Y Pointe sur une zone de 27 octets minimum
+h La zone est initialisée. La tortue est au centre de
+l'écran, invisible, crayon levé, échelle normale, direction er
+rotation nulles, mode "rapide" er en forme de triangle isocèle
+(un peu comme la tortue LOGO).
+3.3 La visibilité
+
+# point d'entrée : SHOW (33)
+
+# paramètres d'entrée :
+
+- registre 6809 Y Pointe sur le descriptreur de la tortue
+- registre 6809 A O0H ==> cache la tortue
+FFH ==> montre la tortue
+
+Pour pouvoir s'effacer et se réafficher facilement, les
+tortues sont déssinées en "ou exclusif", la couleur de la tortue
+est la couleur choisie dans CHOIX. En mode M05, la couleur n'est
+pas mise en inverse vidéo, ainsi une tortue peut laisser des
+traces de couleurs, Il est conseillé de demander sans la couleur
+(voir la routine CHOIX), si on veut éviter cer effet,
+
+=== PAGE 266 ===
+L'Extramoniteur du M06 Page 15
+3.4 Le déplacement
+# point d'entrée : FWD (37)
+* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur de la tortue
+- registre 6809 X Longueur -256 < X < 256
+Cette routine permet de déplacer la tortue dans sa direction
+courante, ceci correspond à la commande AVANCE de l'interpréteur
+LOGO. Le déplacement à lieu dans une fenêtre virtuelle sphérique
+de -32768 à 32767 en X comme en YŸ. La partie visible étant
+définie par la fenêtre de visualisation.
+3.5 La direction
+# point d'entrée : HEAD (34)
+#* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur de la tortue
+- registre 6809 X Angle (signé)
+- registre 6809 A OOH ===> L'angle est absolu
+FFH =2:=> L'angle est relatif
+Le sens positif est le sens des aiguilles d'une montre. Les
+angles sont fournis en 256ème de cercle, Les FWD diront
+maintenant dans cette nouvelle direction. En relatif, ceci
+correspond à l'instruction DROITE de l'interpréteur LOGO. En
+absolu, cela correspond à l'ordre FCAP (fixe cap).
+3.6 La rotation
+# point d'entrée : ROT (35)
+#* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur du crabe
+- registre 6809 X Angle (signé)
+- registre 6809 A OOH ===> L'angle est absolu
+FFH ===> L'angle est relatif
+Le sens positif est le sens des aiguilles d'une mentre. Les
+angles sont fournis en 256ème de cercle. La forme de la tortue
+tourne sur elle-même de X 256ème de cercle sans changer de
+direction.
+
+=== PAGE 267 ===
+L'Extramoniteur du M06 Page 16
+3.7 La taille
+# point d'entrée : ZOOM (36)
+#* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur de la tortue
+- registre 6809 X Agrandissement
+- registre 6809 A OOH ===> L'agrandissement est absolu
+FFH ===> L'agrandissement est relatif
+L'agrandissement est limité de manière absolue entre O0 et
+255. Attention ! Il est déconseillé de trop agrandir un objet,
+EXTRAMON ne teste rien pour une question de rapidité, mais si un
+segment d'un objet dépasse 256 pixels, 11 peut être mal affiché.
+3.8 La trace
+# point d'entrée : TRACE (31)
+* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur de la tortue
+- registre 6809 A OOH ===> Lève le crayon
+FFH ===> Baisse le crayon
+A chaque objet est associé un crayon, ceoi permet de
+dessiner oomme avec LOGO. Le tracé se fait dans le mode courant
+choisi avec la routine CHOIX. Ceci correspond aux ordres LC et
+BC de l'interprèteur LOGO.
+3.9 La vitesse
+# point d'entrée : ANIME (32)
+#* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur du lièvre
+- registre 6809 A OOH ===> Mode rapide
+FFH ===> Mode lent
+Ceci permet de moduler la qualité de l'affichage en donnant
+priorité à la vitesse ou au suivi de l'affichage. En mode
+"lent", on réaffiche l'objet à chaque modification. Alors qu'en
+mode "rapide", EXTRAMON ne réaffiche que lors d'un déplacement de
+l'objet, En particulier, les actions de Z0O0M et de ROT sont
+différées au prochain mouvement de l'objet. Ceci permet de
+modifier plusieurs paramètres de la tortue assez rapidement. On
+peut aussi pour des questions de vitesse, ou plus simplement pour
+déplacer la tortue autrement que par FWD, modifier directement
+certains octets du descripteur. Les modifications étant faites,
+11 faut appeler MOVE pour voir les medifications à l'écran. on
+peut ainsi en un seul appel à EXTRAMON changer la taille, la
+
+=== PAGE 268 ===
+L'Extramoniteur du MO6 Page 17
+position, la retation, etc... de l'objet.
+3.10 Le positionnement
+# point d'entrée : MOVE (38)
+* paramètres d'entrée :
+- registre 6809 Y Pointe sur le descripteur de la tortue
+Voici la liste des choses modifiables dans le descripteur :
+TX (en Y+6) abscisse de la tortue (3 octets)
+TY (en Y+9) ordonnée de la tortue (3 octets)
+TROT (en Y+12) rotation (1 octet)
+TTAI (en Y+13) taille (1 octet)
+TDIR (en Y+14) direction (1 octet)
+
+TX et TY sont connus au 256ème de pixel, le dernier cctet
+représentant la partie fractionnaire de pixel.
+
+Pour changer la forme de la tortue, 11 faut modifier la
+ferme standard proposée par EXTRAMON. Il faut demander à l'objet
+de se cacher avant de modifier sa forme pour ne pas avoir
+d'effets bizarres, Cette forme se trouve dans le descripteur à
+partir de TFORME (Y+16). La forme d'une tortue est une série
+d'avance et de tourne crayon levé ou baissé. La forme est donc
+définie par une série de doublet ou de triplets. Voici un
+exemple :
+
+TFORME FDB 0,15,0 LC AV 15 TD O (BC)
+FDB 30,117 AV 30 TD 117
+FDB 15,74 AV 15 TD 74
+FDB 30,74 AV 30 TD 74
+FDB 0,0
+
+Ce sont donc en géneral des doublets (LONGUEUR,ANGLE), mais
+si la longueur est zérce alors le doublet qui suit sera effectué
+crayon levé. Deux Zéros terminent la description. L'exemple est
+la forme par défaut des tortues,
+
+3.11 La compilation d'une forme
+# point d'entrée : CMPTORTUE (40)
+* paramètres d'entrée :
+- registre 6809 Y Pcinte sur la chaîne à compiler
+- FACLO (2151H) Longueur de la chaîne de caractères
+- registre 6809 X Pointeur sur une zene de rangement
+
+=== PAGE 269 ===
+L'Extramoniteur du M06 Page 18
+# paramètres de retour :
+- FACLO (2151H) Longueur du résultat
+La syntaxe est celle utilisée dans l'ordre TURTLE de Basic
+128.
+Le résultat de la compilation peut immédiatement être
+interprèté par les commandes tortues.
+
+=== PAGE 270 ===
+L'Extramoniteur du M06 Page 19
+
+4 LES MATHEMATIQUES
+4,1 Généralités
+
+Ceci est un ensemble de fonctions mathématiques toutes aussi
+passionnantes les unes que les autres. Avec celles ci vous
+pourrez additionner, multiplier, diviser et j'en passe, tout cela
+sur des réels courts ou longs et sur des entiers 16 bits signés.
+4.2 Les opérations unaires
+
+L'argument doit se trouver dans l'accumulateur FAC (voir
+plus bas). Dès lors un simple appel à SIN, COS etc... vous rend
+le résultat (dans FAC aussi bien sûr). Le type du résultat peut
+être différent du type de départ, par exemple SIN(entier) ==>
+réel 1.
+j.3 Les opérations binaires
+
+L'argument gauche doit être dans ARG et l'argument droit
+dans FAC. Les deux arguments doivent être de même type et le
+type dans VALTYP. Vous retrouvez le résultat sscompté dans FAC.
+Attention, le type du résultat peut ne pas tre celui des
+opérandes. Par exemple 20000+20000 somme de deux bons entiers
+signés ne peut être un entier signé, vous vous retrouverez donc
+avec un réel dans FAC; si vous avez des doutes regardez VALTYP.
+Si vous voulez que le calcul se fasse en double précision, 11
+faut que VALTYP=8 et que DBLFLG (2103H) scit à $FF.
+4.4 Description de l'accumulateur
+
+L'accumulateur principal s'appelle FAC,
+
+Pour un réel court, on aura les codages suivants :
+
+Les réels courts sont codés (sauf signe) sur 4 octets. Le
+ler octet est l'exposant E, les 3 autres la mantisse M.
+
+! Exposant-128 1!
+{ nombre := O.Mantisse x 2 !
+
+=== PAGE 271 ===
+L'Extramoniteur du M06 Page 20
+Ex Nombre = 100 décimal.
+Exposant = 87H = $410000111
+Mantisse = C80000H = %11001000 00000000 00000000
+7
+100 décimal = 0.C80000 2
+Remarque : pour ces routines, un exposant nul implique que
+le nombre est égal à zéro, ceci quelque soit la mantisse.
+En entrée de toute routine, le nombre doit être normalisé
+(le bit de poids fort de la mantisse doit être à 1). En sortie,
+EXTRAMON rend des nombres normalisés. Tant que vous utilisez des
+reutines EXTRAMON pour vos calculs, ceci est transparent pour
+vous,
+Voici les divers cemposants de FAC :
+Pour un réel court :
+FACEXP (214HEH) : exposant binaire (de -128 +127)
+FACHO (214FH) : mantisse 24 bits. poids forts
+FACMO (2150H) : mantisse poids moyens
+FACLO (2151H) : mantisse poids faibles
+FACSGN (2156H) : Signe de l'accumulateur
+VALTYP (2105H) : type de l'accumulateur (à 4)
+Pour un réel long, c'est identique sauf :
+VALTYP (2105H) : à 8
+(2152H-2155H) : H octets suivent la mantisse
+Peur un entier 16 bits :
+FACEXP,FACHO,FACSGN sont inutiles
+FACMO,FACLO contiennent l'entier
+VALTYP (2105H) : à 2
+Voici les composants de ARG :
+ARG (2159H) est le 2ème accumulateur, il vous servira pour
+les opérations binaires. IL est très semblable à FAC :
+ARGEXP , ARGHO, ARGMO, ARGLO (2159H-215CH) pour les réels 4
+DARGHO (215DH-2160H) +4 ccetets pour les réels 8
+ARGSGN (2161H) signe de l'argument pour réels
+ARGMO,ARGLO (215BH-215CH) pour les entiers.
+Dans FACSGN et ARGSGN seul le bit 7 est utilisé. Ce bit à 1
+représente un nombre négatif.
+},5 Les échanges mémoire avec accumulateur
+Les réels 4H sont en fait codés sur 5 octets dans
+l'accumulateur, c'est seulement en mémoire qu'ils n'utilisent que
+
+=== PAGE 272 ===
+L'Extramoniteur du MO6 Page 21
+4 octets. Ceci est pessible en codant le signe du nombre dans le
+bit de poids fert de la mantisse, ce bit étant un 1 peur un réel
+normalisé. Pour les réels longs, c'est pareil mais avec 4 cctets
+de plus pour la mantisse. Les routines fonctionnent aussi pour
+les entiers, X pcintant alcrs sur 2 cetets seulement.
+Pour utiliser les reutines de transfert mémoire vers
+accumulateur et vice versa, i1 faut mettre dans VALTYP le type de
+la variable, puis appeler une des routines de transfert avec le
+registre 6809 X pointant sur la variable à transférer.
+MOVFM (62) : accumulateur FAC := mémoire peintée par X
+MOVMF (63) : mémeire pointée par X := accumulateur FAC
+MOVAF (64) : accumulateur ARG := accumulateur FAC
+
+4.6 La liste des foncticens
+
+SGN (41) : Rend le signe de l'accumulateur dans
+FACMO,FACLO. L'accumulateur "entier" vaut
+ainsi 0, -1 cu 1.
+
+INT (42) : Rend la partie entière de l'accumulateur.
+
+ABS (43) : Rend la valeur absolue de l'accumulateur.
+
+SQR (44) : Rend la racine carrée de l'accumulateur. Le
+résultat est un nembre réel.
+
+LOG (45) : Rend le logarithme néprien de l'accumulateur.
+Le résultat est un nombre réel.
+
+EXP (46) : Rend l'exponentielle de l'accumulateur. Le
+résultat est un nombre réel.
+
+COS (47) : Rend le cosinus de l'accumulateur
+L'accumulateur est en radians. Le résultat
+est un nembre réel.
+
+SIN (48) : Rend le sinus de l'accumulateur.
+L'accumulateur est en radians. Le résultat
+est un nombre réel.
+
+TAN (49) : Rend la tangente de l'accumulateur.
+L'acounmulateur est en radians. Le résultat
+est un nombre réel.
+
+ATN (68) : Rend l'arctangente de l'accumulateur. Le
+résultat est un nembre réel.
+
+=== PAGE 273 ===
+L'Extramoniteur du M06 Page 22
+FRCTYP (50) : Conversien de type.
+# paramètres d'entrée :
+- VALTYP le type courant de l'accumulateur FAC
+- Si regAz=2 résultat entier 2.
+- Si regA=} résultat réel 4.
+- Si regA=8 résultat réel 8.
+FIXER (51) : Rend l'entier tronqué d'un réel. Le résultat
+est un réel.
+RND (52) : Rend un réel 4 aléatoire.
+NEGGO (53) : Effectue FAC := - FAC
+ADDGO (54) : Effectue FAC := ARG + FAC
+SUBGO (55) : Effectue FAC := ARG = FAC
+MULTGO (56) : Effectue FAC := ARG # FAC
+DIVGO (57) : Effectue FAC := ARG / FAC. Les arguments sont
+des réels 4 ou 8.
+EXPGO (58) : Effectue FAC := ARG * FAC. Les arguments sent
+des réels 4 cou 8.
+IMODO (59) : Effectue FAC := ARG MOD FAC. Les opérandes
+doivent être des entiers.
+IDIVO (60) : Effectue FAC := ARG Divisien entière par FAC.
+Les opérandes doivent être des entiers.
+FIN (65) : Conversion ASCII ==> Binaire.
+# paramètres d'entrée :
+- registre 6809 Y Pcinte sur ASCII fini par 00H
+# paramètres de reteur :
+- FAC Centient le nombre
+- VALTYP Le type du nombre
+Les conventions sent similaires à celles de
+Basic. FIN accepte aussi les constantes
+binaires, .octales cu  hexadécimales (Ex:
+&H3A0, &B100101001 eu &0177).
+
+=== PAGE 274 ===
+L'Extramoniteur du M96 Page 23
+PUFOUT (66) : Conversion Binaire ==> ASCII décimal.
+# paramètres d'entrée :
+- FAC (214EH) Le nombre à convertir
+- VALTYP (2105H) Le type de celui-ci
+- registre 6809 Y Pointe sur un tampon
+- PUMASK (217CH) Flag de PRINTUSING
+Le flag PUMASK permet d'utiliser le PRINTUSING
+comme Basic. Si le flag est nul, le format de
+scrtie sera chcisi par PUFOUT (au mieux 1!)
+sinen les octets DPWID et FLDWID permettent de
+choisir le nombre de chiffres avant le peint
+décimal, et après celui-ci. Le tampen doit
+être mis à 00H avant l'appel à PUFOUT.
+DPWID (217AH) nombre de chiffres après
+le point décimal.
+FLDWID (217BH) idem mais avant le point.
+PUMASK (217CH) Bit 0 Notation scientifique.
+Bit 2 Signe aprs le nombre
+Bit 3 Ferce le "+" pour les
+positifs
+Bit 5 Remplit d'#' au lieu
+d'espaces
+bit 7 USING or net USING.
+# paramètre de reteur :
+- FACMO Pointe sur l'ascii
+Attention, FACMO pointe sur l'ASCII dans le tampon que vous
+avez fourni à travers le registre Y. Votre
+nombre dans FAC a été détruit lors de la
+conversion.
+HOFOUT (67) : Conversien Binaire ==> ASCII héxadécimal ou
+octal.
+# paramètres d'entrée :
+- FACMO (2150H-2151H) le nembre à convertir
+en entier 2.
+- registre 6809 Y pointe sur un buffer
+résultat.
+- registre 6809 A 00H ==> sortie octale
+FFH ==> sertie héxa
+
+=== PAGE 275 ===
+L'Extramoniteur du M06 Page 24
+5 LE DOS
+
+Le DOS est compatible du format MICROSOFT(R), et la
+description des disquettes peut être trouvée dans le descriptif
+du moniteur du M06.
+
+ATTENTION : En double densité, le DOS n'utilise que 255
+cetets par secteur (sur 256 de disponibles).
+
+5.1 L'initialisation du DOS
+
+# point d'entrée : FCBINI (02)
+
+# paramètres d'entrée :
+
+- SECBUF (2197H) Pointe sur un buffer pour un secteur.
+256 ou 128 octets selon la densité.
+
+- FATPTR (2199H) Pointe la place libre pour 5 FATs.
+Il faut DSBLEN (166) octets par FAT.
+
+- registre 6809 Y Nombre de disques que l'on veut
+utiliser (5 au maximum).
+
+- registre 6809 A Nombre max de fichiers que l'on veut
+pouveir ouvrir en même temps.
+
+- registre 6809 X Pointe la zone libre peur FCBLEN
+(283) x A octets. Réserve la place
+pour A File Control Bleck.
+
+Après avoir démarré EXTRAMON par un RESETC, il faut
+initialiser les variables d'EXTRAMON liées aux disques. IL faut
+preciser où, comment, quand, etc... C'est-à-dire le nombre de
+disques que l'on veut pouvoir utiliser, et le nombre de fichiers
+que l'on veut pouvoir cuvrir en même temps. Ceci se fait par la
+routine FCBINI.
+
+La densité des disques est choisie par EXTRAMON au
+démarrage, il travaille en simple densité sur les contrôleurs
+simple densité 80K ainsi que sur les QDD, et utilise la double
+densité sur tous les autres centrôleurs. Il n'y a pas de gestion
+de disque RAM sur le M06. Il y a par contre la pessibilité
+d'utiliser un cache disque.
+
+5,2 Le cache disque
+# point d'entrée : INICACHE (70)
+# paramètres d'entrée :
+- ONOFF (22B0H) Flag avec ou sans cache.
+- BLOCS (22AEH) Pointe sur une table de descripteurs de blees.
+
+Pour celui qui n'a pas prévu le cache, il n'y en a pas
+Celui qui en veut un deit explicitement le demander. Le flag
+ONOFF (22B0H) doit être mis à FFH, le pointeur BLOCS (22AEH) doit
+
+=== PAGE 276 ===
+L'Extramoniteur du M06 Page 25
+adresser une table de descripteurs de caches. IL n'y a pas de
+limite au nembre de caches, chaque descripteur a une lengueur de
+8 octets divisés ainsi :
+
+KADRESSE (2 octets) Adresse du buffer
+
+KBANQUE (1 octet) Numéro de banque
+
+Réservés (5 cetets)
+
+Vous peuvez donc aveir autant de caches que vous le désirez,
+11 suffit d'initialiser les 3 premiers cctets de chaque
+descripteur vers une zene mémoire suffisamment grande pour lire
+une piste soit 257#16 en double densité et 129#16 en simple.
+KBANQUE est un numéro de banque logique cempris entre 1 et 6.
+EXTRAMON reconnait la fin de la table des descripteurs de cache
+lorsque un zéro est en première position.
+
+Apres avoir mis vos pointeurs à jour, il suffit d'appeler la
+routine INICACHE (70) pour que cela marche. N'oubliez pas de
+mettre ONOFF à FFH. Si veus avez des cheses à faire sans cache,
+il suffit de mettre ONOFF à zéro le temps nécessaire pour votre
+opération. Par exemple, vous pouvez ainsi interdire les caches
+en écriture et les autcriser en lecture seulement. Pour des
+opérations style SAVE ou LOAD, vous pouvez aussi interdire le
+cache disque car il n'apperte rien.
+
+EXTRAMON suppose que le disque n'est pas retiré du lecteur,
+si vous veulez le prévenir d'un risque de changement, il faut
+pesitionner le flag RSKCHG (2189H) à FFH. EXTRAMON considérera
+alors ses caches comme incorrects et ira relire le disque si
+nécessaire. Dans les opératicens impertantes tel CLOSE, KILL,
+etce.,. EXTRAMON vide ses caches.
+
+Le type de contrôleur est dans l'octet TYPDSK (2219H), ainsi
+le programmeur peut demander un cache sur QDD et pas sur disque,
+s'il préfère la sécurité à la vitesse.
+
+5,3 L'ouverture d'un fichier
+
+# point d'entrée : OPEN (03)
+
+On peut ouvrir un fichier selon trois modes, lecture,
+écriture ou accès direct en lecture/écriture,.
+
+* paramètres d'entrée :
+
+- DK.DRV (2049H) Numéro de drive.
+
+- FILMOD (224BH) Type d'accès
+M.SQI (10H) ouvre en input.
+M.SQ0 (20H) ouvre en output.
+M.RND (40H) ouvre en direct.
+
+- FILNAM (224FH-2259H) Nom du fichier, 11 caractères,
+
+- OPTBUF (225AH-2261H) Commentaire (écriture seule).
+8 octets, s'arrête au 1er $00.
+
+=== PAGE 277 ===
+L'Extramoniteur du MO06 Page 26
+En écriture, 2 autres flags :
+- FILTYP (224CH) Type de fichier
+- ASCFLG (224DH) FFH fichier ASCII
+OOH fichier binaire
+Pour l'ouverture d'un fichier en accès direct, voir détails
+supplémentaires dans PUTGET.
+#* paramètres de retour :
+- FCBNUM (2244H) Numéro logique de fichier.
+En lecture, 2 autres flags :
+- FILTYP (224CH) Type de fichier
+- ASCFLG (224DH) FFH fichier ASCII
+00H fichier binaire
+Remarque : Un numéro de fichier est rendu dans FCBNUM, il
+permet de distinguer les différents fichiers ouverts en même
+temps. Pour lire, écrire ou fermer un fichier, il suffit de
+mettre son numéro dans FCBNUM avant l'appel à la routine
+concernée, Tout ceci est transparent si on n'ouvre qu'un seul
+fichier.
+5.4 La lecture d'un caractère
+# point d'entrée : INPUT (05)
+# paramètres d'entrée :
+- FCBNUM (2244H) Numéro logique de fichier.
+#* paramètres de retour :
+- CARCOU (2196H) Le caractère lu.
+- EOFFLG (2178H) Flag de fin de fichier.
+Remarque : Si EOFFLG est mis, il n'y pas de caractère
+valide dans CARCOU.
+5.5 L'écriture d'un caractère
+# point d'entrée : PRINT (04)
+# paramètre d'entrée :
+- FCBNUM (2244H) Numéro logique de fichier.
+- registre 6809 A Caractère à écrire.
+
+=== PAGE 278 ===
+L'Extramoniteur du MO6 Page 27
+5.6 L'accès direct
+
+#* point d'entrée : PUTGET (07)
+
+Les 2 opérations principales sont PUT et GET d'un
+enregistrement.
+
+# paramètres d'entrée :
+
+- PUTFLG (2249H) OOH ==> GET
+FFH ==> PUT.
+- FCBNUM (2244H) Numéro legique de fichier.
+- registre 6809 X Numéro d'enregistrement désiré.
+# paramètres de retcur de PUT :
+- Le buffer est enregistré
+# paramètres de retour de GET :
+- Le buffer a été lu.
+
+Lors de l'appel de la routine OPEN, il faut préciser la
+longueur des enregistrements dans RLEN (2247H-2248H), ainsi que
+l'adresse d'un buffer dans BUFFRE (22AAH-22ABH). Ce buffer est
+bien sûr de longueur RLEN.
+
+Le 1er enregistrement est le numéro 1. Si X est nul,
+l'enregistrement suivant est pris (séquentiel par défaut).
+
+Remarque : Vous peuvez remplir eu vider le buffer veus
+même, cu passer par PRINT et INPUT si vous préférez. Ceux-ci
+vous préviennent en cas de dépassement du buffer,
+
+5.7 La fermeture d'un fichier
+
+# point d'entrée : CLOSE (06)
+
+#* paramètres d'entrée :
+
+- FCBNUM (2244H) Numéro legique de fichier.
+
+=== PAGE 279 ===
+L'Extramoniteur du M06 Page 28
+5.8 La lecture du catalogue
+# pcints d'entrée : DIRO (08), DIR1 (09)
+#* paramètres d'entrée :
+- DK.DRV (2049H) Numéro de drive
+- FILNAM (224FH-2259H) Filtre 11 caractères.
+# paramètres de retour :
+- NAMSEC (218EH) nul indique fin du catalogue.
+- NAMSLT (218FH-2190H) Pointe vers 32 octets.
+cctets 0-7 nom
+octets 8-10 extension
+octet 11 type de fichier
+octet 12 flag ascii binaire.
+octet 13 pointeur dans la FAT
+octets 14-15 taille du dernier secteur
+octets 16-23 commentaire sur 8 octets
+octets 24-31 réservés
+- FACMO (2150H-2151H) taille en Koctets du fichier.
+
+FILNAM sert de filtre pour le catalogue, des zéros binaires
+servant de joker. Si tout est à zéro, le catalogue complet est
+rendu. Le 1er appel se fait par DIRO, par la suite appel à DIRI.
+A chaque appel, DIR rend un nem de fichier.
+
+5.9 La lecture du nom d'une disquette
+# point d'entrée : RDVOL (21)
+#* paramètres d'entrée :
+- DK.DRV (2049H) Numéro de drive
+
+# paramètres de retour :
+
+- SECBUF (2197H-2198H) Pointe sur le nom (8 octets).
+
+=== PAGE 280 ===
+L'Extramoniteur du MO6 Page 29
+5.10 Le backup d'une disquette
+# points d'entrée : BACKUPO (10), BACKUP1 (11)
+#* point d'entrée : NEW-BACKUP (71)
+* paramètres d'entrée :
+- DK.DRV (2049H) Drive destination
+- registre 6809 A Drive source
+- DEBZON (216BH-216CH) Zone mémoire de travail
+- FINZON (216EH-216FH) Fin de cette zone
+# paramètres de retour :
+- SWPFLG (219DH) Flag : doit-on swapper ?
+5.10.1 Lecteur source différent du lecteur destination
+En ce cas DEBZON et FINZON doivent délimiter une zone
+mémcire d'au meins la longueur d'une piste c'est-à-dire 2 eu 4 Ko
+selon la densité du drive, sinon une erreur est générée.
+5,10,2 Lecteur sceurce = lecteur destination
+Ce BACKUP utilise toute la mémoire, de la banque 1 à la
+banque NBANK (218CH). Vous pouvez toujours modifier NBANK pour
+préserver votre mémeire. Le backup n'en sera que plus long. Le
+contrôle vous est rendu lersqu'un changement de disquette est
+nécessaire, à vous d'afficher le message nécessaire et de
+centinuer Le backup par un appel à BACKUP1. Le flag SWPFLG veus
+indique une demande de SWAP, Si SWPFLG est nul, c'est que
+l'oépration est terminée.
+5.10.3 New-Backup
+Ce point d'entrée est très proche de BACKUPO, la seule
+différence est une meilleure gestion mémoire. Les peinteurs
+DEBZON et FINZON sont alors sur 3 octets, le 3èeme étant un
+numéro de banque (entre 1 et 6). DEBZON et FINZON délimitent la
+zone utilisée dans tous les cas. Pour la suite du traitement
+dans le cas d'un backup mono-lecteur, il suffit d'appeler
+BACKUP1.
+
+=== PAGE 281 ===
+L'Extramoniteur du M06 Page 30
+5.11 La copie d'un fichier
+
+# points d'entrée : COPYO (12), COPY1 (13)
+
+# point d'entrée : NEW-COPY (72)
+
+# paramètres d'entrée :
+
+- registre 6809 X Pointe fichier source.
+- registre 6809 Y Pointe fichier destination,
+Les registres X et Y pointent sur une zone de 20 octets.
+octets 0-7 Nom
+octets 8-10 Extension
+octets 11-18 Commentaire
+octet 19 Numéro de drive.
+- DEBZON (216BH-216CH) Zone mémoire de travail
+- FINZON (216EH-216FH) Fin de cette zone
+#* paramètres de retour :
+- SWPFLG (219DH) Flag : doit-on swapper ?
+
+La taille minimum du buffer est de 20 octets. Mais une
+taille assez grande est presque indispensable dans le cas de
+copie avec SWAP.
+
+Comme pour BACKUP, 2 cas se présentent. Le cas d'une copie
+nécessitant un swap et celui qui n'en nécessite pas. Si les
+registres 6809 X et Y sont égaux, EXTRAMON suppose que
+l'utilisateur veut copier son fichier dans le même lecteur, mais
+sur une autre disquette et avec le même nom. En ce cas, si la
+zone tampon n'est pas assez longue pour contenir le fichier, COPY
+rend la main avec SWPFLG<>0. C'est alors au programme appelant
+d'afficher un message du style "PLEASE INSERT DESTINATION etc" et
+lorsque l'utilisateur a changé sa disquette, il faut rappeler
+COPY1 qui continue le travail. C'est fini pour le programme
+appellant lorsque SWPFLG est nul.
+
+Si X est différent de Y, il n'y a aucun problème et rien
+d'autre à faire. Attention il faut avoir réservé au moins 2 FCBs
+(voir FCBINI) pour pouvoir faire COPY.
+
+Le point d'entrée NEW-COPY est très proche de COPYO, la
+seule différence est une meilleure gestion mémoire. Les
+pointeurs DEBZON et FINZON sont alors sur 3 octets, le 3èeme
+étant un numéro de banque (entre 1 et 6). DEBZON et FINZON
+délimitent la zone utilisée dans tous les cas. Dans le cas d'une
+copie mono-lecteur, la suite se fait par appel de COPY1.
+
+=== PAGE 282 ===
+L'Extramoniteur du M06 Page 31
+5.12 La destruction d'un fichier
+# point d'entrée : KILL (14)
+#* paramètres d'entrée :
+- DK.DRV (2049H) Numéro de drive
+- FILNAM (224F4-2259H) Nom du fichier, 11 caractères.
+8 octets pour le nom.
+3 octets pour l'extension.
+# paramètres de retour :
+Sauf erreur, votre fichier est perdu (vous l'avez bien
+cherché).
+5.13 Le changement de nom d'un fichier
+#* point d'entrée : NAME (15)
+#* paramètres d'entrée :
+- registre 6809 *x Pointe fichier ancien nom.
+- registre 6809 Y Pointe fichier prochain nom.
+X comme Y pointent sur une zone de 20 octets.
+octets 0-7 Nom
+octets 8-10 Extension
+octets 11-18 Commentaire
+octet 19 Numéro de drive,
+EXTRAMON vérifie que le nouveau nom n'est pas déja présent
+sur la disquette,
+5.14 L'initialisation d'une disquette
+# point d'entrée : DSKINI (17)
+* paramètres d'entrée :
+- DK.DRV (2049H) Numéro de disque,
+- FILNAM (224FH-2256H) Nom de volume (8 octets).
+- DK.NUM (204DH) L'entrelacement désiré
+(7 est bien).
+- VERFLG (218DH) 00H pas de vérification
+80H Vérification (beaucoup
+plus lent).
+
+=== PAGE 283 ===
+L'Extramoniteur du M06 Page 32
+5.15 La place libre sur une disquette
+
+#* point d'entrée : DSKF (16)
+
+* paramètres d'entrée :
+
+- DK.DRV (2049H) Numéro de drive.
+
+* paramètres de retour :
+
+- FACMO (2150H-2151H) La place libre en Koctets
+
+5.16 La taille d'un fichier
+
+# point d'entrée : LOF (18)
+
+#* paramètres d'entrée :
+
+- FCBNUM (2244H) Numéro logique de fichier.
+
+* paramètres de retour :
+
+- FAC (214EH) Résultat en entier 16 bits
+(FACMO (2150H)) ou en réel 4
+selon la taille,pour le savoir
+il faut tester VALTYP (2 ou 4).
+
+Dans le cas des fichiers à accès direct, c'est le nombre
+d'enregistrements du fichier qui est rendu. En séquentiel, c'est
+le nombre de secteurs du fichier,
+
+Formule de calcul pour l'accès direct :
+
+LOF := ( NBoct # Nbsecteur = Inutiles ) / RLEN
+
+Avec :
+
+NBoct = Nombre d'octets par secteur
+
+NBsecteur = Nbre de secteurs du fichier.
+
+Iautiles = Nbre d'octets inutiles du dernier secteur
+
+RLEN = Taille d'un enregistrement,
+
+=== PAGE 284 ===
+L'Extramoniteur du M06 Page 33
+5.17 Le numéro d'enregistrement courant
+# point d'entrée : LOC (19)
+# paramètres d'entrée :
+- FCBNUM (22444) Numéro logique de fichier.
+#* paramètres de retour :
+- FACMO (2150H-2151H) Résultat en entier 16 bits
+LOC rend le numéro de l'enregistrement courant sur un
+fichier à accès direct. Sur un fichier à accès séquentiel, c'est
+le numéro du secteur courant qui est rendu,
+
+=== PAGE 285 ===
+L'Extramoniteur du M06 Page 34
+6 L'EDITEUR
+# point d'entrée : EDIT (22)
+#* paramètres d'entrée :
+- registre 6809 X Adresse du tampon
+- registre 6809 Y Fin du tampon (dernier
+octet utile)
+- DEFTXT (21E0H-21E1H) Pointe sur un texte se
+substituant à l'entrée clavier
+- INTFLG (22A94) Sémaphore de sortie rapide
+
+Le tampon est rempli lors de la frappe de la couche ENTREF,
+La fin de la ligne se reconnait par un 00H. Les accents sont
+codés avec les séquences SS2, Les caractères non reconnus par
+l'éditeur sont effaçés à l'écran. Si l'utilisateur frappe CNT-C,
+EDIT rend la main à l'application avec un tampon vide.
+
+ATTENTION : i1 ne faut pas fournir de tampon < 3
+caractères.
+
+Cette routine permet d'utiliser un éditeur du cype Basic
+aisément. En entrée l'appelant fournit un buffer, en sortie il
+recoit la ligne lue. Cer éditeur fonctionne en mode M05,en mode
+80 colonnes et en vert sur noir en bitmap 4 couleurs, Il a
+toutes les fonctionnalités de l'éditeur Basic bien connu.
+L'édition se fait dans la fenêtre courante (voir PUTC$ et ses
+séquences US pour fixer cette fenêtre),
+
+L'éditeur teste (quand il n'a rien d'autre à faire) l'octer
+IWNTFLG, si celui-ci devient différent de zéro, il y a une sortie
+de l'éditeur avec un tampon vide. Ceci permet à une application
+de reprendre la main si nécessaire, par exemple : IWTFLG peur
+être modifié dans une routine d'interruption, ou dans
+l'indirection de GETC$ du moniteur, si l'applicacion veut
+reprendre la main sur une touche fonction,
+
+On peut demander à l'éditeur de prendre un texte pointé par
+DEFTXT à la place de l'entrée clavier, le texte devant se
+terminer par un 00H. Pour ne pas avoir de texte par défaut, il
+faut faire pointer DEFTXT sur un 00H. Exemples: Basic s'en sert
+pour AUTO, en entrant dans l'éditeur DEFTXT pointe sur le numéro
+de ligne à afficher, ainsi ce numéro de ligne est écrit à l'écran
+comme si l'utilisateur l'avait frappé. Grace à l'indirection de
+SETC$ (sur M06 en redirectant les SWI), l'application peut faire
+pointer DEFTXT sur un texte lors d'un appui sur une touche
+fonction. F1 ==> RUN F2 ==> LIST etc... En fait, il fautr que la
+routine indirectée de GETC$ rende le 1er caractère ML" er fasse
+pointer DEFTXT vers IST,00H. Si par exemple il y a un CR dans la
+ligne, elle est automatiquement validée par l'éditeur,
+
+=== PAGE 286 ===
+L'Extramoniceur du MO6 Page 35
+7  L'INTERPRETEUR MUSICAL
+# point d'entrée : PLAY (23)
+# paramètres d'entrée :
+- registre 6809 Y Pointe sur la chaîne à jouer
+- registre 6809 A Longueur de la chaîne
+# paramètres de retour :
+- une misique mélodieuse
+Ce pointr d'entrée interprète une chaîne de caractères au
+format Basic, telle "DOLASIOUA2REMIDP",
+La syntaxe est celle de PLAY de Basic, les paramètres par
+défaut (vitesse, etc...) sont ceux de Basic,
+
+=== PAGE 287 ===
+L'Extramoniteur du M06 Page 36
+8 LES MESSAGES D'ERREUR EN ANGLAIS
+# point d'entrée : ERRMSG (20)
+#* paramètres d'entrée :
+- registre 6809 A Numéro d'erreur
+- registre 6809 X Pointe sur une zone tampon
+#* paramètres de retour :
+- registre 6809 X Pointe sur le message
+terminé par un 00H
+Le message d'erreur de Basic dont le numéro est dans A est
+rendu dans un tampon pointé par X et peut ensuite être affiché.
+
+=== PAGE 288 ===
+L'Extramoniteur du M06 Page 37
+9 UTILISATION DE L'EXTRAMONITEUR SOUS BASIC 128
+
+Ce chapitre ne concerne que les utilisateurs d'extramon sous
+Basic 128.
+
+Si vous utilisez EXTRAMON à partir d'EXEC ou d'équivalents
+BASTC, plusieurs points sont à considérer :
+
+Lors d'un EXEC, BASIC passe la main au programme binaire de
+l'utilisateur avec le BANK ROM BASIC commuté, ainsi l'utilisateur
+peut appeler certains points d'entree standard de la ROM BASIC.
+Si celui ci désire appeler EXTRAMON, 11 doit tout d'abord appeler
+la routine EXTRAMON (EFFBH) via un JSR. Pour pouvoir refaire des
+appels à la ROM basic, un nouvel appel à cette routine
+recommutera la ROM basic.
+
+Attention, si on veut récupérer les erreurs, il faut penser
+à rediriger le rattrapage d'erreur (vecteur ZPERR (2185H)), sinon
+le message d'erreur Basic sera affiché. Pour rattraper les
+erreurs, il faut rediriger ZPERR vers le programme suivant :
+
+LDS SAVSTK SAVSTK = $2175
+
+LEAS 3,S Saute quelques octets
+
+STB 2,S le code erreur pour l'appelant
+RTI et retour a l'appelant
+
+=== PAGE 289 ===
+L'Extramoniteur du MO06 Page 38
+
+10 LES EQUATES
+CCCECCOPCOLICT CIO III ETUI IETI EST SES IEEE ENT TES III ES IEEE ITIT)
+.
+# Les equates d'extramon...
+. Lrn-----mmmmmmmmmmmeee
+.
+.
+CELETCOCCUPTIYIIIIT ES SET TS CII III ETES ETS ENT IE TN IIS EESTI II IIITTT)
+
+1/ préparation des paramètres.
+
+2/ LDB énuméro de routine désirée
+
+3/ SwI2 Appel moniteur
+
+4/7 TSTB Y-a-t-il une erreur ?
+
+5/ BNE ERROR Oui, traitement ..,
+
+=== PAGE 290 ===
+L'Extramoniteur du M96 Page 39
+RSR ENONRODUN RSS NN NENNNESDENEN NS SNS ENS UNSS NN UUNUUE
+.
+#
+# Définitions des modes d'ouverture des fichiers pour
+# la routine OPEN).
+.
+M.SQI EQU $10 Open for sequential input.
+M.SQ0 EQU $20 Open for sequential output.
+M.RND EQU $40 Open for random access 1/0.
+CCCECELECETEOTTIIIT ICT SIT SIT S TITI ESS T EST III IITI INIST ET III
+0
+* Les objets tortues. Voici le descripteur :
+*
+TX EQU 6 Position de la tortue en X
+TY EQU 9 Position de la tortue en Y
+TROT EQU 12 Rotation de la tortue
+TTAI EQU 13 Taille de la tortue
+TDIR EQU 14 Direction de la tortue
+TFORME EQU 16 Forme de la tortue
+:
+DBLFLG EQU $2103 Flag de double précision
+VALTYP EQU $2105 Indicateur de type
+FAC EQU $214E Accumulateur
+FACEXP EQU $21UE Exposant
+FACHO EQU $214F Octet fort de la mantisse
+FACMO EQU $2150 Octet moyen de la mantisse
+FACLO EQU $2151 Octet faible de la mantisse
+DFACHO EQU $2152 Quatre octets de plus pour
+DF ACMH EQU $2153 double précision
+DFACML EQU $2154
+DFACLO EQU $2155
+FACSGN EQU $2156 Signe de FAC (0 ou -1) quand
+. non codé
+.
+# --- LES ARGUMENTS FLOTTANTS (NON CODE) ===
+ARGEXP EQU $2159
+ARGHO EQU $2154
+ARGMO EQU $215B
+ARGLO EQU $215C
+DARGHO EQU $215D Quatre de plus pour
+DARGMH EQU $215E la double précision
+DARGML EQU $215F
+DARGLO EQU $2160
+ARGSGN EQU $2161
+.
+DEBZON EQU $216B Début et fin de zone tampon
+FINZON EQU $216E pour extramon.
+#
+EOFFLG EQU $2178 Flag fin de fichier
+# 0 = Non fini
+* Nonzéro = fini
+
+=== PAGE 291 ===
+L'Extramoniteur du M06 Page 40
+C
+C
+. TEMPORAIRES POUR PRINT USING
+* 222222222=22222222222222222=2=
+C
+DPWID EQU $2174A
+FLDWID EQU $217B
+PUMASK EQU $217C
+2
+0)
+ZPERR EQU $2185 Rattrapage d'erreur de extramon
+L Basic l'initialise à ERROR
+# dans CLEAR.
+0)
+0)
+0)
+RSKCHG EQU $2189 Flag de risque de changement
+# de disque
+NBANK EQU $218C Nombre de banques accessibles.
+2
+
+=== PAGE 292 ===
+L'Extramoniteur du M06 Page 1
+ÉÉNÉRRRRNNENSSÉSNSSRRRRRRRERNRRRNRUNRRRRRRRÉRRRSNRESRSRRNRRRSIEUSER
+#
+
++ Variables liées aux disques
+
+Li 2Z2===-=z2=2===2=22=22=2=z-====2===727z
+
+0
+
+#
+
+VERFLG EQU $218D Pour VERIFY ON ou OFF,
+
+NAMSEC EQU $218E Le secteur du catalogue
+
+: contenant le nom recherché,
+
+0)
+
+NAMSLT EQU $218F Un pointeur vers le slot dans
+D le secteur (voir NAMSEC) ou
+
++ zéro si le nom n'a pas été
+
+: trouvé,
+
+CARCOU EQU $2196 Le caractère que DFCHRI vient
+Li de lire,
+
+0)
+
+L SECBUF er FATPTR doivent être
+Li positionnés avant le Îer appel
+$ au DOS sous peine de bug.
+
+0)
+
+SECBUF EQU $2197 Un pointeur vers le buffer de
++ lecture d'un secteur,
+
+FATPTR EQU $2199 Pointeur vers la zone ou
+
+* l'utilisateur veut ranger les
+: FATS (DSBs),
+
+DSBLEN EQU 6+2280
+
+:
+
+SWPFLG EQU $219D Un flag pour dire que l'on veut
+Li un swap disquette,
+
+= .
+
+=== PAGE 293 ===
+L'Extramoniteur du MO06 Page 42
+RRÉSÉRRRNNRENNRRERERRRRRRRRERENARRRRRRRÉRRENNRNRRRRRRENENNNRRRRRR
+«
+
+* Variables globales nécessaires au graphique.
+
+* L22ZZS=SSZSSZ=Z==SS==Z=E=ZSZZ=Z========-==-=2=2=-2=7
+
+Û
+
+CETETEEEEEEEY TETE II IE EYE TETE ISIN IIIINI I IIY TE EEE III YETYEYE:
+«
+
+«
+
+«
+
+COULEUR EQU $219F
+
+TRATYP EQU $2140 Type de tracé 0 pour normal,
+
+* 1 normal sans couleur,
+# 2 en ou exclusif,
+XXXXX EQU $2141
+
+YYYYY EQU $2143 Le curseur graphique.
+
+*
+
+XL EQU $2145 La fenêtre graphique.
+
+YB EQU $21A7
+
+XR EQU $2149 De XLefr,YBottom
+
+YT EQU $21AB à XRight,YTop.
+
+ns
+
+0]
+
+«
+
+* Temporaires pour l'éditeur,
+
+L SI2SS22222222225252232222222=2
+
+DEFTXT EQU $21E0 Pointeur vers du texte à afficher.
+CECLEPEYTE EEE TITI IDE TETE TS EEE IEEE TESTS ETS STE IYY EEE TEE ETES
+0]
+
+C]
+
+. Variables locales au tracé d'ellipses
+
++ SISSS2222222222=22222=2=====:2=2=2222==
+
+0]
+
+FILFLG EQU $21EF Doit on remplir l'ellipse
+Li ou le rectangle.,,
+
+AXEV EQU $21F0 Axe vertical.
+
+AXEH EQU $21Fr1 Axe horizontal.
+
+CAMFLG EQU $21F2 Camembert ?
+
+ALPHA1 EQU $21r3
+
+ALPHA2 EQU $21F7
+
+*
+
+«
+
+# Variables locales au codage et au décodage
+
+* 2I22222222:2222:253:22=222222223z3222222222=
+
+«
+
+XOCOD EQU $21D6 Extrémités du rectangle.
+YoCcoD EQU $21D7
+
+X1COD EQU $21D8
+
+Y1COD EQU $21D9
+
+«
+
+Û
+
+CODAGE EQU $21DA Type de codage.
+
+=== PAGE 294 ===
+L'Extramoniteur du M96 Page 43
+RSRRRRRRRRRRRRNNNRRNRRRRRRRRERRRRNRRRNRRRRERRRÉRRRARSRNÉESRRRRENE
+C
+C
+; De $2200 à $22FF
+NRRRRSSRSRRRNNRNRRRRRRRRETRRRRRNS RARES RRRRRRSNRRRRTRRRRRRRRRRNSEE
+TYPDSK EQU $2219 Type de contrôleur.
+
+MAXMOD EQU $2223
+
+FCBNUM EQU $2244 Numero du FCB courant
+
+RLEN EQU $2247 Longueur de l'enregistrement du
+D fichier à accès direct
+
+PUTFLG EQU $2249 Pour distinguer PUT de GET !
+FILMOD EQU $224B Mode du fichier (OPEN).
+FILTYP EQU $224C Type de fichier.
+
+L 0 = Basic program.
+
+Li 1 = Basic data file.
+
+L 2 = machine language file.
+ASCFLG EQU $224D Flag ASCII
+
+L 0 = fichier non ASCII.
+
++ FF = fichier ASCII.
+
+FILNAM EQU $22ur Buffer nom de fichier.
+
+FILEXT EQU $2257 Buffer extension nom de fichier
+OPTBUF EQU $225A Buffer de descriptions des
+
+Li options
+
+MACP EQU $227D Le pointeur vers le motif de
+L peinture.
+
+WITH EQU $2288 Flag avec ou sans couleur.
+INTFLG EQU $22A9 Pour l'éditeur, lorsque ce flag
+L devient <> de 0, on sort sans
+L réfléchir !11,.
+
+BUFFRE EQU $22AA Pour l'open en accès direct.
+* Pointe vers un buffer (de
+
+L longueur RLEN) ou l'appelant
+L retrouvera l'enregistrement
+
+* demandé.
+
+ONOFF  EQU $22B0 Flag avec ou sans cache,
+BLOCS  EQU $22AE Pointe sur une table de
+
+L) descripteurs de blocs.
+
+=== PAGE 295 ===
+L'Extramoniteur du M06 Page 4}
+RRRRRRRRRRRRRRRRERESRRRSRRRRERRRRSSRRRRERRENRRERSSSSSRSEUNRRRRRERRR
+0]
+
+* L'interprèteur graphique M.I.G ...
+0] nn mms msn
+0]
+RRRRRERRRRRENERERRRRRRRENRRRRRRRRARANESRSRSRERERÉRSRSRRNRRRERENRSE
+STOP MACRO Retour sous-programme ou principal.
+FCB 0
+ENDM
+CALL MACRO ARG Appel de sous programme.
+FCB 1
+FDB ARG
+‘ ENDM
+RCALL MACRO ARG BSR
+BRA ARG
+ORG 2-2
+FCB 19
+FCB ARG-#- 1
+ENDM
+LRCALL MACRO ARG LBSR
+FCB 20
+FDB ARG-#-2
+ENDM
+DO MACRO  ARG Structure de contrôle
+FCB 2,ARG
+ENDM
+LOOP MACRO Le complément du DO
+FCB 0
+ENDM
+MULTIP MACRO ARG Cette Macro est généralement
+FCB 3,ARG suivie d'une suite de FCB
+ENDM
+
+=== PAGE 296 ===
+L'Extramoniteur du M96 Page 45
+MOTIF MACRO ARG Pointeur vers un pattern
+FCB 4
+FDB 8+(ARG)
+ENDM
+RMOTIF MACRO ARG
+BRA ARG+8
+ORG #-2
+FCB 21
+FCB 8+(ARG)-#-1
+ENDM
+LRMOTIF MACRO ARG
+FCB 22
+FDB 8+(ARG)-#-2
+ENDM
+ABSOLU MACRO Passe en absolu
+FCB 5
+ENDM
+RELATIF MACRO Passe en relatif
+FCB 6
+ENDM
+LFCUR MACRO ARGX, ARGY Positionne le curseur
+FCB 7
+FDB ARGX, ARGY
+ENDM
+FCUR MACRO ARGX, ARGY
+FCB 8,ARGX,ARGY
+ENDM
+
+=== PAGE 297 ===
+L'Extramoniteur du M06 Page 46
+LPOIN MACRO ARGX,ARGY Ecrit un point
+FCB 9
+FDB ARGX, ARGY
+ENDM
+POIN MACRO ARGX, ARGY
+FCB 10,ARGX, ARGY
+ENDM
+LLINE MACRO ARGX, ARGY Trace une ligne
+FCB 11
+FDB ARGX, ARGY
+ENDM
+LINE MACRO ARGX, ARGY
+FCB 12,ARGX, ARGY
+ENDM
+LBOX MACRO ARGX,ARGY Trace un rectangle
+FCB 13
+FDB ARGX, ARGY
+ENDM
+BOX MACRO ARGX, ARGY
+FCB 14,ARGX, ARGY
+ENDM
+LBOXF MACRO ARGX, ARGY Trace un rectangle plein
+FCB 15
+FDB ARGX, ARGY
+ENDM
+BOXF MACRO ARGX, ARGY
+FCB 16,ARGX,ARGY
+ENDM
+ROND MACRO ARGX,ARGY Trace une ellipse
+FCB 17,ARGX,ARGY
+ENDM
+RONDF MACRO ARGX , ARGY Une ellipse pleine
+FCB 18,ARGX,ARGY
+ENDM
+
+=== PAGE 298 ===
+L'Extramoniteur du M06 Page 47
+RÉBSERSTÉNNENRNRRSERTRSRSNRRRRRRRÉRRRÉSNRRRÉRSNRSRNRRENNRESSRRERE
+C
+. Les numéros de routine.
+
+s pres.
+
+C
+RRRRRRRRRRSNNRRRRNRRRRRNRNNRSRSRRSRRSRRRRRENREÉRSRRRRRRERNRNREEEER
+RESETC EQU 0 Reset à froid
+
+RESETW EQU 1 Reset à chaud
+
+FCBINI EQU è Init d'un FCB
+
+OPEN EQU 3 Ouverture
+
+PRINT EQU 4 Output
+
+INPUT EQU 5 Input
+
+CLOSE EQU 6 Close
+
+PUTGET EQU 7 Accès direct
+
+DIRO EQU 8 Catalogue
+
+DIR1 EQU 9 Catalogue suite
+
+BACKUPO EQU 10 Backup
+
+BACKUP1 EQU 11 Backup suite
+
+COPYoO EQU 12 Copie
+
+COPY1 EQU 13 Copie suite
+
+KILL EQU 14 Destruction d'un fichier
+NAME EQU 15 Renomme un fichier
+
+DSKF EQU 16 Calcul place libre
+
+DSKINI EQU 17 Initialise la disquette
+LOF EQU 18 Taille d'un fichier
+
+LOC EQU 19 Adresse écriture dans fichier
+ERRMSG EQU 20 Rend erreur en clair
+RDVOL EQU 21 Va lire le nom du disque
+EDIT EQU 22 L'éditeur plein ecran
+PLAY EQU 23 L'interprèteur musical
+CIRCLE EQU e4 Dessin d'un cercle ou ellipse
+PSETXY EQU 85 Ecrit un point
+
+LINE EQU 26 Trace une ligne
+
+BOX EQU 27 Trace un rectangle
+
+CHOIX EQU 28 Initialisation mode graphique
+PAINT EQU 29 Remplissage d'une surface
+MIG EQU 30 L'interprèteur graphique
+TRACE EQU 31 Trace de tortue
+
+ANIME EQU 32 Liberté de la tortue
+
+SHOW EQU 33 Allumage de la tortue
+HEAD EQU 34 Direction de la tortue
+ROT EQU 35 Rotation de la tortue
+ZOOM EQU 36 Taille de la tortue
+
+FWD EQU 37 Avance la tortue
+
+MOVE EQU 38 Déplacement de la tortue
+INITORTUE EQU 39 Initialise une tortue
+CMPTORTUE EQU 40 Compile une forme de tortue
+SGN EQU 41 Signe
+
+INT EQU 42 Entier
+
+ABS EQU 43 Valeur absolue
+
+SQR EQU ul Racine carrée
+
+LOG EQU 45 Logarithme népérien
+
+EXP EQU 46 Exponentielle
+
+cos EQU 47 Cosinus
+
+SIN EQU 48 Sinus
+
+TAN EQU 49 Tangente
+
+FRCTYP EQU 50 Force le type
+
+=== PAGE 299 ===
+L'Extramoniteur du M06 Page 48
+FIXER EQU 51 Troncature
+FRND EQU 52 Valeur aléatoire
+NEGGO EQU 53 Négation
+ADDGO EQU 54 Addition
+SUBGO EQU 55 Soustraction
+MULTGO EQU 56 Multiplication
+DIVGO EQU 57 Division réelle
+EXPGO EQU 58 Exponentiation
+IMODO EQU 59 Reste de la division entière
+IDIVO EQU 60 Division entière
+MOVFM EQU 62 FAC := Mémoire
+MOVMF EQU 63 Mémoire := FAC
+MOVAF EQU 64 ARG := FAC
+FIN EQU 65 Conversion ASCII ==> Binaire
+PUFOUT EQU 66 C. Binaire ==> ASCII décimal
+HOFOUT EQU 67 C. Binaire ==> ASCII hexa/octal
+ATN EQU 68 Arctangente
+CODE EQU 69 Code et décode image
+INICACHE EQU 70 Cache disque
+NEW-BACKUP EQU 71 Backup
+NEW-COPY EQU 7è Copie
+
+=== PAGE 300 ===
+1
+GATE ARRAY MODE PAGE MO
+AVERTISSEMENT
+Ce document est destiné aux lecteurs soucieux de se familiariser avec le
+fonctionnement interne des micro-ordinateurs THOMSON du type MO ainsi qu'aux
+programmeurs désirant piloter directement le hardware des machines ou
+souhaitant simplement mieux comprendre le déroulement des routines fournies
+en ROM moniteur.
+Seuls les points d'entrée standard des ROMSs moniteurs qui sont fournis avec
+chaque machine ont un fonctionnement garanti ainsi qu'une compatibilité
+directe d'un modèle à l'autre. Tout logiciel exploitant directement les
+ressources hardware de la machine -et notamment le circuit décrit dans ces
+pages- s'expose à une perte de compatibilité au fur et à mesure de la sortie
+de nouveaux modèles.
+En aucun cas il n'est garanti que le fonctionnement du circuit décrit ci-
+après sera maintenu dans sa version actuelle.
+1 - PRESENTATION
+Depuis le MO5, les unités centrales de nos machines sont bâties autour d'un
+circuit "Gate Array", du nom de la technologie employée, qui assure les
+fonctions électroniques essentielles du système :
+- rafraîchissement et accès à la mémoire,
+- gestion de la vidéo,
+- du light-pen...
+Ce circuit est conçu de telle sorte que, lorsque le CPU accède à la mémoire
+écran, son accès est dirigé soit vers la mémoire de "marquage" appelée
+également mémoire de "formes", soit vers la mémoire de "couleurs", en
+fonction du bit FORME piloté par le logiciel ; les circuits d'exploration
+automatique de la mémoire écran -contenue dans le Gate Array- accèdent quant
+à eux simultanément la mémoire "formes" et la mémoire "couleurs",
+indépendamment de la valeur du bit FORME, afin de pouvoir élaborer en temps
+réel l'intégralité des signaux de visualisation destinés au tube cathodique
+d'affichage :
+fig. 1
+CPU bit FORME Mémoire FORMES Mémoire Couleurs
+circuiterie d'affichage TV ou moniteur
+Pour chaque groupe de 8 pixels affichés à l'écran, la circuiterie vidéo doit
+lire 16 bits en mémoire :
+- 8 bits pour l'octet "formes" et
+- 8 bits pour l'octet "couleurs"
+Jusqu'à maintenant, cette lecture devait se faire en une seule fois, sur 16
+bits, ce qui imposait à la mémoire vidéo d'être physiquement organisée en
+deux bancs de 8 bits, alors que tout le reste de la mémoire système est sur
+8 bits seulement. Cette organisation "irrégulière" n'est pas optimale
+économiquement et n'est pas favorable à l'utilisation de boîtiers mémoire N
+X 1 bits qui sont pourtant les plus répandus.
+Afin de pallier cet inconvénient, le nouveau Gate Array, dénommé "Mode
+Page", remplace l'accès 16 bits à la mémoire vidéo par deux accès successifs
+
+=== PAGE 301 ===
+2
+
+8 bits très rapides qui totalisent la même durée que l'ancien accès 16 bits.
+Cette technique est rendue possible grâce à un mode d'adressage particulier
+des mémoires dynamiques appelé mode "Page" dans lequel plusieurs cases
+mémoires du composant peuvent être lues en séquence à condition que ces
+cases appartiennent toutes à la même rangée de la matrice interne. C'est
+ainsi qu'on organise la mémoire vidéo pour que les octets "forme" et
+"couleur" soient accessibles en mode Page. Evidemment, vue du logiciel,
+l'organisation de l'écran reste inchangée et compatible avec le système
+précédent, c'est-à-dire que le bit FORME permet toujours de choisir l'accès
+du CPU, soit à la mémoire "formes", soit à la mémoire "couleurs".
+Outre cette nouvelle caractéristique -qui reste transparente au logiciel-,
+ce nouveau Gate Array incorpore des fonctionnalités supplémentaires qui
+permettent de gérer plus de mémoire et de produire les différents modes
+d'affichages déjà disponibles sur le TOS.
+Comme les autres périphériques, le Gate Array Mode Page est vu du logiciel
+comme un ensemble de registres décodés dans l'espace mémoire du 6809.
+L'endroit où sont situés ces registres dans la zone d'adressage du 6809 est
+fixe car codé à l'intérieur du Gate Array lui-même. Selon que le Gate Array
+est utilisé dans un système MO ou dans un système TO, l'adresse de ses
+registres est différente :
+
+- en système MO, les 6 registres sont situés en :
+
+ATE4, A7ES, A7E6, A7E7, A7DC, A7DD
+
+Un résumé complet de l'affectation de ces registres est donné à la fin de ce
+chapitre. D'ici là, ce document examine une à une les fonctions du circuit.
+II - GESTION DE LA MEMOIRE VIVE
+Le Gate Array Mode Page permet de gérer jusqu'à 512 K de mémoire RAM par
+pages de 16 K. Ces pages physiques de mémoire vive, dont le nombre dépend de
+l'unité centrale considérée et de l'éventuelle extension mémoire, sont
+affectables à plusieurs espaces logiques du système. Comme dans le TO7-70 et
+le TO9, c'est un système de "bank-switch" qui permet au 6809 d'accéder à
+toute cette mémoire.
+Ce système a été étendu à tout l'espace mémoire (hors périphériques) des
+machines afin d'accroître la souplesse de l'environnement. Cette extension a
+conduit à la détermination de 4 espaces d'adressage logiques distincts :
+
+- l'espace "Ecran"
+
+- l'espace "RAM système" (ou page fixe)
+
+- l'espace "RAM Data"
+
+- l'espace "Cartouche"
+
+SYSTEME MO
+
+fig. 2
+FFFF F000 EFFF B000 AFFF A000 SFFF 6000
+5FFF 2000 1FFF 0000 Moniteur Cartouche E/S
+RAM Data RAM fixe (système) Ecran (bit FORME=0) Ecran
+(bit FORME=1) N pages physiques de 16 K (jusqu'à 32 pages)
+
+=== PAGE 302 ===
+3
+
+31 2 1 0
+Les pages physiques peuvent être affectées à ces espaces logiques en
+programmant des registres du Gate Array, les pages étant simplement
+identifiées par leur numéro.
+Le comportement individuel de chacun des espaces logiques est spécifié dans
+ce qui suit.
+II - 1 - ESPACE RAM FIXE
+Cet espace logique contenant des informations vitales au système (comme la
+page "zéro" du moniteur), n'est pas reconfigurable et c'est la page physique
+1 de la mémoire qui y est affectée.
+Aucun registre ne permet de re-programmer cet espace.
+II - 2 - ESPACE ECRAN
+Cet espace contient les informations utilisées par l'automate de lecture
+vidéo pour synthétiser l'image affichée. Par défaut, c'est la page physique
+0 qui est affichée, mais il est possible de demander à l'automate d'afficher
+les pages 1, 2, ou 3.
+Le fonctionnement est le suivant :
+- après un Reset, une mise sous tension ou si les bits D7, D6 du registre du
+Gate Array situé en A7DD sont tous les deux à 0, c'est la page physique 0
+qui est affichée à l'écran. La façon dont les données sont interprétées par
+l'automate d'affichage dépendent du mode d'affichage choisi (voir Paragraphe
+IV-1).
+- en reprogrammant les bits D7D6 de A7DD, on peut afficher les pages
+physiques 1, 2 ou 3. Si on demande l'affichage de la page 1, c'est le
+contenu de l'espace RAM FIXE qui apparaîtra à l'écran. Ce contenu ayant peu
+d'intérêt, ce sont surtout les pages 2 et 3 qui sont utilisables.
+- lorsque le CPU accède à l'espace logique d'ECRAN (0 à 1FFF), c'est
+TOUJOURS la page physique 0 qui est adressée, même si l'automate d'affichage
+utilise une autre page (D7D6 de A7DD # 00). Dans l'espace logique d'ECRAN,
+le CPU utilise toujours le bit FORME pour sélectionner l'accès à la mémoire
+FORMES ou la mémoire COULEURS (bit 0 de A7CO).
+- si le CPU veut accéder aux pages 2 et 3 en les considérant comme des
+écrans, il doit les affecter à son espace RAM DATA (6000 à 9FFF) afin de
+pouvoir les lire ou les écrire. Dans ce cas, on doit considérer que la
+mémoire correspondant aux "formes" se trouve aux adresses "hautes" de la
+page tandis que les adresses "basses" contiennent l'information "couleurs" ;
+en effet, le bit FORME traditionnel est inopérant dans l'espace DATA.
+6000 - 7FFF = plan "couleurs"
+8000 - 9FFF = plan "formes"
+
+- la page affichée par l'automate vidéo peut être en même temps
+
+affectée à l'espace DATA voire à l'espace CARTOUCHE.
+
+=== PAGE 303 ===
+4
+
+Voici quelques exemples de configuration :
+fig. 4
+CPU Espace RAM DATA page 4 ECRAN (bit FORME=0)
+ECRAN (bit FORME=1) page 0 Automate d'affichage
+D7D6 de A7DD = 00
+Dans cette configuration standard, l'écran est constitué par ia page
+physique 0 que le CPU accède par l'espace logique d'écran.
+Ce mode est le seul mode normalisé ; il est exploité par les routines
+d'affichage du moniteur telles que PUTCH.
+fig. 5
+CPU Espace RAM DATA Espace ECRAN page 4 page 2 page 0
+Automate d'affichage D7D6 de A7DD = 10
+La page 2 est affichée mais le CPU ne peut y accéder puisque l'espace ECRAN
+aboutit forcément à la page 0 et que c'est la page 4 qui est affectée à
+l'espace RAM DATA.
+fig. 6
+CPU Espace RAM DATA Espace ECRAN page 2 page 0
+Automate d'affichage D7D6 de A7DD = 10
+La page 2 est affichée et le CPU peut la mettre à jour à travers l'espace
+logique RAM DATA. Le CPU a toujours accès à la page 0 à travers l'espace
+logique ECRAN.
+Les routines d'affichage standard du moniteur sont inopérantes dans une
+telle configuration.
+II - 3 - ESPACE RAM DATA
+Cet espace logique, situé entre 6000 et 9FFF est utilisé par les
+applications pour leurs propres besoins et leurs données. Déjà sur TO7-70 et
+sur TOS, cet espace était géré en "bank-switch" à l'aide de bits de PIA qui
+permettaient d'y sélectionner une page physique de 16 K parmi 6.
+Le mécanisme de "bank switch" implémenté dans le Gate Array est simple
+puisqu'il suffit d'écrire le numéro (de 0 à 31) de page physique souhaité
+dans les bits D4-D0 du registre A7E5 du Gate Array pour que la page
+concernée soit affectée à l'espace RAM DATA.
+fig 7
+
+A7E5 D4 - DO
+N
+
+=== PAGE 304 ===
+5
+NE 0,..., 31 espace RAM DATA Page N
+Ainsi, la gestion mémoire s'en trouve simplifiée puisqu'une simple écriture
+de numéro de page physique suffit à affecter cette page.
+Le nombre de pages disponibles dépendra de l'unité centrale, de son
+éventuelle extensibilité en mémoire par un module d'extension. Le Gate Array
+ne fournit pas lui-même d'indication quant au nombre de pages ; par
+conséquent, le moniteur indique le numéro de la dernière page physique
+utilisable dans le registre DERBAN de la page zéro. Se référer à la
+documentation du moniteur.
+Afin de reproduire l'environnement standard, il faut affecter la page 2 à
+l'espace RAM DATA ; en effet, au Reset et pour des questions de hardware, le
+contenu des 5 bits D4-D0 de A7E5 est à 0, ce qui affecte la page physique 0
+normalement réservée à l'écran.
+II - 4 - ESPACE CARTOUCHE
+Cet espace, situé entre B000 et EFFF contient normalement de la ROM sous
+forme de cartouche externe ou de mémoire interne au système contenant BASIC
+1, le moniteur, ou un autre BASIC.
+Il est néanmoins possible d'affecter de la mémoire vive RAM à cet espace
+logique en mettant le bit D5 du registre du Gate Array A7E6 à 1.
+La gestion de ia mémoire RAM affectée à l'espace cartouche dépend de la
+valeur du bit D6 du registre A7E7 ; en effet, ce bit sélectionne l'un des
+deux systèmes de gestion suivants :
+
+- le mode direct par registre : comme pour la gestion de l'espace RAM
+DATA, ce mode permet de choisir la page physique affectée à l'espace
+logique CARTOUCHE en écrivant directement son numéro sur 5 bits dans
+le registre A7E6 du Gate Array.
+
+fig. 8
+
+ATE7 D6 1 A7E6 D5 D4
+
+DO 1 N espace CARTOUCHE page N
+
+- le mode compatible Nano-Réseau (marque déposée LEANORD) : ce système
+permet de simuler complètement la cartouche de RAM 64 K THOMSON référence
+RAM 64 K NR 5 pour MO5 développée dans le cadre du Nano-Réseau. Dans ce
+mode, la programmation de la cartouche RAM par le registre A7CB
+
+est "reproduit" de façon à assurer la compatibilité des logiciels créés pour
+
+le MO5. Les 4 pages de 16 K de la cartouche RAM pour MO5 sont remplacées par
+les pages 4 à 7. Seuls 2 bits (D1D0) de A7CB étant affectés au numéro de
+page sur le nano-réseau ; il y a donc une transposition des numéros 0 à 3
+programmés en A7CB pour aboutir aux pages physiques 4 à 7.
+
+fig. 9
+
+A7E7 D6 0 A7CB D3 D2 D1 DO
+
+WE  RAM/ROM ll 0 espace CARTOUCHE page 7 page 6
+
+=== PAGE 305 ===
+6
+
+page 5 page 4
+fig. 10
+Dans ce mode, le contenu du registre A7E6 est en fait une transposition du
+registre A7CB :
+A7TCB WE  RAM/ROM A7E6 WE RAM/ROM 0 0
+Au Reset ou à la mise sous tension, c'est le mode compatible nano-réseau qui
+est pris, c'est-à-dire que le bit D6 de A7E7 est à 0.
+Que la gestion soit faite directement par le registre A7E6 ou par le
+registre A7CB (mode Nano-Réseau), un bit de programmation Write Enable (WE)
+permet d'interdire ou d'autoriser l'écriture dans la page physique de RAM
+affectée à l'espace CARTOUCHE. Ceci donne une protection contre les
+écritures intempestives, la mémoire se comportant comme de la ROM.
+En résumé, les pages physiques de mémoire vive sont affectables à l'espace
+ECRAN, l'espace RAM DATA ou l'espace CARTOUCHE.
+
+- l'espace ECRAN dont l'affichage est géré par A7DD,
+
+- l'espace RAM DATA est géré par le registre A7E5,
+
+- l'espace CARTOUCHE est géré soit par le registre A7E6, soit par
+
+le registre A7CB en mode MO compatible Nano-Réseau.
+
+L'espace CARTOUCHE situé entre B000 et EFFF a un comportement particulier,
+déjà présent sur le MO5. En effet, si on divise par la pensée l'espace
+CARTOUCHE de 16 K en quatre sous-espaces de 4 K chacun, ces 4 parties ne
+présentent pas une correspondance directe entre leur adressage logique (par
+les 4 sous-espaces consécutifs B000-BFFF, CO000-CFFF, DO00-DFFF, E000-EFFF)
+et leur adressage physique (4 pages physiques de 4 K consécutives).
+En effet, la correspondance est la suivante :
+
+Adresse Logique Adresse Physique
+
+B000-BFFF 4ième page de 4 K
+
+(adresses hautes)
+CO000-CFFF lère page de 4 K
+(adresses basses)
+
+DO000-DFFF 2ième page de 4 K
+
+E000-EFFF 3ième page de 4 K
+Cette organisation logique/physique se retrouve d'ailleurs dans la ROM BASIC
+128 des systèmes MO.
+Ceci a une influence importante sur l'utilisation de RAM en espace
+CARTOUCHE, surtout si on transfère l'information par l'espace RAM DATA avan
+de la mettre dans l'espace CARTOUCHE. En effet, l'espace RAM DATA lui-même
+possède une affectation logique/physique à l'intérieur de chaque page
+physique de 16 K. Cette affectation n'a aucune importance et aucun effet
+tent qu'on ne recopie pas l'information de l'espace RAM DATA vers l'espace
+
+=== PAGE 306 ===
+7
+CARTOUCHE ou inversement, mais il faut tenir compte de la transposition qui
+résulte d'un tel transfert.
+La correspondance entre adressage logique et adressage physique à
+l'intérieur de l'espace RAM DATA est la suivante :
+On considère comme précédemment que la page de 16 K est divisée en quatre
+sous-espaces de 4 K :
+Adresse Logique Adresse Physique
+6000-6FFF 3ième page de 4 K
+7000-7FFF 4ième page de 4 K
+(adresses hautes)
+8000-8FFF lière page de 4 K
+(adresses basses)
+9000-9FFF 21ème page de 4 K
+Par conséquent, la transposition entre l'espace RAM DATA et l'espace
+CARTOUCHE donne le tableau suivant :
+Espace RAM DATA Espace CARTOUCHE
+6000-6FFF E000-EFFF
+7000-7FFF BO00-BFFF
+8000-8FFF C000-CFFF
+9000-9FFF D000-DFFF
+Cette correspondance est bijective.
+On peut également mentionner les correspondances entre les autres espaces
+logiques.
+La correspondance entre espace RAM DATA et espace ECRAN a déjà été donnée au
+Paragraphe II-2 :
+Espace RAM DATA Espace ECRAN
+6000-7FFF Plan Couleur
+8000-SFFF Plan Forme
+La correspondance entre espace CARTOUCHE et espace ECRAN est donc :
+Espace CARTOUCHE Espace ECRAN
+B000-BFFF 2ième moitié du Plan Couleur
+CO000-CFFF lière moitié du Plan Forme
+D000-DFFF 2ième moitié du Plan Forme
+E000-EFFF lière moitié du Plan Couleur
+
+=== PAGE 307 ===
+8
+Cette correspondance doit être utilisée par tout programmeur désireux de
+préparer un écran dans l'espace CARTOUCHE. La lière moitié (adresses basses)
+d'un Plan (Forme ou Couleur) correspond à la moitié supérieure de l'écran,
+la 2ième moitié (adresses hautes) correspondant à la partie inférieure de
+l'écran. La signification réelle des plans Forme et Couleur dépend du mode
+d'affichage.
+III - GESTION DE L'AFFICHAGE
+Le Gate Array Mode Page intègre la totalité de la circuiterie vidéo capable
+de gérer les différents modes d'affichage du TO9. Il est prévu pour piloter
+directement une palette externe. Les routines du moniteur permettent de
+gérer les différents modes. Aucune programmation directe du circuit ne doit
+être entreprise.
+IV - GESTION DU LIGHT-PEN
+Le Gate Array Mode Page contient la circuiterie associée au light-pen
+permettant de faire des mesures avec la résolution du pixel. La gestion
+logicielle est assurée par les routines moniteur. Aucune programmation
+directe du circuit ne doit être entreprise.
+V - ORGANISATION GENERALE DES REGISTRES
+Ce paragraphe résume la totalité des fonctions des 6 registres du Gate
+Array.
+VI - 1 - REGISTRE "SYSTEME 1" (A7ET)
+Ce registre ne peut être qu'écrit.
+ECRITURE
+D7 D6 D5 D4 D3 D2 D1 DO
+ATET réservé gestion réservé gestion réservé réservé
+RAM dans RAM dans
+l'espace CARTOUCHE l'espace DATA
+D6=0 mode compatible
+Nano-Réseau
+
+D6 = 1 gestion par
+
+registre interne A7E6
+Ce registre ne pouvant pas être relu et seuls certains bits pouvant être
+modifiés par l'utilisateur, il faut utiliser la recopie de ce registre gérée
+par le moniteur sous le nom de MA7E7. On doit donc lire cette recopie et y
+modifier les bits nécessaires avant d'écrire dans le registre du Gate Array.
+Cette recopie doit TOUJOURS être tenue à jour afin de ne pas perturber le
+fonctionnement du moniteur.
+
+=== PAGE 308 ===
+9
+VI - 2 - REGISTRE "SYSTEME 2" (A7DD)
+ECRITURE
+D7 D6 D5 D4 D3 D2 D1 DO
+A7TDD numéro de page
+RAM affichée R E S E R V E
+D7D6 = numéro de la page
+physique de RAM affichée
+par l'automate vidéo
+On ne peut rien relire en A7DD. Néanmoins, les bits D7D6 sont relisibles
+dans le registre A7E4 (voir paragraphe VI - 4).
+VI - 3 - REGISTRE "D'AFFICHAGE" (A7DC)
+Ce registre est réservé à l'usage du moniteur.
+VI - 4 - REGISTRE "LIGHT-PEN/SYSTEME 2" (A7E4)
+ECRITURE
+D7 D6 D5 D4 D3 D2 D1 Do
+AT7E4 0 0 0 0 0 0 0 sélection
+réservé réservé réservé réservé  light-pen/
+registres
+Les bits à 0 sont réservés pour des extensions futures et ne doivent pas
+être positionnés à 1 pour préserver la compatibilité.
+DO = O0 accès autorisé en lecture aux
+registres "CARTOUCHE" et "RAM DATA" ainsi qu'à
+la partie système 2 de ce registre A7E4.
+DO = 1 accès autorisé en lecture aux
+registres light-pen. Interruption light-pen
+autorisée.
+On peut relire la valeur qui a été écrite dans le bit DO de A7E4 dans le bit
+DO du registre système 1 (A7ET7).
+En lecture, le registre A7E4 peut avoir deux valeurs, selon le bit DO qui a
+été écrit en A7E4 :
+- si DO de A7E4 a été écrit à 0, alors la relecture de A7E4 fournit des
+copies de certains bits du registre système 2.
+
+=== PAGE 309 ===
+10
+- si DO de A7E4 a été écrit à 1, alors la relecture de A7E4 fournit des
+informations relatives au light-pen qui sont réservées à l'usage du
+moniteur.
+LECTURE
+* DO de A7E4 écrit à 0 :
+D7 D6 D5 D4 D3 D2 D1 DO
+A7E4 numéro de page réservé 0 0 0 0
+RAM affichée
+re-lecture des bits D7D6
+écrits dans le registre
+"système 2" en A7DD
+* DO de A7E4 écrit à 1 : informations relatives au light-pen.
+VI - 5 - REGISTRE "RAM DATA‘ (A7ES)
+(Ce registre n'est accessible en écriture que si le bit D4 de A7E7 est écrit
+à 1)
+ECRITURE
+D7 D6 D5 D4 D3 D2 D1 DO
+A7E5 réservé 0 0 numéro de page RAM utilisée dans l'espace
+RAM DATA
+En lecture, le registre A7E5 peut avoir deux valeurs, selon le bit DO qui a
+été écrit en A7E4 :
+- 8i DO de A7E4 a été écrit à 0, alors la lecture de A7E5 redonne le numéro
+de page physique affectée à l'espace logique RAM DATA,
+- 8i DO de A7E4 a été écrit à 1, alors la lecture de A7E5 donne des
+informations relatives au light-pen réservées au moniteur.
+LECTURE
+* DO de A7E4 écrit à 0.
+D7 D6 D5 D4 D3 D2 D1 DO
+A7E5 0 0 0 numéro de page RAM utilisée dans l'espace
+RAM DATA
+re-lecture des bits D4-D0 écrits dans ce même registre
+* DO de A7E4 écrit à 1 : informations relatives au light-pen.
+VI - 6 - REGISTRE "CARTOUCHE" (A7E6)
+ECRITURE
+D7 D6 D5 D4 D3 D2 D1 DO
+
+=== PAGE 310 ===
+11
+
+A7E6 0
+protection en écriture (WE)
+RAM/ROM
+numéro de page RAM utilisée dans l'espace CARTOUCHE quand le bit D5 est à 1
+quand D5 est écrit à 1 (espace CARTOUCHE recouvert par de la RAM)
+si D6 = O0 on ne peut pas écrire dans la page de RAM dont le numéro est
+donné par D4-D0
+8i D6 = L l'écriture est autorisée
+D5 = O l'espace CARTOUCHE n'est pas recouvert par de la RAM
+D5 = 1 l'espace CARTOUCHE est recouvert par une page de RAM dont le numéro
+est donné par D4-D0
+D4-D0 = numéro de la page physique de RAM utilisée pour recouvrir l'espace
+CARTOUCHE quand le bit D5 est écrit à 1.
+En lecture, le registre A7E6 peut avoir deux valeurs, selon le bit DO qui a
+été écrit en A7E4 :
+
+- si DO de A7E4 a été écrit à 0, alors la lecture de A7E6 redonne le
+contenu de ce qui a été écrit dans ce même registre.
+
+- si DO de A7E4 a été écrit à 1, alors la lecture de A7E6 donne des
+informations relatives au light-pen réservées au système.
+
+LECTURE
+* DO de A7E4 écrit à 0
+D7 D6 D5 D4 D3 D2 D1 DO
+A7E6 0
+protection d'écriture (WE)
+RAM/ROM
+numéro de page RAM utilisée dans l'espace CARTOUCHE quand le bit D5 est
+écrit à 1
+recopie du contenu écrit dans ce même registre.
+* DO de A7E4 écrit à 1 : information relative au light-pen.
+Pour les registres A7E4, A7E5 et A7E6 qui ont une double fonction en
+lecture, il est toujours possible de s'assurer de ce qui a été écrit dans le
+bit DO de A7E4 en relisant le bit DO de A7E7 qui en est le reflet.
+ECRITURE LECTURE
+
+DO de A7E4 = 0
+DO de A7E4 = 1
+
+=== PAGE 311 ===
+12
+
+ATE4 0 0 0 0 0 0 0
+sélection registres lecture
+page RAM affichée réservé 0 0 0 0 ,
+informations light-pen
+ATE5 réservé 0 0 page RAM de l'espace RAM DATA
+0 0 0 page RAM de l'espace RAM DATA
+informations light-pen
+ATE6 0 prot. écr. (WE) RAM/ROM
+page RAM de l'espace CARTOUCHE
+0 prot. écr. (WE) RAM/ROM
+page RAM de l'espace CARTOUCHE
+informations light-pen
+ATE7 réservé gest. cart. réservé
+
+réservé
+ATDC réservé affichage
+ATDD page RAM affichée réservé
+

@@ -1,0 +1,37 @@
+mkdir -p tessdata pages ocr && pdftoppm -gray -r 300 -f 190 -l 311 /mnt/raid/Common/Retrocomputing/OlivettiProdestPC128/assembleurmo6.pdf pages/p && ls pages/ | wc -l && ls pages/ | head -5 && ls pages/ | tail -5
+
+
+
+export TESSDATA_PREFIX=/home/finzic/tessdata && count=0 && for f in pages/p-*.pgm; do
+  base=$(basename "$f" .pgm)
+  tesseract "$f" "ocr/$base" -l fra --psm 6 2>/dev/null
+  count=$((count+1))
+done
+echo "Processed: $count"
+ls ocr/*.txt | wc -l
+
+
+cd /home/claude && ls ocr/*.txt 2>/dev/null | wc -l
+
+export TESSDATA_PREFIX=/home/finzic/tessdata && for f in pages/p-*.pgm; do
+  base=$(basename "$f" .pgm)
+  if [ ! -f "ocr/$base.txt" ]; then
+    tesseract "$f" "ocr/$base" -l fra --psm 6 2>/dev/null
+  fi
+done
+ls ocr/*.txt | wc -l
+for i in $(seq 190 311); do
+  echo "=== PAGE $i ===" >> ocr_full.txt
+  cat "ocr/p-$i.txt" >> ocr_full.txt
+  echo "" >> ocr_full.txt
+done
+wc -l ocr_full.txt
+wc -w ocr_full.txt
+
+TESSDATA_PREFIX=/home/finzic/tessdata && count=0 && for f in pages/p-*.pgm; do
+  base=$(basename "$f" .pgm)
+  tesseract "$f" "ocr/$base" -l fra --psm 6 2>/dev/null
+  count=$((count+1))
+done
+echo "Processed: $count"
+ls ocr/*.txt | wc -l

@@ -1,0 +1,41 @@
+{
+  // On Windows replace "python3" with "py" (or your interpreter).
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "PC128: run BASIC (current file)",
+      "type": "shell",
+      "command": "python3",
+      "args": ["${workspaceFolder}/pc128.py", "basic", "${file}", "--done-addr", "9F01", "--dump", "9F00:16"],
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "PC128: run ASM (current file)",
+      "type": "shell",
+      "command": "python3",
+      "args": ["${workspaceFolder}/pc128.py", "asm", "${file}", "--done-addr", "9F01", "--dump", "9F00:16"],
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "PC128: run ASM (choose memory dump)",
+      "type": "shell",
+      "command": "python3",
+      "args": ["${workspaceFolder}/pc128.py", "asm", "${file}", "--dump", "${input:dumpSpec}"],
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "dumpSpec",
+      "type": "promptString",
+      "description": "Memory to dump as HEXADDR:LENGTH",
+      "default": "9F00:16"
+    }
+  ]
+}

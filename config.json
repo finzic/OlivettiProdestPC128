@@ -1,0 +1,12 @@
+{
+  "mame": "mame",
+  "machine": "pc128",
+  "rompath": "",
+  "lwasm": "lwasm",
+  "boot_frames": 250,
+  "line_gap_frames": 6,
+  "run_frames": 300,
+  "timeout_s": 120,
+  "headless": false,
+  "extra_args": []
+}
