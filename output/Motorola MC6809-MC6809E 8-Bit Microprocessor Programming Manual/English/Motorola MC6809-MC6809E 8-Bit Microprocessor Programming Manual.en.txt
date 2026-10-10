@@ -1,0 +1,4919 @@
+# Motorola MC6809-MC6809E 8-Bit Microprocessor Programming Manual -- English text (machine translation from 'en' OCR)
+
+===== Page 1 =====
+7+
+DUNFIELD DEVELOPMENT SYSTEMS
+P.0. BOX 31044
+NEPEAN, ONT. CANADA
+K2B 8S8 mele
+
+M6809PM (AD) ~~
+
+ee
+
+Ae, -- .-
+
+MC6809-MC6809E
+- 8-BIT MICROPROCESSOR
+
+PROGRAMMING MANUAL
+
+Original Issue: March 1, 1981
+
+er he te ri ee te
+
+© MOTOROLA INC., 1981
+
+
+
+===== Page 2 =====
+~~
+- -
+
+Paragraph No.
+
+BRO =) wk oe ek kek
+ot G RO —
+
+Nh
+Qh —
+
+» . . . « . » ‘ .
+* .
+Qh —
+
+. . . . . * . . = . . . « * * a * . . * .
+
+—-~ a oS tot toot ot ot KOO OCC OO COCO
+
+wooaNnnawvoannd
+
+®@ ho —
+
+TABLE OF CONTENTS
+
+Title Page No.
+SECTION 1
+
+GENERAL DESCRIPTION
+IMtCODUCTION 0... eee ceeecsstesceessesentecseestcuseeenstecstessnevedsacescesscassecessusesssanessansaseorsreress 1-4
+FOAtUIeS i... ceesecscscscesscensasscesscsecsussesecsenssesssasvaseeesscorsatsesustacsateusesagssacerasaceusaeensenens 1-1
+SOftWAre Feature... cccssccscsssecsssecssecescsccsevsasessesscstessscecssecetasecatasecatssenseeesenees 1-2
+PrograMmMing Model ............cceccesccssscccsssssesasescesceeuscussceasssrasssseuauaseuecessscavcatacenstenseees 1-3
+Index REGiISters (X,Y)... cece ceseecsescecsseestessssstesssccesstecesssesssusseuseauaesessesaevsseorserersees 1-3
+Stack Pointer Registers (U, S) uu... cc ccssssscccsssssccscsccessssecssccatesecsvscessseussesecsnsanees 1-3
+Program Counter (PC)... ccsesssesssssscssecessesecessncssencvensssssssassescerscserseeerestessaseners 1-4
+Accumulator Registers (A, B, D) ...........cccsccssssscessssesssscesesscsssonsrseecssscesarecetsnarennees 1-4
+Direct Page Register (DP) ou... eeessessecssscecnscesssscessessesscessuacstssaseeeesseecessrecusenes 1-4
+Condition Code Register (CC) oc. cccccssccccsssscesssecesssccessssseseseescersceecsssseuseusseses 1-4
+CONItION Code Bits 00.0.0... ccessssessersscesscsersssecesseesseseasssnecerseasvecseecensearecaseeerees 1-5
+Half Carry (H), Bit 6.00... cs ccsscsssscsssssssscereconscisecsssassteessesaseasecevecesseassees 1-5
+Negative {N), Bit 3... csscccssssecssscesssssscssscssssscevesertcssusscosstscssecetacecataaeens 1-5
+ZOTO (Z), Bit 2.00... csessessesesessreccensscesseccessscenssnassaccesceossceassucesteessesnacsatacsecenes 1-5
+Overflow (V), Bit 1 oe cceseessseresecnssesceesessnsessceesasessesssacerssscsateeessesenstsas 1-5
+Carry (C), Bit 0 occ ssceeseesssessssssseessensesevseecensasensunesassasesarsnseenseeasences 1-5
+Interrupt Mask Bits and Stacking Indicator......ccccccsecsessesssesessscseseeassssserees 1-5
+Fast Interrupt Request Mask (F), Bit 6.0.0... ce ecsccssesesssesssecssssseesereeeres 1-5
+Interrupt Request Mask {), Bit 4 oc cscssssscccssscsssesecsessssessssenscesesnesnees 1-5
+Entire Flag (E), Bit 7.0.0... cccssesccssssecssscesssscerssscsserscsrsasvecosssssesssecessceseseutaceens 1-6
+Pin Assignments and Signal Description...............ccccssccsssecsssssscsssevesseceetscteesenes 1-6
+— MOG6809 CLOCKS 20. cessescenseessenseecseescsonseesscecessnscensecestsnarsnsersuseneceagssseceasers 1-6
+Oscillator (EXTAL, XTAL)......ccccccsssessssscccsssccsssssssseessstonscsvessscesessatarscvnteceacees 1-6
+Enable (E)...........,. psessdecsssseessnnsssnsssssceenseppaddersuncessneansuessenesssescsonstessssersssscessnersnee 1-7
+QUAMrature (Q) u.......ecsssssesssesssscecsnssssssssceeessacesssevasesessssecasescesvsatsnsersuceassceerers 1-7
+MC6809E Clocks (E and Q) ooo... cc ccsncssssssceesecessecsessnecsssessesceosssensseceescersnacens 1-7
+Three State Control (TSC) (MC6809E) uo eee ccseecesscerscsccesssecssecscssreeseeeees 1-7
+Last Instruction Cycle (LIC) (MC6809E) ou... ccc eccssesssescsscossecevssseeesesecsreaes 1-7
+Address Bus (A0-A15).00... ee scscessesssseestesssesscevessossescessnessacesssssarenacensserasenrssnes 1-7
+Data BuS (DO-D7) .0.........cceccsssscsssscrsssecscsasssccassscsssscovssnsonssucesacecesanecsteasestagevsceneces 1-7
+Read/Write (RIW)...........:cccscssscersesccssscccsrasscsssscsnssscanssecessscessseceseecetanecstacecsvenenes 1-8
+Processor State Indicators (BA, BS)... ccessecsssscssscosssecerssscesssecstarecstsaeees 1-8
+et 1-8
+Interrupt or Reset ACKnOWledge..............:csccccssecscessscssescseseserescessveassecernescees 1-8
+SYNC ACKNOWlEIGE..........eceeesessevssesvscecrsnscessncessusecsnsussacensceanscesssceesatenstesaes 1-8
+
+
+
+===== Page 3 =====
+TABLE OF CONTENTS
+
+(CONTINUED)
+Paragraph No. Title Page No,
+1.41.8.4 HaltiBus Grant oo... cccccsccccscssscecnccereescseeerssncenecceenensensenesnscdeerersaeeesaesnenessngeas 1-8
+1.11.9 Reset (RESET) ..........:cccccseeecsesscssescenscensecensensensecenseecaesnecanereeadocepnesantenscenenereneesns 1-9
+1.11.10 INC@PPUDtS ,.....ceeccecsscsteeceeeeescctsecsacospeecusncnsensersatepsussenseneancacensdsequnennaesanensnneenaneents 1-9
+1.11.10.1 Non-Maskable Interrupt (NMI) .........--scsscscsssteesesennseetseneetscessesonseccanonnenses 1-9
+1.11.10.2 Fast Interrupt Request (FIRQ)............ccccsscernsesseecssenneseetetinensneensanennecensses 1-9
+1.11.10.3 Interrupt Request (IRQ)... ssecerrescesseeesssseeencenseestetennsnsssnneceeeseaeenens 1-9
+4.41.11 Memory Ready (MRDY) (MC6809) ...........-ssecsssssteressstoernrerteetsensersaastesneseetannes 1-9
+1.11.12 Advanced Valid Memory Address (AVMA) (MC680QB)........ccsescseecceenans 1-10
+1.11.13 Halt (HALT).......cccccesccccecsssecsstonsercnerseneensccsssntensesenseanseeneeasseneensnensensanenseonesaenes 1-10
+1.11.14 Direct Memory Access/Bus Request (DMA/BREQ) (MC6809).............:0 1-10
+1.11.15 Busy (MC680QE) uu... ceeccccceeennensnssersecenssesesssseeseesenepeteetsomenanrensasarsesazeneanenees 1-10
+1.11.16 POWED ....cccccccssccsecscnescccecesssescsssossenaceneeseeseceseeceenasnansesesesscopennacuessessneeseecepesnaauaaeans 4-11
+SECTION 2
+ADDRESSING MODES
+2.1 INTFOGUCTION.......cccsecccccseececccessscessrscceessnssenesceeeseneaeeensessuceessusansnmeneeseenedgneessensenanenonss 2-1
+2.2 AdGreSSiNg MOdGG..........ccseeccesessssssnteserenessssseeseeseresseetetsesasossnecsorssanseneeneneennaeenets 2-1
+2.2.1 INTOLANL......cccccccecccesssosseccssscessssnusceneessseeacsestonsencocnsensenssanadesusneeessesensscenteconesnaneees 2-1
+2.2.2 VITIIMO DIAL «0... .cccccecesccssscssescccssacecscrssscersrsneetencseconsedoesesnauenasssacerresaaeeenassnsenessoenaees 2-1
+2.2.3 Extended .......ccccccccsccscsscccssccessccceesssesesnseesesecesensenensssonedcsosesnatanrensuseenicenensnanenneaneees 2-2
+2.2.4 DiPeCt....ecccccesscscccseecssscsncceepesssscecceessersceneetetsseresssesseceoeetenneneaunseerenaenaeamennenneneeos 2-2
+2.2.5 INGEXE 0... ccccccccssceneeccncsseccarsscsesenessrcecesesnenessenemestssouseccoseeeassensnedcersneaeeneesasnensuoonne 2-2
+2.2.5.1 Constant Offset from Register... ccsssessecneeeseneenseeciserrentntemeseensens 2-2
+2.2.5.2 Accumulator Offset from REGIStel.........cccceccssrscsnscrteseteseesteenetereetneersneenses 2-3
+2.2.5.3 Autoincrement/Decrement from ReQiStel ...........cecscnensteesscererennenetees 2-3
+2.2.5.4 INGIFOCTION ........ceccccscceeencesscccsceassucessscssscresssoosseneestsnmessepuncecssanssenaeseoesereaetnnent 2-4
+2.2.5.5 Extended INGirect ..........ccccseccsssssesssecsescenseneetsseesssconeeseesmmenseeannnepsananaeenanssonads 2-4
+2.2.5.6 Program Counter Relative .........cccessseseseernneetssestssenrecestssnessenseseeennenetans 2-4
+2.2.6 Branch Relative ............:cccccscssscccreeesesscesecentssesseeeessccosseeeeenensseeeneseetteansesnenenpennees 2-4
+SECTION 3
+INTERRUPT CAPABILITIES
+3.1 IMNCFODUCTION.......cccccsecssesssecccecccccescensscersensssrcensscersesnausesnsadsoneenerseeanesseeaacooneetnerstanenens 3-1
+3.2 Non-Maskable Interrupt (NMI) ou... ce ecsecsrnseesstrecsneensserssnensatooesecestnnanenaaneees 3-1
+3.3 Fast Maskable Interrupt Request (FIRQ)..........-:scscscsessseessrensrssenseeseseatennesess 3-2
+3.4 Normal Maskable Interrupt Request (VRQ) ............csceseereteetseeessasenneteetteensensenes 3-2
+3.5 Software Interrupts (SWI, SWI2, SWI) 0.0.0... ce eesceeeeeetteeeecenevernesnensenevenseoenen 3-2
+
+iv
+
+
+
+===== Page 4 =====
+7 pA
+
+— ee
+
+4.1
+4.1.1
+4.1.2
+4.1.2.1
+4.1.2.2
+4.1.3
+4.2
+4.2.1
+4.2.1.1
+4.2.1.2
+4.2.1.3
+4.2.2
+4.2.3
+4.2.4
+4.2.5
+4.2.6
+
+| 4.2.6.1
+4.2.6.2
+4.2.6.3
+4.2.7
+4.3
+
+4.4
+
+Al
+A.2
+
+B.1
+B.2
+B.3
+
+Paragraph No.
+
+TABLE OF CONTENTS
+
+(CONCLUDED)
+Title Page No.
+SECTION 4
+PROGRAMMING
+IMEFODUCTION ec cssccsseeesseeessesesnseessccesuseseesusesseaseseaessesecsensesenayanevessesvanseessdesuseoeues 4-1
+POSILTION-INGEPENdENCE.............seeeeseessessssensevsecosnsescesscauerestsseeecenseneaeessnereners 4-1
+Modular ProgramMmMing....c..ccecsscsssccsssscsssscsssecosseessesseonsssenssscsssecsssneecseneeseseeeeees 4-1
+LOCAl Storage... ccessescecssecssenssssnseeseerovessauscersensserenssevsssonsssestensenssssnarsnsersees 4-1
+Global Storage .........cccescssscssscesssscsssrsssessasscsassecsersessesevavscoseusssesssesatareseteasease 4-2
+REe@ntrancy/ReCurSion ............ccsccssscenstsesessressereeserssssseaesencsescesnecevsncessanconsesessaca 4-2
+M6809 Capabilities ee eessscesececeseeesseessseeassessueesnsesssnersenaessaeponseesacevsess 4-2
+Module Construction... ccceccccessscesseessseressenessecassesacsenssescsesssssonseceusasessasensas 4-2
+PAPAIMOLETS ........cscseesceesseeesseeesaeerenseesncersaceeseuseaeusessuseaeseasssesacsenaesnaaeatvessuesvaes 4-3
+LOCA] Storage... eeeseccsesssenesenssensseeeseecssscsssecsseseecstenatsanesseresestevsecensnecerssesass 4-3
+Global Storage... .cccccsssccsssesssesceesesssnecseecstesesssncesssceeusscansassessenessecessaseenenees 4-3
+Position-independent Code ............csccesscecsssscssssssssssresssnesssessessersnarcceasencevnscons 4-4
+Reentrant Programs............cccccscssssescssensecesscceenscovsseecsussensenesseeasassessensensenenssags 4-5
+RECUrSIVE PrOQraMMS ............ccccssecsssceescesssesesssestesneesessassesaevacesutessscessssseesatertens 4-5
+ele) 0) 4-5
+Stack PrograMMing ..........ccssesssesscsessssrssssessscsssseccesssspetosssecserssssarseersetsesseacases 44
+M6809 Stacking Operations... csscsssscssessssesesssseseeeseesrseessarsesseveveeenes 4-6
+SUDrOUTING LINKAGE............cscsssesensssesescessssscessccsssnesssscesssnssssevsuasersversetsseseseeses 4-7
+SOPTWArE StACKS oe esc ssceseesceeseesssesesteassessetssacestesevsopenscevseseasseousenrerenseses 4-8
+Real Time Programming ..........ccccscesscssecssesecseessssssceestceseensstsnseeseersecessecenseenas 4-8
+Program DOCUMENtAatiOn ............ccccscscsvecentsesssssesssscesesseesseesseeesesensseseeasseuseetecsnsens 4-8
+INStrUCHION Set oo. e ce eeesesesssssecssssessesesssensssecssensssssacsserseeseaceeanessseacsuaersessaceracveeess 4-9
+APPENDIX A
+INSTRUCTION SET DETAILS
+IMEPOGUCTION ..... cee ccscceecesneeenssconssecssseracsorsatsaesesensatsnsseeeesateaseecetstenesnentaeeaseenetaes A-1
+NOCAtiON oo. eccsstescsescesseesetncessaesnersenassencaecauetsnessatecaeeseetoscnsasernetcossssessaseensceesenes A-14
+Instructions (listed in alphabetical order).....................:ccssssscevssreesevenseecersccennese A-3
+APPENDIX B
+ASSISTO09 MONITOR PROGRAM
+General Description... ceesscssesssssessesssseesssseessseasssceasssccessaeeneacesncersuecuaneesesceas B-1
+Implementation REquirEMents ........... ee ssesteecesesecertssnsesenceeeaseuesssersneseesseeees B-1
+Interrupt CONIOL ou. ec cssescessecossssesssscesescecseesetensetaeeaeeneesseaseseesetsnaaeseenstaceaeneeentens B-2
+DITIATIZALION 0... cceccsseessssensssecscecesseesecseessecssscecsesnecaeaseaeagscneesetonsnneseussensseceneteeaseens B-3
+
+
+
+===== Page 5 =====
+Paragraph No.
+
+B.5
+B.6
+B.7
+B.8
+
+B.9
+
+B.10
+
+Input/Output Control
+Command Format
+
+ve unncaapucnnvacdccusunnpehenunnnes PeHseunuspunsscuns¢aussnereetsausaavengacusanseraueesaseesssseaseeess
+
+TABLE OF CONTENTS
+(CONTINUED)
+
+Title
+
+cecaccnnevapuccennscepycausesepesmansdopussnvragsausuucrppasssansepuasowansgaussrresngecssesreyee
+
+peceuncccccdesnssunnneeennscussescunnerapeccussoressauaansepesssunagsaauaacengnausaasppacaseseneessscceee esse
+
+cewegennnnrccceanecccepepessanncpennsunnad pacemensadsuennwspeacsuauacebyssaaaceenesevasaeeasssaseeeessseest
+
+veccuvaunauncuappynsaneusdoncescrspscnausncbeeessensepesnansngposunaceagessenacousunusaaeparsscssgeacesanrvegeessacaets
+
+cauuaccuceecuunenceseecacesssuceuavsncgansnnapseacuuncepegenaussepusemrcnaransuacesganaesaseyeeecesagereeseesgee’
+
+cunerpccaucucceeeuscauncdseannnursgceusnavppensussebesnauanasonesevansysauaaaspeccarsegesussscsee¢ereereeagecccs
+
+vecuauunnccregecusnsepepuscusessopuseeaustseususrpageausneregaauauseppansansaggacuusrasgeasessgreeenseaseveresseacgyecse’
+
+ceueununcoucccucccecausuncresccanseecenenmannceensspusscouausosssdeusnavoppaaasauauevesseaaaagsecssesagessagasreees ens
+
+ceeencaacuunrendeanunnnvrrecausncgeveuneauac@henssunadesuaereng¢anusuvresacsseesepessmanacasesseusegeecasacrecee uses
+
+dauuacuccaeccuaeccuspecacenceusnenauesaneannarsegeusucersacoususpbaassusaagauauneuaagauseacepecccessgseeee cesses
+
+Vacucauccdausesanscevacsuacesenssuccespensanaedoueunuaadssnuasousdsausasvenyasauaucevesswanagacscesaresessces eens
+
+cuncepenenncccceucucusedccceneraceeacuancepesmanscspensnvanagausumroopesnacucspanenansaeusnracesarecccesseses
+
+cunuceuccacucarveeecvaucnvepenenanscepesspansagsussmenegauauaucreenuuanusypuasusanevesenansagacssevsas¢aenseeer’
+
+venue rcceauacecresecausnncpensasacesonusneusnsdsusssanedeuansvesseausuncootesuaaacopaasounassseeeeaseeea sean reese ®
+
+cucucceunnnauceeeauunncreecounnascevuneusenepenssanncenssponsnggcuunscuseesuaasenyssenanagacceeasa¢eesssasr esses’
+
+cenccaunnreepyncauuncpassscvanceausnavaseusasesypguensnasepunssacudeguaasobasecussasnyeneasceevesecessegccees
+
+cevpvcvacunnrpesescusndeceenvsssescunanepperauengopennansacessusmuaaganenamopeunauassegerseesacelesssganesen sacs!
+
+vunnncpeynaccccceeeescunnsenusnsersceassnnvsoeasusuneeenccussedouaaaunagguausncerenmaaaagepasasssageceeserceeeeans
+
+wecuccoceccaunnddeusunvecdeauanssepensannacdpenspaasepasancusagacuuunsppenauaaaepesseusaggeacenverecesssae re yee’
+
+cepcecaunnncepecesuuncepasscusanspenncusngesusucuuadenumauwopensucungouaasausagausssacaguccasecseyssesessgy et
+
+caueeaccucccceeauucnccseusnunsespeunsuange¢ausaausegassusemsseacsusaaeboussusundeuasacosperaussaseyeeecceesy ence
+
+vu cuaceunnccensedguunncepensauannvesecusnnnepensaaacepauaancooscsusuadsanssmangesnuaaceryercceeseyoccessae eye
+
+cacunuennepecnnncccdeuccsceceseausnncenenauannebessuunacecusnnonagecaunagppuncanuacasacenraagausssageresecee’
+
+vecaauunncuccecausnncceeccuncnssbyscuscucopenamascegusncsagegauanesppanawasagoussaureousanaeereyscescense seen st
+
+Sea uunacraceausnnncunsecusnccesegsnunnespansauseeppunananadenunuvesasssuaasegeuewannagacasacresecessssgeecc ens’
+
+cecccepuccacnnnceuunnceccGeusensnensspennevaesgeusasuseessunnnersesaunaagepuascusagseueescereensssageyeseceese?
+
+venunevopeunaucccgeunecucnncepecnansnspenssasece@besuarassgassssovegguwanacenssscunnagauaaacareceessnsengseccs
+
+ceuunccacaapecnnuccceceuceessppecanuncoousmansneppassacsagouauswananarsunsopuauscaaugausesanygosceeseeaceseess’
+
+secececncacce¢ausuncressceunnnereeccunadebena sunny ppasenanadeusuawrbyssanauuepaasecsaaenunsarereyesccece yan se
+
+uae ucucepenanuccsvepecnccesdassusecusceneensoandsauuarvesesaunanopasumansacouuusauaaeearsaraseyesssaseresessacee’
+
+cunupenaecccecvepucceucuceceenecnccdesuscansnganessauegsauansoepermessundpecsaaaaconssaausngeccensereecesssse eye
+
+cuueccencapecnnnansdccucneeeonsauennceapeesunseppuncussareuuususgegaausacertsaauacaepeusscaaesenccacasggeecnns
+
+uc rreeacuununcragcusuncepensasscscppsumeuandsesscuseqeauauauregecusuuaspanssacaceeusswonageeccsevsssssesasees
+
+vecuncucrreccuseuscvessausescopenucusncgpansmenscoasuavanagssunaavposssvanccouuusaauggacesareeeeceessceeese esas’
+
+paunncnucdoucnnnccegucaucevesuacaususeonennansedpumavansugausunenacgoasenvoppanseussepasesceagesceesenyeeceesns
+
+vuumauccopecccunncdeucunvsdbensuenucppescucnncepensaeuedeauasuanggausnasregsauaaacppaasounaggeenserceeeeseense?
+
+vunacuuopeccnannncdcucunresesaascunosensansnseousucuuedpauasovas¢anunnsepayesasasepanaavanccauesncaresecccscr eens
+
+vee teceunnnddgucunvanceansnnnvorsconnnnneesuscuuudpansspanadpeusnuaneusauauavepascursaceusseccerseecsceceyeees
+
+penn cencepensncunccesenaserrssccunecreouscuasegenasersageuuaacasegaacuauncopaseuauagaesanereggessceegyyae acess
+
+vi
+
+neveceaucnenepersausns@penenussepununsusagssanaereeasnasasepanananuagenusucaassscesesaryeencs
+
+er errrrrrrrrrrrrrrrrrret rrr tite hes
+
+
+
+===== Page 6 =====
+TABLE OF CONTENTS
+
+(CONTINUED)
+Paragraph No. Title Page No.
+CODTA Lc ececcceccceeeceeeecceeecceneecceeecuseeeceeeecenecuueneceesaeeeaceeanseeeasceuecasuueeaensasenanasueaess B-28
+1010) 5 ee B-29
+61010) | ee B-29
+0 Oe B-30
+FUP. ccc ccccceececeeeeeceeeeceeceseeuneceuaraseecuueusaaecuuaessauaecuansssuuassusascuanscuansssunsaueneseensses B-30
+ts] OF ee B-31
+VR... eececccccceeeseececenceescceeeestenereupeseucercasercesacceneaucarasepeaucesuauenuaaepussseusascusescusessusnens B-31
+SL ce B-32
+PAD 1.0... cccccsccseseecseesceseucepectenpeoesercuseesegereeneacepeasteraeuerauuuerasuerasscususerasenausecuseesensene B-32
+PAUSE ....... cee cceccececesssssseecsavssensecessvstoeeterscevesnecersensestaserstssusserasseessesensnerasenentane B-33
+ee B-33
+RESET ........cccccccvccssccesececeercreccrsccessneceusereesouseecensuasesenaaseeaacateasesouseawanesauaessousesaness B-34
+RSVD oie. cceeccccecsseccecececceescccreseceecereaseraeereauasesseeauancesseessseeeasesenuuunenseeeseeeeesesennes B-34
+SW] oo cceccceeesccsecceeee reece sesesceeeeeceescuueesueseaeeueceessauensaeeseaeeeescuaesuuecscensecesesonnscavencevens B-35
+SWU2.. cece ccccccccscccsseccssecesssccsesccussacuncssecsasueceunccessccessccenevecensecensecsnssecesacensauccnseccuss B-35
+SWI. ccc cccccccecceecaececaceecaceescueeescusscugesaauessanssauseseensceesscesesecevsscersaterssatersacersteersstenss B-36
+B.11 MONitor LISTING ......... eee eeeecessecceesssneescesnaneesceseeceesssueeceeseeeceeesueneacnsaeesasgesesseeanees B-37
+APPENDIX C
+MACHINE CODE TO INSTRUCTION CROSS REFERENCE
+C.1 IMEFOGUCHION 0.0... ceceeceeeceneeceseecceeeeceescueuncuseceeeneceeesscunseuseenceuesauesscuaneeneecesesenensaaeeseers C-1
+APPENDIX D
+PROGRAMMING AID
+D.1 Introduction eovndcencdevsucertenessevenstesesevsuuceaseseceensuuesesseensuasaeeeeesenccuseonessasanseesesennanseasene D-1
+APPENDIX E
+ASCII CHARACTER SET
+E.1 INCFOCUCTION occ ccccesencensescenecansectanscesseeseeaseerasesenaessseneesseoeseaeesseeaeee seaetensenentaes E-1
+E.2 Character Representation and Code Identification ...........ceeseeesersteeceerseees E-1
+E.3 Control Character ..........cceccccccccceccesseseseeceeeecneeeceseseceesaceeeeneceeaseevecseeasesaneeesaneeeeeens E-2
+E.4 Graphic CHaracters ...........ccceessscessssseescersatecvsceneseeereesesrneserseesnecsersuneessevsuasecuserens E-2
+
+vii
+
+
+
+===== Page 7 =====
+Paragraph No,
+
+F.1
+F.2
+
+G.1
+
+Figure No.
+
+1-
+1-
+1-
+
+Go ND —+
+
+2-1
+3-4
+4-1
+B-1
+E-1
+
+G-1
+
+TABLE OF CONTENTS
+(CONTINUED)
+Title Page No.
+APPENDIX F
+OPCODE MAP
+IITFOGUCTION ooo ce eccsccseccccenssceceeccsnscreeecssseeencerasaesreeeesseseesecusanasseseensessisonsassessaouans F-1
+OPCOde MaD........ccccscccssseccsesssseecesneeesseesesesssceseseeseeseusesaenenaeuncsusnecssdeeseeaesssnensanenees F-1
+APPENDIX G
+PIN ASSIGNMENTS
+INTFOGUCTION .....cccccccccccreececeecccesesccsecnsscerseeeeesseeescceueeseeerenneesrasepeeceeeesaaneueeeeemennawerseouee G-1
+APPENDIX H
+CONVERSION TABLES
+INTFOGUCTION ooo... cecceccscccceeeccsescesssecssscrenserecerpeseeeseseesenecenneenenersseesasasesecogeesauuensauenaueas H-1
+Powers of 2; Powers Of 16 ...c.ccccscccssesscescteseessssersscenscsaeesnseteeescetsnassanensepsusenaeconens H-1
+Hexadecimal and Decimal ConverrSion.............cccccseccessssessscenseeeesesessneonnncosenenees H-2
+Converting Hexadecimal to Decimal ...............cececcceseeneseeseenteeetseenenneenaneaaes H-2
+Converting Decimal to Hexadecimal ............:.eccesssereseertseeeetsetsnenteneeeneennaes H-2
+
+LIST OF ILLUSTRATIONS
+
+Title Page No.
+Programming Model ........ccccssccssscrsessesssseesnacernesesessenesseescsseninseesreenseenassnensnanetees 1-3
+Condition Code REGISter ..........ccesccseccctsseetsecseseersessesenneeseneesersaeeeneneensesersesesenaes 1-4
+Processor Pin ASSIQNMENTS...........:cccceccceeessssessssoreeseesenessasseeesseeserscersevenetonsnenens 1-6
+Postbyte Usage for EXG/TFR, PSH/PUL INStrUuctiOnS.........ccscreneseereneteenees 2-2
+Interrupt Processing FIOWCHAML..............sscesseseseseeeeseeseesseeenerseetsenenteesneneteneases 3-5
+Stacking Order... ceccccsssscccssessvscsseesssecssecsssssennsepetsaecsserasseesseceontoonengenenseenneanserss 4-7
+MeMory Map .....0..... 2. eccseseeerscetseeteescensnessseepeesanensceuseaeeaeersa¢epnesnasteaesseasnanenaeesesesneae B-2
+ASCII] Clraracter Set... cccceccessessssecsscestonsensansnnensncnsensersdeseneeatseensneasatersnseeneeees E-1
+Pin ASSIQMIMEMS.........ccccccccsscesscececseesecssesssesssersseteenuscusaueeseseesneassenecasenenaesmesaeaneceney G-1
+
+viil
+
+
+
+===== Page 8 =====
+Table No.
+1-1
+2-1
+3-1
+4-1
+4-2
+4-3
+4-4
+4-5
+46
+
+A-1
+A-2
+
+B-1
+B-2
+B-3
+C-1
+D-1
+
+E-1
+E-2
+
+F-1
+F-2
+
+H-1
+H-2
+
+LIST OF TABLES
+
+Title Page No.
+BA/BS Signal Encoding... ccscscsssenescsesseeesneeeseseeseeenseseeesenasteraessnasssenerseaneas 1-8
+Postbyte Usage for Indexed Addressing Mode ......0.......ccccssesseeesseeetseneeeeeees 2-3
+Interrupt VECtor LOCATIONS oo. eseesesesestersseerssesoessensassecesusraseseesseenessenssnnanes 3-1
+INStrFUCTION SOt 20... cece ee ccceceesesessseaeeseessnesseescesseasseeseasssnassensersssssensassvssossecentesesss 4-9
+8-Bit Accumulator and Memory INStructions.............cccscrccesstccrscerttecentessanes 4-11
+16-Bit Accumulator and Memory INStructionS .............cceeecsesceesteeesssenseeenseees 4-12
+Index/Stack Pointer INStrUCtiONS................:.cccccessssscseesssesseseesaeesseaeeeeetesnnanessesvnss 4-12
+Branch INStrUCTIONS o.oo... ccc cee ceeeeeeesenecsssessnereneesessuseaussensseeceessacesseasessunspeneneens 4-13
+Miscellaneous INStrUCtiOnS oo... essececsscesssccessetensesscassecesseceeesecesseesserensseenenes 4-13
+Operation Notation... csescessecsseessenecersecsercssssnsesscensencessncessseesatecetseessnes A-1
+Register Notation........cccsccccssscsssssrssscssscesscsssesessuteersncerseecensucerssacersccerstesunrecansessanee A-2
+ek B-5
+SOPVICES........ccescsrsessensccnscersssertesersceernsceancennecenseceereseesasceenscersncespecenaneenatecssseesnneces B-14
+Vector Table Entries... cceescceecsssseesseeseeesaeeeeeeessenesseaeeessaueesassecasevenmesvens B-22
+Machine Cade to Instruction Cross Reference. .......uccssccsserssccscctnccsnecenneens C-2
+PLFOQrFaAMMiINgG AiG ..........c:sccsssscsrsscrstccersserrscernccoensccersteerenseepacennacoensecerstcersucoennaceaneces D-1
+Control Character i... acccscccessscressscesssneccerscsecsuseeseeccensceeneceenneceeceeesneeeanncceneneannes E-2
+Graphic Characters oo... ccccccscsscccssseccsscecsecesssecesseceesscessscsesceseueceseseacauceseereessnenss E-3
+Opcode Mapa... ecccsccssscssscesssssccseressessssessssecseseeesssesstssecssenscseecseneeterecees essueerseeseee F-2
+Indexed Addressing Mode Data uo... ee eececeseeeeeeeseeeeeeeeeeeeetteeneeenees ateeenenseneeee F-3
+Powers of 2; Powers Of 16.0.0... ..ccccceescsseeesssseesecseceeesssneeenasseeceessnaeseeesaeneessnnaeeeenses H-1
+Hexadecimal and Decimal Conversion Chart .....0........ccccsseessssceseseesseesesseessnenaees H-2
+
+ix/x
+
+
+
+===== Page 9 =====
+SECTION 1
+GENERAL DESCRIPTION
+
+1.1 INTRODUCTION
+
+This section contains a general description of the Motorola MC6809 and MC6809E
+Microprocessor Units (MPU). Pin assignments and a brief description of each input/out-
+put signal are also given. The term MPU, processor, or M6809 will be used throughout this
+manual to refer to both the MC6809 and MC6809E processors. When a topic relates to
+only one of the processors, that specific designator (MC6809 or MC6809E) will be used.
+
+1.2 FEATURES
+
+The MC6809 and MC6809E microprocessors are greatly enhanced, upward compatible,
+computationally faster extensions of the MC6800 microprocessor.
+
+Enhancements such as additional registers (a Y index register, a U stack pointer, and a
+direct page register) and instructions (such as MUL) simplify software design. Improved
+addressing modes have aiso been implemented.
+
+Upward compatibility is guaranteed as MC6800 assembly language programs may be
+assembied using the Motorola MC6809 Macro Assembler. This code, while not as com-
+pact as native M6809 code, is, in most cases, 100% functional.
+
+Both address and data are available from the processor earlier in an instruction cycle
+than from the MC6800 which simplifies hardware design. Two clock signals, E (the
+MC6800 2) and a new quadrature clock Q {which leads E by one-quarter cycle) also
+simplify hardware design.
+
+A memory ready (MRDY) input is provided on the MC6809 for working with slow
+memories. This input stretches both the processor internal cycle and direct memory ac-
+cess bus cycle times but_aliows internal operations to continue at fuil speed. A direct
+memory access request (DMA/BREQ) input is provided for immediate memory access or
+dynamic memory refresh operations; this input halts the internal MC6809 clocks.
+Because the processor's registers are dynamic, an internal counter periodically recovers
+the bus from direct memory access operations and performs a true processor refresh
+cycle to allow unlimited length direct memory access operation. An interrupt
+acknowledge signal is available to allow development of vectoring by interrupt device
+hardware or detection of operating system calls.
+
+4-1
+
+
+
+===== Page 10 =====
+Three prioritized, vectored, hardware interrupt levels are available: non-maskable, fast,
+and normal. The highest and lowest priority interrupts, non-maskable and interrupt re-
+quest respectively, are the normal interrupts used in the M6800 family. A new interrupt on
+this processor is the fast interrupt request which provides faster service to its interrupt
+input by only stacking the program counter and condition code register and then servic-
+ing the interrupt.
+
+Modern programming techniques such as position-independent, system independent,
+and reentrant programming are readily supported by these processors.
+
+A Memory Management Unit (MMU), the MC6829, allows a M6809 based system to ad-
+dress a two megabyte memory space. Note: An arbitrary number of tasks may be sup-
+ported — slower — with software.
+
+This advanced family of processors is compatible with all M6800 peripheral parts.
+
+1.3 SOFTWARE FEATURES
+
+Some of the software features of these processors are itemized in the following
+paragraphs. Programs developed for the MC6800 can be easily converted for use with the
+MC6809 or MC6B09E by running the source code through a M6809 Macro Assembler or
+any one of the many cross assemblers that are available.
+
+The addressing modes of any microprocessor provide it with the capability to efficiently
+address memory to obtain data and instructions. The MC6809 and MC6809E have a ver-
+satile set of addressing modes which aliow them to function using modern programming
+techniques.
+
+The addressing modes and instructions of the MC6809 and MC6809E are upward com-
+patible with the MC6800. The old addressing modes have been retained and many new
+ones have been added.
+
+A direct page register has been added which allows a 256 byte “direct” page anywhere in
+the 64K logical address space. The direct page register is used to hold the most-
+significant byte of the address used in direct addressing and decrease the time required
+for address calculation.
+
+Branch relative addressing to anywhere in the memory map (- 32768 to + 32767) is
+available.
+
+Program counter relative addressing is also available for data access as weli as branch
+instructions.
+
+The indexed addressing modes have been expanded to include:
+0-, 5-, 8-, 16-bit constant offsets,
+8- or 16-bit accumulator offsets,
+autoincrement/decrement (stack operation).
+
+1-2
+
+
+
+===== Page 11 =====
+In addition, most indexed addressing modes may have an additional level of indirection
+added.
+
+Any or all registers may be pushed on to or pulled from either stack with a single instruc-
+tion.
+
+A multiply instruction is Included which multiplies unsigned binary numbers in ac-
+cumulators A and B and places the unsigned result in the 16-bit accumulator D. This un-
+signed multiply instruction also allows signed or unsigned multiple precision multiplica-
+tion.
+
+1.4 PROGRAMMING MODEL
+
+The programming model (Figure 1-1) for these processors contains five 16-bit and four
+8-bit registers that are available to the programmer.
+
+15 0
+X — index Register
+
+Y¥ — Index Register
+U — User Stack Pointer
+
+S — Hardware Stack Pointer
+
+Pointer Registers
+
+PC Program Counter
+A | B Accumulators
+. ,
+a A
+
+D
+7 ¢]
+| DP } Direct Page Register
+7 0
+PETE, H] | N] Zz] vic] Condition Code Register
+
+Figure 1-1. Programming Mode!
+
+1.5 INDEX REGISTERS (X, Y)
+
+The index registers are used during the indexed addressing modes. The address informa-
+tion in an index register is used in the calculation of an effective address. This address
+may be used to point directly to data or may be modified by an optional constant or
+register offset to produce the effective address.
+
+1.6 STACK POINTER REGISTERS (U, S)
+
+Two stack pointer registers are available in these processors. They are: a user stack
+pointer register (U) controlled exclusively by the programmer, and a hardware stack
+pointer register (S) which is used automatically by the processor during subroutine calls
+
+1-3
+
+
+
+===== Page 12 =====
+and interrupts, but may also be used by the programmer. Both stack pointers always
+point to the top of the stack.
+
+These registers have the same indexed addressing mode capabilities as the index
+registers, and also support push and pull instructions. All four indexable registers (X, Y,
+U, S) are referred to as pointer registers.
+
+1.7 PROGRAM COUNTER (PC)
+
+The program counter register is used by these processors to store the address of the
+next instruction to be executed. It may also be used as an Index register in certain ad-
+dressing modes.
+
+1.8 ACCUMULATOR REGISTERS (A, B, D)
+
+The accumulator registers (A, 8) are general-purpose 8-bit registers used for arithmetic
+calculations and data manipulation.
+
+Certain Instructions concatenate these registers into one 16-bit accumulator with
+register A positioned as the most-significant byte. When concatenated, this register is
+referred to as accumulator D.
+
+1.9 DIRECT PAGE REGISTER (DP)
+
+This 8&bit register contains the most-significant byte of the address to be used in the
+direct addressing mode. The contents of this register are concatenated with the byte
+following the direct addressing mode operation code to form the 16-bit effective address.
+The direct page register contents appear as bits A15 through A8& of the address. This
+register is automatically cleared by a hardware reset to ensure M6800 compatibiity.
+
+1.10 CONDITION CODE REGISTER (CC)
+
+The condition ‘code register contains the condition codes and the interrupt masks as
+shown in Figure 1-2.
+
+7 6 56 43 2 1 9
+
+ElED pert)
+
+Li Carry
+Overflow
+Zero
+
+Negative
+
+IRQ Mask
+
+Half Carry
+
+FIRQ Mask
+Entire Flag
+
+Figure 1-2. Condition Code Register
+
+1-4
+
+
+
+===== Page 13 =====
+1.10.1 CONDITION CODE BITS. Five bits in the condition code register are used to in-
+dicate the results of instructions that manipuiate data. They are: half carry (H), negative
+(N), zero (2), overflow (V), and carry (C). The effect each instruction has on these bits is
+given in the detail information for each instruction (see Appendix A).
+
+1.10.1.1 Half Carry (H), Bit 5. This bit is used to indicate that a carry was generated from
+bit three in the arithmetic logic unit as a result of an 8-bit addition. This bit is undefined in
+all subtract-like instructions. The decimal addition adjust (DAA) instruction uses the
+State of this bit to perform the adjust operation.
+
+1.10.1.2 Negative (N), Bit 3. This bit contains the value of the most-significant bit of the
+result of the previous data operation.
+
+1.10.1.3 Zero (Z), Bit 2. This bit is used to indicate that the result of the previous opera-
+tion was zero.
+
+1.10.1.4 Overflow (V), Bit 1. This bit is used to indicate that the previous operation caused
+a signed arithmetic overfiow.
+
+1.10.1.5 Carry (C), Bit 0. This bit is used to indicate that a carry or a borrow was generated
+from bit seven in the arithmetic logic unit as a result of an 8-bit mathematical operation.
+
+1.10.2 INTERRUPT MASK BITS AND STACKING INDICATOR. Two bits (I and F) are used
+as mask bits for the interrupt request and the fast interrupt request inputs. When either
+or both of these bits are set, their associated input will not be recognized.
+
+One bit (E) is used to indicate how many registers (all, or only the program counter and
+condition code) were stacked during the fast interrupt.
+
+1.10.2.1 Fast Interrupt Request Mask (F), Bit 6. This bit is used to mask (disable) any fast
+interrupt request line (FIRQ). This bit Is set automatically by a hardware reset or after
+recognition of another interrupt. Execution of certain instructions such as SWI will also
+inhibit recognition of a FIRQ input.
+
+1.10.2.2 Interrupt Request Mask (i), Bit 4. This bit is used to mask (disable) any interrupt
+request input (IRQ). This bit is set automatically by a hardware reset or after recognition
+of another interrupt. Execution of certain instructions such as SWI will also inhibit
+recognition of an IRQ input.
+
+1-5
+
+
+
+===== Page 14 =====
+1.10.2.3 Entire Flag (E), Bit 7. This bit is used to indicate how many registers were stack-
+ed. When set, all the registers were stacked during the last interrupt stacking operation.
+When clear, only the program counter and condition code registers were stacked during
+the last interrupt.
+
+The state of the E bit in the stacked condition code register is used by the return from in-
+terrupt (RTI) instruction to determine the number of registers to be unstacked.
+1.11 PIN ASSIGNMENTS AND SIGNAL DESCRIPTION
+
+Figure 1-3 shows the pin assignments for the processors. The following paragraphs pro-
+vide a short description of each of the input and output signals.
+
+Mce8098 MC6S09E
+Yssdie “” 4opHALT Vsstie “~ ajpHALt
+NMI @ 2 39 P XTAL RMI G 2 39P TSC
+IROY3 ap D EXTAL TROD 3 ae f Lic
+FIRQY 4 37 P RESET FIRQQ 4 37 DP RESET
+Bsds5 36 P MRDY BSW5 36 DP AVMA
+BANG 35 HQ BA Tg 356) 0
+Vocd? wpe Voc a7 3a E
+AOd8 33 1 DMA/BREQ AOGS 331 BUSY
+Allg a2 DR/Ww Alfg sop R/Ww
+A27 10 31 00 A210 318 DO
+A30 11 30 § D1 A311 30p D1
+A412 99 § D2 A412 29 D2
+A5q13 28 1 D3 A5q13 28 ft D3
+AB gt4 2704 A6qi4 27 D4
+A7 gt5 26D D5 A7QI15 26 P DS
+A8 q16 259 06 AS q16 25 pb D6
+AS {17 24 D7 AQ a}? 24 DD?
+A10g 18 23) A15 Al10 18 23D A15
+At1q19 22 hA14 A11q19 22h Al4
+A12 q 20 21D A13 A12 420 21PA13
+
+Figure 1-3. Processor Pin Assignments
+
+1.11.1 MC6809 CLOCKS. The MC6809 has four pins committed to developing the clock
+signals needed for internal and system operation. They are: the oscillator pins EXTAL
+and XTAL; the standard M6800 enable (E) clock; and a new, quadrature (Q) clock.
+
+1.11.1.1 Oscillator (EXTAL, XTAL). These pins are used to connect the processor's inter-
+nal oscillator to an external, parailel-resonant crystal. These pins can also be used for in-
+put of an external TTL timing signal by grounding the XTAL pin and applying the input to
+the EXTAL pin. The crystal or the external timing source is four times the resulting bus
+frequency.
+
+1-6
+
+
+
+===== Page 15 =====
+1.11.1.2 Enable (E). The E clock is similar to the phase 2 (¢2) MC6800 bus timing clock.
+The leading edge indicates to memory and peripherals that the data is stable and to
+begin write operations. Data movement occurs after the Q clock is high and is latched on
+the trailing edge of E. Data is vatid from the processor (during a write operation) by the
+rising edge of E.
+
+1.11.1.3 Quadrature (Q). The Q clock leads the E clock by approximately one half of the E
+clock time. Address information from the processor is valid with the leading edge of the
+Q clock. The Q clock is a new signal in these processors and does not have an equivalent
+clock within the MC6800 bus timing.
+
+1.11.2 MC6809E CLOCKS (E and Q). The MC6809E has two pins provided for the TTL
+clock signal inputs required for internal operation. They are the standard M6800 enable
+({E) clock and the quadrature (Q) clock. The Q input must lead the E input.
+
+Addresses will be valid from the processor (on address delay time after the falling edge
+of E) and data will be latched from the bus by the falling edge of E. The Q input is fully TTL
+compatible. The E input is used to drive the internal MOS circuitry directly and therefore
+requires input levels above the normai TTL Jeveis.
+
+1.11.3 THREE STATE CONTROLS (TSC) (MC6809E). This input is used to place the ad-
+dress and data lines and the R/W line in the high-impedance state and allows the address
+bus to be shared with other bus masters.
+
+1.11.4 LAST INSTRUCTION CYCLE (LIC) (MC6809E). This output goes high during the last
+cycle of every instruction and its high-to-low transition indicates that the first byte of an
+opcode will be jatched at the end of the present bus cycle.
+
+1.11.5 ADDRESS BUS (A0-A15). This 16-bit, unidirectional, three-state bus is used by the
+processor to provide address information to the address bus. Address information Is
+valid on the rising edge of the Q clock. All 16 outputs are in the high-impedance state
+when the bus available (BA) signal is high, and for one bus cycle thereafter.
+
+When the processor does not require the address bus for a data transfer, it outputs ad-
+dress FFFF76, and read/write (R/W) high. This is a “dummy access” of the jeast-
+significant byte of the reset vector which replaces the valid memory address (VMA) func-
+tions of the MC6800. For the MC6809, the memory read signal internal circultry inhibits
+stretching of the clocks during non-access cycles.
+
+1.11.6 DATA BUS (D0-D7). This 8-bit, bidirectional, three-state bus is the general purpose
+data path. All eight outputs are in the high-impedance state when the bus available (BA)
+output is high.
+
+1-7
+
+
+
+===== Page 16 =====
+1.11.7 READ/WRITE (R/W). This output indicates the direction of data transfer on the data
+bus. A low indicates that the processor is writing onto the data bus; a high indicates that
+the processor is reading data from the data bus. The signal at the R/W output is valid at
+the leading edge of the Q clock. The R/W output is in the high-impedance state when the
+bus available (BA) output is high.
+
+1.11.8 PROCESSOR STATE INDICATORS (BA, BS). The processor uses these two output
+lines to indicate the present processor state. These pins are valid with the leading edge
+of the Q clock.
+
+The bus available (BA) output is used to indicate that the buses (address and data) and
+the read/write output are in the high-impedance state. This signal can be used to indicate
+to bus-sharing or direct memory access systems that the buses are available. When BA
+goes low, an additional dead cycie will elapse before the processor regalns contro! of the
+buses.
+
+The bus status (BS) output Is used in conjunction with the BA output to indicate the pre-
+sent state of the processor. Tabie 1-1 is a listing of the BA and BS outputs and the pro-
+cessor states that they indicate. The following paragraphs briefly explaln each processor
+state.
+
+Table 1-1. BA/BS Signal Encoding
+
+SA BS Processor State
+
+Normal {Running}
+
+Interrupt or Reset Acknowledge
+Sync Acknowledge
+
+Hatt/Bus Grant Acknowtedged
+
+- OF - ©
+
+1.11.8.1 Normal. The processor is running and executing instructions.
+
+1.11.8.2 Interrupt or Reset Acknowledge. This processor state is indicated during both
+cycles of a hardware vector fetch which occurs when any of the following Interrupts have
+occurred: RESET, NMI, FIRQ, |RQ, SWI, SWI2, and SWIS.
+
+This output, plus decoding of address lines A3 through A1 provides the user with an
+indication of which interrupt is being serviced.
+
+1.11.8.3 Sync Acknowledge. The processor is waiting for an external synchronization in-
+put on an interrupt line. See SYNC instruction in Appendix A.
+
+1.11.8.4 Halt/Bus Grant. The processor is halted or bus control has been granted to some
+other device.
+
+1-8
+
+
+
+===== Page 17 =====
+1.11.9 RESET (RESET). This input is used to reset the processor. A low Input lasting
+longer than one bus cycle will reset the processor.
+
+The reset vector is fetched from locations $FFFE and $FFFF when the processor enters
+the reset acknolwedge state as indicated by the BA output being low and the BS output
+being high.
+
+During initial power-on, the reset input should be held low until the clock oscillator is ful-
+ly operational.
+
+1.11.10 INTERRUPTS. The processor has three separate interrupt input_pins: non-
+maskable interrupt (NMI), fast interrupt request (FIRQ), and interrupt request (IRQ). These
+interrupt inputs are latched by the falling edge of every Q clock except during cycle steal-
+ing operations where only the NMi input is latched. Using this point as a reference, a
+delay of at least one bus cycle will occur before the interrupt is recognized by the pro-
+cessor.
+
+1.11.10.1 Non-Maskable Interrupt (NMI). A negative edge on this input requests that a
+non-maskable interrupt sequence be generated. This input, as the name indicates, can-
+not be masked by software and has the highest priority of the three interrupt inputs. After
+a reset has occurred, a NMI input will not be recognized by the processor until the first
+program load of the hardware stack pointer. The entire machine state is saved on the
+hardware stack during the processing of a non-maskable interrupt. This interrupt is inter-
+nally blocked after a hardware reset until the stack pointer is initialized.
+
+1.11.10.2 Fast Interrupt Request (FIRQ). This input is used to initiate a fast interrupt re-
+quest sequence. Initiation depends on the F (fast interrupt request mask) bit in the condi-
+tion code register being clear. This bit is set during reset. During the interrupt, only the
+contents of the condition code register and the program counter are stacked resulting in
+a short amount of time required to service this interrupt. This interrupt has a higher priori-
+ty than the normal interrupt request (IRQ).
+
+1.11.10.3 Interrupt Request (IRQ). This input is used to initlate what might be considered
+the “normal” interrupt request sequence. Initiation depends on the | {interrupt mask) bit
+in the condition code register being clear. This bit is set during reset. The entire machine
+State is saved on the hardware stack during processing of an IRQ input. This input has
+the lowest priority of the three hardware interrupts.
+
+1.11.11 MEMORY READ (MRDY) (MC6809). This input allows extension of the E and Q
+clocks to allow a longer data access time. A low on this input allows extension of the E
+and Q clocks (E high and Q low) in integrai multiples of quarter bus cycles (up to 10
+cycies) to allow interface with slow memory devices.
+
+1-9
+
+
+
+===== Page 18 =====
+Memory ready does not extend the E and Q clocks during non-valid memory access
+cycles and therefore the processor does not slow down for “don’t care” bus accesses.
+Memory ready may also be used to extend the E and Q clocks when an external device is
+using the halt and direct memory access/bus request inputs.
+
+1.11.12 ADVANCED VALID MEMORY ADDRESS (AVMA) (MC6809E). This output signal in-
+dicates that the MC6809E will use the bus in the following bus cycle. This output is low
+when the MC6809E Is in either a halt or sync state.
+
+1.11.13 HALT. This input is used to halt the processor. A low input halts the processor at
+the end of the present instruction execution cycle and the processor remains halted in-
+definitely without loss of data.
+
+When the processor is halted, the BA output is high to indicate that the buses are in the
+high-impedance state and the BS output is also high to indicate that the processor is in
+the halt/bus grant state.
+
+During the halt/bus grant state, the processor will not respond to external real-time re-
+quests such as FIRQ or IRQ. However, a direct memory access/bus request Input will be
+accepted. A non-maskable interrupt or a reset input will be latched for processing later.
+The E and Q clocks continue to run during the halt/bus grant state.
+
+1.11.14 DIRECT MEMORY ACCESS/BUS REQUEST (DMA/BREQ) (MC6809). This input Is
+used to suspend program execution and make the buses available for another use such
+as a direct memory access or a dynamic memory refresh.
+
+A low level on this input occurring during the Q clock high time suspends instruction ex-
+ecution at the end of the current cycle. The processor acknowledges acceptance of this
+input by setting the BA and BS outputs high to signify the bus grant state. The requesting
+device now has up to 15 bus cycles before the processor retrieves the bus for self-refresh.
+
+Typically, a direct memory access controller will request to use the bus by setting the
+DMA/BREQ input low when E goes high. When the processor acknowledges this input by
+setting the BA and BS outputs high, that cycle will be a dead cycle used to transfer bus
+mastership to the direct memory access controller. False memory access during any
+dead cycle should be prevented by externally developing a system DMAVMA signal
+which Is low In any cycle when the BA output changes.
+
+When the BA output goes low, either as a result of a direct memory access/bus request or
+a processor seif-refrash, the direct memory access device should be removed from the
+bus. Another dead cycle will elapse before the processor accesses memory, to allow
+transfer of bus mastership without contention.
+
+1.11.15 BUSY (MC6809E). This output indicates that bus re-arbitration should be deferred
+and provides the indivisable memory operation required for a “‘test-and-set’”’ primitive.
+
+4-10
+
+
+
+===== Page 19 =====
+This output will be high for the first two cycles of any Read-Modify-Write Instruction, high
+during the first byte of a double-byte access, and high during the first byte of any indirect
+access or vector-fetch operation.
+
+1.11.16 POWER. Two inputs are used to supply power to the processor: Vcc is +5.0
++5%, while Vss Is ground or 0 volts.
+
+1-11/1-12
+
+
+
+===== Page 20 =====
+SECTION 2
+ADDRESSING MODES
+
+“
+
+2.1 INTRODUCTION
+
+This section contains a description of each of the addressing modes available on these
+processors.
+
+2.2 ADDRESSING MODES
+
+The addressing modes available on the MC6809 and MC6809E are: Inherent, Immediate,
+Extended, Direct, Indexed {with various offsets and autoincrementing/decrementing),
+and Branch Relative. Some of these addressing modes require an additional byte after
+the opcode to provide additional addressing interpretation. This byte is called a postbyte.
+
+The following paragraphs provide a description of each addressing mode. In these
+descriptions the term effective address is used to indicate the address in memory from
+which the argument for an instruction is fetched or stored, or fram which instruction pro-
+cessing is to proceed.
+
+2.2.1 INHERENT. The information necessary to execute the instruction is contained in
+the opcode. Some operations specifying only the index registers or the accumulators,
+and no other arguments, are also included in this addressing mode.
+
+Example: MUL
+
+2.2.2 IMMEDIATE. . The operand is contained in one or two bytes immediately foliowing
+the opcode. This addressing mode is used to provide constant data values that do not
+change during program execution. Both 8- bit and 16-bit operands are used depending on
+the size of the argument specified in the opcode.
+
+Example: LDA #CR
+LDB #7
+LDA #$F0
+LOB #%1110000
+LDX #$8004
+
+Another form of immediate addressing uses a postbyte to determine the registers to be
+manipulated. The exchange (EXG) and transfer (TFR) instructions use the postbyte as
+shown in Figure 2-1(A). The push and pull instructions use the postbyte to designate the
+registers to be pushed or pulled as shown in Figure 2-1(8).
+
+2-4
+
+
+
+===== Page 21 =====
+b? b6 b5 b4 b3 b2 b1 bo
+
+[ SOURCE (Al) | DESTINATION (R2} |
+Code* Register Code* Ftegister
+
+0000 D (A:B) 0101 Program Counter
+
+0001 X index 1000 A Accumulator
+
+0016 Y¥ index 1001 B Accumulator
+
+0011 U Stack Pointer 1010 Condition Code
+
+0100 § Stack Pointer 1011 Direct Page
+
+*All other combinations of bits produce undefined results.
+(A) Exchange (EXG) or Transfer (TFR) instruction Postbyte
+
+b? b6 bo b4 63 b2 bl 6b
+PC IS/U] Y | X JOP] B § A JCC
+
+PC = Program Counter
+S/U = = Hardware/User Stack Pointer
+Y = ¥ Index Register
+
+x = U Index Register
+
+DP = Direct Page Register
+
+B = B Accumulator
+
+A = A Accumulator
+
+cc = Condition Code Register
+
+{B) Push (PSH) or Pull (PUL) Instruction Postbyte
+
+Figure 2-1. Postbyte Usage for EXG/TFR, PSH/PUL Instructions
+
+2.2.3 EXTENDED. The effective address of the argument is contained in the two bytes
+following the opcode. Instructions using the extended addressing mode can reference
+arguments anywhere in the 64K addressing space. Extended addressing is generally not
+used in position independent programs because it supplies an absolute address.
+
+Example: LDA @CAT
+
+2.2.4 DIRECT. The effective address is developed by concatenation of the contents of the
+direct page register with the byte immediately following the opcode. The direct page
+register contents are the most-significant byte of the address. This allows accessing 256
+locations within any one of 256 pages. Therefore, the entire addressing range is available
+for access using a single two-byte Instruction.
+
+Example: LDA > CAT
+
+2.2.5 INDEXED. In these addressing modes, one of the pointer registers (X, Y, U, or S), and
+sometimes the program counter (PC) is used in the calculation of the effective address of
+the instruction operand. The basic types {and their variations) of indexed addressing
+available are shown in Table 2-1 along with the postbyte configuration used.
+
+2.2.5.1 Constant Offset from Register. The contents of the register designated in the
+postbyte are added to a twos complement offset value to form the effective address of
+
+2-2
+
+
+
+===== Page 22 =====
+the instruction operand. The contents of the designated register are not affected by this
+addition. The offset sizes avallable are:
+
+No
+offset — designated register contains the effective
+address
+
+S-bit — 16 to +15
+8-bit — 128 to +127
+16-bit — 32768 to + 32767
+
+Table 2-1, Postbyte Usage for Indexed Addressing Modes
+
+Mode Type Variation Direct indirect
+Constant Offset from Register No Offset TRROGIOO § 1RR10100
+{twos Complement Offset) 5-Bit Offset ORAnnnnn | Defaults to &bit
+8-Bit Offset 1RRO1g00 | 1RR11000
+16-Bit Offset 1RRO10Ot | 1RR11001
+Accumulator Offset from Register | A Accumulator Offset 1RROO110 | 1RR10110
+{twos Complement Offset) 8 Accumulator Offset 1RROO101 1RR10101
+D Accumulator Offset 1RROI11 | 1RAR1011
+Auto Increment/Decrement from Increment by 1 1RRGOON | Not Allowed
+Register Increment by 2 1RRO00001 | 1AR10001
+Decramant by 1 -| JRROQOOID | Not Allowed
+Decrement by 2 1RRO0014 1RR10011
+Constant Offset from Program &-Bit Offset 1XXO1100 | 1XX11100
+Counter 16-Bit Offset 1XXO1100 f tXX11101
+Extended Indirect 16-Bit Address | ------- 10014111
+
+The 5-bit offset value is contained in the postbyte. The 8- and 16-bit offset values are con-
+tained In the byte or bytes immediately following the postbyte. If the Motorola assembler
+is used, it will automatically determine the most efficient offset; thus, the programmer
+need not be concerned about the offset size.
+
+Examples: LDA ,X LDY -64000,U
+LDB 0,Y LDA 17,PC
+LDX 64,000,8 LDA There,PCR
+
+2.2.5.2 Accumulator Offset from Register. The contents of the index or pointer register
+designed in the postbyte are temporarily added to the twos compiement offset value con-
+tained in an accumulator (A, B, or D) also designated in the postbyte. Nelther the
+designated register nor the accumulator contents are affected by this addition.
+
+Example: LDA A,X LDA D,U
+LDA B,Y
+
+2.2.5.3 Autoincrement/Decrement from Register. This addressing mode works in a
+postincrementing or predecrementing manner. The amount of increment or decrement,
+one or two positions, is designated in the postbyte.
+
+2-3
+
+
+
+===== Page 23 =====
+In the autoincrement mode, the contents of the effective address contained in the
+pointer register, designated In the postbyte, and then the pointer register is automatical-
+ly incremented; thus, the pointer register is postincremented.
+
+In the autodecrement mode, the pointer register, designated in the postbyte, is
+automatically decremented first and then the contents of the new address are used;
+thus, the pointer register is predecremented.
+
+Examples: Autolncrement Autodecrement
+LDA ,X+ LDY A%++ LDA ,-X LDY ,--X
+LDA ,Y+ LDX Y+e+ LDA ,-Y LDX ,--Y
+LDA ,S+ LDX ,U++ LDA ,-S LDX ,--U
+LDA ,U+ LDX S++ LDA ,-U LDX ,--S
+
+2.2.5.4 indirection. When using indirection, the effective address of the base indexed ad-
+dressing mode is used to fetch two bytes which contain the final effective address of the
+operand. It can be used with all the Indexed addressing modes and the program counter
+relative addressing mode.
+
+2.2.5.5 Extended Indirect. The effective address of the argument is located at the ad-
+dress specified by the two bytes following the postbyte. The postbyte is used to Indicate
+indirection.
+
+Example: LDA [$F000]
+
+2.2.5.6 Program Counter Relative. The program counter can also be used as a pointer
+with either an 8- or 16-bit signed constant offset. The offset value is added to the program
+counter to develop an effective address. Part of the postbyte is used to indicate whether
+the offset is 8 or 16 bits.
+
+2 2.6 BRANCH RELATIVE. This addressing mode Is used when branches from the current
+instruction location to some other location relative to the current program counter are
+desired. If the test condition of the branch instruction is true, then the effective address
+is calculated (program counter plus twos complement offset) and the branch is taken. If
+the test condition is false, the processor proceeds to the next in-line instruction. Note
+that the program counter is always pointing to the next instruction when the offset is ad-
+ded. Branch relative addressing Is always used in position independent programs for all
+control transfers.
+
+For short branches, the byte following the branch instruction opcode is treated as an
+8-bit signed offset to be used to calculate the effective address of the next instruction If
+the branch is taken. This is called a short relative branch and the range is limited to plus
+427 or minus 128 bytes from the following opcode.
+
+For long branches, the two bytes after the opcode are used to calculate the effective ad-
+dress. This is called a long relative branch and the range is plus 32,767 or minus 32,768
+
+2-4
+
+
+
+===== Page 24 =====
+SECTION 3
+INTERRUPT CAPABILITIES
+
+3.1 INTRODUCTION
+
+The MC6809 and MC6809E microprocessors have six vectored interrupts (three hardware
+and three software). The hardware Interrupts are the non-maskable interrupt (NMi), the
+fast maskable interrupt request (FIRQ), and the normal maskable interrupt request (IRQ).
+The software Interrupts consist of SWI, SWI2, and SWI3. When an interrupt request is
+acknowledged, all the processor registers are pushed onto the hardware stack, except in
+the case of FIRQ where only the program counter and the condition code register is sav-
+ed, and control is transferred to the address in the interrupt vector. The priority of these
+interrupts is, highest to lowest, NMI, SWI, FIRQ, IRQ, SWI2, and SWI3. Figure 3-1 is a
+detailed flowchart of interrupt processing In these processors. The interrupt vector loca-
+tlons are given in Table 3-1. The vector locations contain the address for the interrupt
+routine.
+
+Additional information on the SWI, SWI2, and SWI3 interrupts ts given in Appendix A. The
+
+hardware interrupts, NMI, FIRQ, and IRQ are listed alphabetically at the end of Appendix
+A.
+
+Table 3-1. Interrupt Vector Locations
+
+interrupt Vector Location
+Description MS Byte | LS Byte
+Reset (RESET) FFFE ~FFFF |
+Non-Maskabie Interrupt (NMI) FFFC FFFD
+Software Interrupt (SW) FFFA FFFB
+Interrupt Request (IRO) FFF8 FFF
+Fast Interrupt Request {FIRG) FFF6 FFF?
+Software Interrupt 2 (SWI12} FFF4 FFFE
+Software Interrupt 3 (SWI3} FFF2 FFF3
+Reserved FFFO FFF1
+
+3.2 NON-MASKABLE INTERRUPT (NMI)
+
+The non-maskable interrupt is edge-sensitive in the sense that if it is sampled low one cy-
+cle after it has been sampled high, a non-maskable interrupt will be triggered. Because
+the non-maskable interrupt cannot be masked by execution of the non-maskable inter-
+rupt handler routine, it is possible to accept another non-maskable Interrupt before ex-
+ecuting the first instruction of the interrupt routine. A fatal error will exist if a non-
+maskable interrupt Is repeatedly allowed to occur before completing the return from in-
+terrupt (RTI) instruction of the previous non-maskable interrupt request, since the stack
+
+3-1
+
+
+
+===== Page 25 =====
+will eventuaily overflow. This interrupt is especially applicable to gaining immediate pro-
+cessor response for powerfail, software dynamic memory refresh, or other non-detayable
+events.
+
+3.3 FAST MASKABLE INTERRUPT REQUEST (FIRQ)
+
+A low level on the FIRQ input with the F (fast interrupt request mask) bit in the condition
+code register clear triggers this interrupt sequence. The fast interrupt request provides
+fast interrupt response by stacking only the program counter and condition code
+register. This allows fast context switching with minimal overhead. If any registers are
+used by the interrupt routine then they can be saved by a single push instruction.
+
+After accepting a fast interrupt request, the processor clears the E flag, saves the pro-
+gram counter and condition code register, and then sets both the | and F bits to mask any
+further IRQ and FIRQ interrupts. After servicing the original interrupt, the user may selec-
+tively clear the | and F bits to allow multiple-level interrupts if so desired.
+
+3.4 NORMAL MASKABLE INTERRUPT REQUEST (IRQ)
+
+A jow level on the IRQ input with the | (interrupt request mask) bit In the condition code
+register clear triggers this interrupt sequence. The normai maskabie interrupt request
+provides a slower hardware response to interrupts because it causes the entire machine
+state to be stacked. However, this means that interrupting software routines can usé all
+processor resources without fear of damaging the interrupted routine. A normal interrupt
+request, having lower priority than the fast interrupt request, is prevented from interrup-
+ting the fast interrupt handler by the automatic setting of the | bit by the fast interrupt re-
+quest handler.
+
+After accepting a normal interrupt request, the processor sets the E flag, saves the entire
+machine state, and then sets the | bit to mask any further interrupt request inputs. After
+servicing the original interrupt, the user may clear the | bit to allow muitiple-level normal
+interrupts.
+
+All interrupt handling routines should return to the formerly executing tasks using a
+return from interrupt } instruction. This instruction recovers the saved machine state
+from the hardware stack and control is returned to the Interrupted program. If the
+recovered E bit is clear, it indicates that a fast interrupt request occurred and only the
+program counter address and condition code register are to be recovered.
+
+3.6 SOFTWARE INTERRUPTS (SWI, SWi2, SWI3)
+
+The software interrupts cause the processor to go through the normal interrupt request
+sequence of stacking the complete machine state even though the interrupting source is
+the processor itself. These interrupts are commonly used for program debugging and for
+calls to an operating system.
+
+3-2
+
+
+
+===== Page 26 =====
+Normal processing of the SWI input sets the | and F bits to prevent either of these inter-
+rupt requests from affecting the completion of a software interrupt request. The remain-
+ing software interrupt request inputs (SWI2 and SWI3) do not have the priority of the SWI
+input and therefore do not mask the two hardware interrupt request inputs (FIRQ and
+IRQ).
+
+3-3
+
+
+
+===== Page 27 =====
+‘(FGOBODW) S1DAD Udiay 10199A ISH HuLAP UBIY SI ASN ‘Z
+"YRYOMO}} BY) Ul JUIOd AUe WO. aoUeNbas jases ay) HuUajus Ut yNSAJ HIM 19S9y Bumassy “| “S3LON
+
+L t ebpajmouxoy 38H
+0 L aBbpajmouxdy 9UAS
+L “9 abpajmoursy 1asey JO Jdnvetu|
+0 0 Buruuny
+sa] va a1e1g sng
+crt 7
+|
+| Burssa30:4
+awnsay |
+! |
+| |
+| o3uvWwa |
+| |
+| |
+| ajOAD) Z| 104 |
+Burssa01g
+| aunsay |
+| |
+| |
+|
+| |
+|
+\ r
+|
+| |
+|
+l
+l
+| l
+|
+| aouenbes |
+| O3uvWd
+Loe LL -_
+
+WM
+
+HeYOMO],4 Buissedoig dniejU] “}-E¢ eunBI4
+
+39 ‘Dd
+4081S
+
+a
+
+uononsuy
+40
+uonnzex3
+
+21607 WN 41D
+—_—
+ce
+A
+N
+
+dna)
+ye
+
+sa-0
+7443 [ €IMS
+visi | IMS
+9444 Ould
+aida Oul
+Vida IMS
+D334 WN
+3d — UOIDBA}
+Z 310N
+
+AWO 360899
+
+dS
+
+©] BUM
+
+N
+
+Naw
+
+od
+‘y y281SUN) yorisury
+
+ISU 1XON
+
+31-0
+
+29 ‘v8 ‘dd “x
+AN 'Jd PRS
+
+ONAS
+
+Alu 360899 ont
+
+3444 }rseu
+
+Id 20190,
+
+N
+
+a0N i
+sa-o
+
+va-0
+
+S1WH
+
+IWIN Wiest
+2607
+
+dav 210
+
+bes 13838
+
+
+
+===== Page 28 =====
+SECTION 4
+PROGRAMMING
+
+4.1 INTRODUCTION
+
+These processors are designed to be source-code compatible with the M6800 to make
+use of the substantial existing base of M6800 software and training. However, this asset
+should not overshadow the capabilities built into these processors that allow more
+modern programming techniques such as position-independence, modular programm-
+ing, and reentrancy/recursion to be used on a microprocessor-based system. A brief
+review of these methods is given in the following paragraphs.
+
+4.1.1 POSITION INDEPENDENCE. A program Is said to be “position-independent” if it
+will run correctly when the same machine code is positioned arbitrarily in memory. Such
+& program /|s useful in many different hardware configurations, and might be copied from
+a disk into RAM when the operating system first sees a request to use a system utility.
+Position-independent programs never use absolute (extended or direct) addressing: in-
+stead, inherent immediate, register, indexed and relative modes are used. In particular,
+there should be no jump (absolute) or jump to subroutine instructions nor should ab-
+solute addresses be used. A position-independent program is almost always preferable
+to a position-dependent program (although position-independent code is usually 5 to
+10% slower than normal code).
+
+4.1.2 MODULAR PROGRAMMING. Modular programming is another indication of quality
+code. A module is a program element which can be easily disconnected from the rest of
+the program either for re-use in a new environment or for replacement. A module is usual-
+ly a subroutine (although a subroutine Is not necessarily a module); frequently, the pro-
+grammer isolates register changes internal to the module by pushing these registers
+onto the stack upon entry, and pulling them off the stack before the return. Isolating
+register changes in the called module, to that module alone, aliows the code in the call-
+ing program to be more easily analyzed since It can be assumed that all registers (except
+those specifically used for parameter transfer are unchanged by each called module.
+This leaves the processor’s registers free at each level for loop counts, address com-
+parisons, etc.
+
+4.1.2.1 Local Storage. A clean method for allocating “local” storage Is required both by
+position-independent programs as well as modular programs. Loca! or temporary storage
+is used to hold values only during execution of a module (or called modules) and Is releas-
+ed upon return. One way to allocate local storage is to decrement the hardware stack
+
+4-1
+
+
+
+===== Page 29 =====
+polnter(s) by the number of bytes needed. Interrupts will then leave this area intact and it
+can be de-allocated on exiting the moduje. A module will almost always need more tem-
+porary storage than just the MPU registers.
+
+4.1.2.2 Global Storage. Even in a modular environment there may be a need for “global”
+values which are accessible by many modules within a given system. These provide a
+convenient means for storing values from one invocation to another invocation of the
+same routine. Global storage may be created as local storage at some level, and a
+pointer register (usually U) used to point at this area. This register is passed unchanged
+in all subroutines, and may be used to index into the global area.
+
+4.1.3 REENTRANCY/RECURSION. Many programs will eventually involve execution in an
+interrupt-driven environment. if the interrupt handlers are complex, they might well call
+the same routine which has just been interrupted. Therefore, to protect present programs
+against certaln obsolescence, all programs should be written to be reentrant. A reentrant
+routine alHocates different local variable storage upon each entry. Thus, a ijater entry
+does not destroy the processing associated with an earlier entry.
+
+The same technique which was implemented to allow reentrancy also allows recursion.
+A recursive routine is defined as a routine that calls itself. A recursive routine might be
+written to simplify the solution of certain types of problems, especially those which have
+a data structure whose elements may themselves be a structure. For example, a paren-
+thetical equation represents a case where the expression in parenthesis may be con-
+sidered to be a value which Is operated on by the rest of the equation. A programmer
+might choose to write an expression evaluator passing the parenthetical expression
+(which might also contain parenthetical expressions) in the call, and receive back the
+returned value of the expression within the parenthesis.
+
+4.2 M6809 CAPABILITIES
+
+The following paragraphs briefly explain how the MC6809 is used with the programming
+techniques mentioned earlier.
+
+4.2.1 MODULE CONSTRUCTION. A module can be defined as a logically self-contained
+and discrete part of a larger program. A properly constructed module accepts well defin-
+ed inputs, carries out a set of processing actions, and produces a specified output. The
+use of parameters, local storage, and global storage by a program module ts given in the
+following paragraphs. Since registers will be used inside the module (essentially a form
+of local storage), the first thing that is usually done at entry to a module is to push (save)
+them on to the stack. This can be done with one instruction (e.g., PSHS Y, X, B, A). After
+the body of the module is executed, the saved registers are collected, and a subroutine
+return is performed, at one tlme, by pulling the program counter from the stack (é.g.,
+PULS A,B,X,Y,PC).
+
+4-2
+
+
+
+===== Page 30 =====
+4.2.1.1 Parameters. Parameters may be passed to or from modules elther in registers, If
+they will provide sufficient storage for parameter passage, or on the stack. If parameters
+are passed on the stack, they are placed there before calling the lower level module. The
+called module is then written to use local storage inside the stack as needed (e.9., ADDA
+offset,S). Notice that the required offset consists of the number of bytes pushed (upon
+entry), plus two from the stacked return address, plus the data offset at the time of the
+call. This value may be calculated, by hand, by drawing a “stack picture” diagram
+representing module entry, and assigning convenient mnemonics to these offsets with
+the assembler. Returned parameters replace those sent to the routine. If more
+parameters are to be returned on the stack than would normally be sent, space for their
+return is allocated by the calling routine before the actual call (if four additional bytes are
+to be returned, the caller would execute LEAS -4,S to acquire the additional storage).
+
+4.2.1.2 Local Storage. Local storage space Is acquired from the stack while the present
+routine is executing and then returned to the stack prior to exit. The act of pushing
+registers which will be used in later calculations essentially saves those registers in tem-
+porary local storage. Additional local storage can easily be acquired from the stack @.9.,
+executing LEAS — 2048,S acquires a buffer area running from the 0,S to 2047,S inclusive.
+Any byte in this area may be accessed directly by any instruction which has an indexed
+addresing mode. At the end of the routine, the area acquired for jocal storage Is released
+(6.g., LEAS 2048,S) prior to the final pull. For cleaner programs, local storage should be
+allocated at entry to the module and released at the exit of the module.
+
+4.2.1.3 Global Storage. The area required for global storage is also most effectively ac-
+quired from the stack, probably by the highest level routine in the standard package.
+Although this is local storage to the highest level routine, it becomes “global” by posi-
+tioning a register to point at this storage, (sometimes referred to as a stack mark) then
+establishing the convention that all modules pass that same pointer value when calling
+lower level modules. In practice, It is convenient to leave this stack mark register un-
+changed in all modules, especially if global accesses are common. The highest level
+routine in the standard package would execute the following sequence upon entry (to in-
+itialize the global area):
+
+PSHS U higher level mark, if any
+TFR S,U new stack mark
+LEAS -17,U allocate global storage
+
+Note that the U register now defines 17-bytes of locally allocated (permanent) globals
+(which are —1,U through ~ 17,U) as well as other external globats (2,U and above) which
+have been passed on the stack by the routine which called the standard package. Any
+global may be accessed by any module using exactly the same offset value at any level
+(e.9., ROL, RAT,U; where RAT EQU — 11 has been defined). Furthermore, the values stack-
+ed prior to invoking the standard package may include pointers to data or I/O peripherals.
+Any indexed operation may be performed indexed Indirect through those pointers, which
+means, for example, that the module need know nothing about the actual hardware con-
+figuration, except that (upon entry) the pointer to an /O register has been placed at a
+given location on the stack.
+
+4-3
+
+
+
+===== Page 31 =====
+4.2.2 POSITION-INDEPENDENT CODE. Positlon-independent code means that the same
+machine language code can be placed anywhere in memory and still functlon correctly.
+The M6809 has a long relative (16-bit offset) branch mode along with the common
+MC6800 branches, plus program-counter relative addressing. Program-counter relative
+addressing uses the program counter like an indexable register, which allows all instruc-
+tions that reference memory to also reference data relative to the program counter. The
+M6809 also has Joad effective address (LEA) instructions which aliow the user to point to
+data in a ROM in a position-independent manner.
+
+An important rule for generating position-independent code is: NEVER USE ABSOLUTE
+ADDRESSING.
+
+Program-counter relative addressing on the M6809 is a form of indexed addressing that
+uses the program counter as the base register for a constant-offset indexing operation.
+However, the M6809 assembler treats the PCR address fleld differently from that used in
+other indexed instructions. In PCR addressing, the assembly time location value is sub-
+tracted from the (constant) value of the PCR offset. The resulting distance to the desired
+symbol is the value placed into the machine language object code. During execution, the
+processor adds the value of the run time PC to the distance to get a position-independent
+absolute address.
+
+The PCR indexed addressing form can be used to point at any location relative to the pro-
+gram regardless of position in memory. The PCR form of indexed addressing allows ac-
+cess to tables within the program space In a position-independent manner via use of the
+load effective address instruction.
+
+in a program which is completely position-independent, some absolute locations are
+usually required, particularly for I/O. If the locations of I/O devices are placed on the
+stack (as globais) by a smal! setup routine before the standard package is invoked, ail in-
+ternal modules can do their I/O through that pointer (e.g., STA [ACIAD, U)), allowing the
+hardware to be easily changed, If desired. Only the single, small, and obvious setup
+routine need be rewritten for each different hardware configuration.
+
+Global, permanent, and temporary values need to be easily available in a position-
+independent manner. Use the stack for this data since the stacked data is directly ac-
+cessible. Stack the absolute address of !/O devices before calling any standard software
+package since the package can use the stacked addresses for I/O in any system.
+
+The LEA instructions allow access to tables, data, or immediate values in the text of the
+program in a position-independent manner as shown in the following example:
+
+LEAX ~ MSG1,PCR
+LBSR PDATA
+MSG1 FCC " JPRINT THIS!
+
+4-4
+
+
+
+===== Page 32 =====
+Here we wish to point at a message to be printed from the body of the program. By
+writing “MSG1, PCR” we signal the assembler to compute the distance between the pre-
+sent address (the address of the LBSR) and MSG1. This resuit is inserted as a constant
+Into the LEA instruction which will be indexed from the program counter value at the time
+of execution. Now, no matter where the code is located, when it is executed the com-
+puter offset from the program counter will point at MSG1. This code is position-
+independent.
+
+It is common to use space in the hardware stack for temporary storage. Space Is made
+for temporary variables from 0,S through TEMP-1, S by decrementing the stack pointer
+equal to the length of required storage. We could use:
+
+LEAS — TEMP,S.
+
+Not only does this facilitate position-independent code but it is structured and helps
+reentrancy and recursion.
+
+4.2.3 REENTRANT PROGRAMS. A program that can be executed by several different
+users sharing the same copy of It in memory is called reentrant. This is important for in-
+terrupt driven systems. This method saves considerable memory space, especially with
+large Interrupt routines. Stacks are required for reentrant programs, and the M6809 can
+support up to four stacks by using the X and Y index registers as stack pointers.
+
+Stacks are simple and convenient mechanisms for generating reentrant programs.
+Subroutines which use stacks for passing parameters and results can be easily made to
+be reentrant. Stack accesses use the indexed addressing mode for fast, efficient execu-
+tion. Stack addressing is quick.
+
+Pure code, or code that is not self-modlfying, is mandatory to produce reentrant code. No
+internal information within the code is subject to modification. Reentrant code never has
+internal temporary storage, is simpler to debug, can be placed in ROM, and must be inter-
+ruptable.
+
+4.2.4 RECURSIVE PROGRAMS. A recursive program is one that can call itself. They are
+quite convenient for parsing mechanisms and certain arithmetic functions such as com-
+puting factorlals. As with reentrant programming, stacks are very useful for this techni-
+que.
+
+4.2.5 LOOPS. The usual structured loops (i.6., REPEAT...UNTIL, WHILE...DO, FOR..., etc.)
+are avaliable in assembly language in exactly the same way a high-level language com-
+piler could transiate the construct for execution on the target machine. Using a
+FOR...NEXT loop as an example, it is possible to push the loop count, increment value,
+and termination value on the stack as variables local to that loop. On each pass through
+the loop, the working register is saved, the loop count picked up, the increment added in,
+and the result compared to the termination value. Based on this comparison, the loop
+counter might be updated, the working register recovered and the loop resumed, or the
+working register recovered and the loop variables de-allocated. Reasonable macros
+
+45
+
+
+
+===== Page 33 =====
+could make the source form for loop trivial, even in assembly language. Such macros
+might reduce errors resulting from the use of multiple Instructions simply to implement a
+standard control structure.
+
+4.2.6 STACK PROGRAMMING. Many microprocessor applications require data stored as
+continguous pieces of Information in memory. The data may be temporary, that is, sub-
+ject to change or it may be permanent. Temporary data will most likely be stored in RAM.
+Permanent data will most likely be stored in ROM.
+
+it is important to allow the main program as well as subroutines access to this block of
+data, especially if arguments are to be passed from the main program to the subroutines
+and vice versa.
+
+4.2.6.1 M6809 Stacking Operations. Stack pointers are markers which point to the stack
+and its internal contents. Although all four index registers may be used as stack
+registers, the S (hardware stack pointer) and the U (user stack pointer) are generally
+preferred because the push and pull instructions apply to these registers. Both are 16-bit
+indexable registers. The processor uses the S register automatically during interrupts
+and subroutine calls. The U register is free for any purpose needed. It is not affected by
+interrupts or subroutine calis Implemented by the hardware.
+
+Either stack pointer can be specified as the base address in indexed addressing. One use
+of the indirect addressing mode uses stack pointers to allow addresses of data to be
+passed to a subroutine on a stack as arguments to a subroutine. The subroutine can now
+reference the data with one instruction. High-level language calls that pass arguments
+by reference are now more efficiently coded. Also, each stack push or pull operation In a
+program uses a postbyte which specifies any register or set of registers to be pushed or
+pulled from either stack. With this option, the overhead associated with subroutine calls
+in both assembly and high-level language programs is greatly decreased. In fact, with the
+large number of instructions that use autoincrement and autodecrement, the M6809 can
+emulate a true stack computer architecture.
+
+Using the S or U stack pointer, the order in which the registers are pushed or pulled is
+shown in Figure 4-1. Notice that we push “onto” the stack towards decreasing memory
+locations. The program counter is pushed first. Then the stack pointer is decremented
+and the “other” stack pointer is pushed onto the stack. Decrementing and storing con-
+tinues until all the registers requested by the postbyte are pushed onto the stack. The
+stack pointer points to the top of the stack after the push operation.
+
+The stacking order is specified by the processor. The stacking order is identical to the
+order used for all hardware and software interrupts. The same order is used even if a
+subset of the registers is pushed.
+
+Without stacks, most modern block-structured high-level languages would be cumber-
+some to implement. Subroutine linkage is very important in high-level language genera-
+tion. Paragraph 4.2.6.2 describes how to use a stack mark pointer for this important task.
+
+4-6
+
+
+
+===== Page 34 =====
+Good programming practice dictates the use of the hardware stack for temporary
+storage. To reserve space, decrement the stack pointer by the amount of storage fe-
+quired with the instruction LEAS - TEMPS, S. This instruction makes space for tem-
+porary variables from 0,5 through TEMPS — 1,8.
+
+Memory
+0000
+~ 3}
+Stack Pointer _. C } . .
+i After Stacking Cc Condition Code Register Contents
+} A Accumulatar Contents
+B } 8 Accumulator Contents
+OP } Direct Page Register Contents
+X.H
+Oo — —
+3 3 XL. X Contents
+3] 3 |
+= —| 7; Y Contents
+Y.L
+U.H of S.H ;
+— —j ; Other Stack Pointer Contents
+U.Lor $.L.
+PC.H
+-— = Program Counter Contents
+PC.L
+Stack Pointer
+Before Stacking")
+FFFF
+
+Figure 4-1. Stacking Order
+
+4.2.6.2 Subroutine Linkage. In the highest level routine, global variables are sometimes
+considered to be local. Therefore, global storage is allocated at this point, but access to
+these same variables requires different offset values depending on subroutine depth.
+Because subroutine depth changes dynamically, the length may not be known
+beforehand. This problem is solved by assigning one pointer (U will be used in the follow-
+ing description, but X or ¥ could also be used) to “mark” a location on the hardware stack
+by using the instruction TFR S,U. !f the programmer does this immediately prior to
+allocating global storage, then all variables will then be available at a constant negative
+offset location from this stack mark. If the stack is marked after the global variables are
+
+4-7
+
+
+
+===== Page 35 =====
+allocated, then the global variables are available at a constant positive offset from U.
+Register U is then called the stack mark pointer. Recall that the hardware stack pointer
+may be modified by hardware interrupts. For this reason, it is fatal to use data referred to
+by a negative offset with respect to the hardware stack pointer, S.
+
+4.2.6.3 Software Stacks. If more than two stacks are needed, autoincrement and
+autodecrement mode of addressing can be used to generate additional software stack
+polnters.
+
+The X, Y, and U index registers are quite useful in loops for incrementing and decremen-
+ting purposes. The pointer Is used for searching tables and aiso to move data from one
+area of memory to another (block moves). This autoincrement and autodecrement
+feature Is avallable in the indexed addressing mode of the M6809 to facilitate such opera-
+tions.
+
+In autoincrement, the value contained in the index register (X or Y, U or S) is used as the
+effective address and then the register is incremented (postincremented). In autodecre-
+ment, the index register is first decremented and then used to obtain the effective ad-
+dress (predecremented). Postincreament or predecrement is always performed in this ad-
+dressing mode. This is equivalent in operation to the push and pull from a stack. This
+equivalence allows the X and Y index registers to be used as software stack pointers. The
+indexed addressing mode can also implement an extra level of post indirection. This
+feature supports parameter and pointer operations.
+
+4.2.7 REAL TIME PROGRAMMING. Real time programming requires specia! care.
+Sometimes a peripheral or task demands an immediate response from the processor,
+other times it can wait. Most real time applications are demanding in terms of processor
+response.
+
+A common solution Is to use the Interrupt capability of the processor in solving real time
+problems. Interrupts mean just that; they request a break in the current sequence of
+events to solve an asynchronous service request. The system designer must consider all
+variations of the conditlons to be encountered by the system including software interac-
+tion with interrupts. As a result, problems due to software design are more common in in-
+terrupt implementation code for real time programming than most other situations. Soft-
+ware timeouts, hardware interrupts, and program control interrupts are typically used in
+solving real time programming problems.
+
+4.3 PROGRAM DOCUMENTATION
+
+Common sense dictates that a well documented program is mandatory. Comments are
+needed to explain each group of instructions since thelr use is not always obvious from
+looking at the code. Program boundaries and branch instructions need full clarification.
+Consider the following points when writing comments: up-to-date, accuracy, com-
+pleteness, conciseness, and understandability.
+
+4-8
+
+
+
+===== Page 36 =====
+Accurate documentation enables you and others to maintain and adapt programs for up-
+dating and/or additional use with other programs.
+
+The following program documentation standards are suggested.
+
+A) Each subroutine should have an associated header block containing at least the
+following elements:
+
+1) A full specification for this subroutine — including associated data struc-
+tures — such that replacement code could be generated from this description
+alone.
+
+2) All usage of memory resources must be defined, including:
+
+a) All RAM needed from temorary (local) storage used during execution of
+this subroutine or called subroutines.
+b) All RAM needed for permanent storage (used to transfer values from one
+execution of the subroutine to future executions).
+c) All RAM accessed as global storage (used to transfer values from or to
+higher-level subroutines).
+d) All possible exit-state conditions, if these are to be used by calling
+routines to test occurrences internal to the subroutine.
+B) Code internal to each subroutine should have sufficient associated line com-
+ments to help in understanding the code.
+C) All code must be non-self-modifying and position-independent.
+D) Each subroutine which includes a loop must be separately documented by a
+flowchart or pseudo high-level language algorithm.
+E) Any moduie or subroutine should be executable starting at the first location and
+exit at the last location.
+
+4.4 INSTRUCTION SET
+
+The complete instruction set for the M6809 is given in Table 4-1.
+
+Tabie 4-1. Instruction Set
+
+Instruction Description
+ABX Add Accumulator B into Index Register X
+ADC Add with Carry into Register
+ADD Add Memory into Register
+AND Logical AND Memory into Register
+ASL Arithmetic Shift Left
+ASR Arithmetic Shift Right
+BCC Branch on Carry Clear
+BCS Branch on Carry Set
+BEQ Branch on Equal
+BGE Branch on Greater Than or Equal to Zero
+BGT Branch on Greater
+BHI Branch if Higher
+BHS Branch if Higher or Same
+BIT Bit Test
+BLE Branch if Less than or Equal to Zero
+
+49
+
+
+
+===== Page 37 =====
+in 2
+
+Table 4-1. Instruction Set (Continued)
+
+Instruction
+
+BLO
+BLS
+BLT
+BMI
+BNE
+BPL
+BRA
+BAN
+BSA
+BVC
+BYS
+CLR
+CMP
+COM
+CWAI
+DAA
+DEC
+EOR
+EXG
+INC
+JMP
+JSR
+LD
+LEA
+LSL
+LSR
+MUL
+NEG
+NOP
+OR
+PSH
+PUL
+ROL
+ROR
+RTI
+R¥$
+SBC
+SEX
+ST
+SUB
+Swi
+SYNC
+TFR
+TST
+
+Description
+Branch on Lower
+Branch on Lower or Same
+Branch on Less than Zero
+Branch an Minus
+Branch Not Equal
+Branch on Plus
+Branch Always
+Branch Never
+Branch to Subroutine
+Branch on Overflow Clear
+Branch on Overflow Set
+Clear
+Compare Memory fram a Register
+Complement
+Clear CC bits and Wait for Interrupt
+Decimal Addition Adjust
+Decrement
+Exclusive OR
+Exchange Registers
+Increment
+Jump
+Jump to Subroutine
+Load Register from Memory
+Load Effective Address
+Logical Shift Left
+Logical Shift Right
+Multiply
+Negate
+No Operation
+Inclusive OR Memory into Register
+Push Registers
+Pull Registers
+Rotate Left
+Rotate Right
+Return from Interrupt
+Return from Subroutine
+Subtract with Borrow
+Sign Extend
+Store Register into Memory
+Subtract Memory from Register
+Software Interrupt
+Synchronize to External Event
+Transfer Register to Register
+Test
+
+4-10
+
+
+
+===== Page 38 =====
+The instruction set can be functionally divided into five categories. They are:
+8-Blt Accumulator and Memory Instructions
+16-Bit Accumulator and Memory Instructions
+Index Register/Stack Pointer Instructions
+Branch Instructions
+Miscellaneous Instructions
+
+Tables 4-2 through 4-6 are listings of the M6809 instructions and their variations grouped
+into the five categories listed.
+
+Table 4-2. 8-Bit Accumulator and Memory Instructions
+
+Instruction Description
+ADCA, ADCB Add memory te accumulator with carry
+ADDA, ADDB Add memory to accumulator
+ANDA, ANDB And memory with accumulator
+
+ASL, ASLA, ASLB
+
+Arithmetic shift of accumulator or memory left
+
+ASR, ASRA, ASRB
+
+Arithmetic shift of accumulator or memory right
+
+BITA, BITB Bit test memory with accumulator
+CLR, CLRA, CLRB Clear accumulator or memory location
+CMPA, CMPB Compare memory from accumulator
+
+COM, COMA, COMB
+
+Complement accumulator or memory location
+
+DAA
+
+Decimal adjust A accumulator
+
+DEC, DECA, DECB
+
+Decrement accumulator or memory location
+
+EORA, EORB Exclusive or memory with accumulator
+
+EXG Al, R2 Exchange R1 with R2 {Rt, R2=A, 8, CC, DP}
+INC, INCA, INCB Increment accumulator or memory location
+LDA, LDB Load accumulator fromm memory
+
+LSL, LSLA, LoL’
+
+Logical shift left accumulator or memory location
+
+LSA, LSRA, LSRB
+
+Logical shift right accumulator or memory location
+
+MUL
+
+Unsigned multiply (A x BD)
+
+NEG, NEGA, NEGB
+
+Negate accumulator or memory
+
+ORA, ORB
+
+Or memory with accumulator
+
+ROL, ROLA, ROLB
+
+Rotate accumulator or memory left
+
+AOR, RORA, RORB
+
+Rotate accumulator or memory right
+
+SBCA, SBCB Subtract memory from accumulator with borrow
+STA, STB Store accumulator to mamroy
+
+SUBA, SUBB Subtract memory from accumulator
+
+TST, TSTA, TSTB Test accumulator or memory location
+
+TFR Al, R2 Transfer R1 to R2 (R1, R2=A, B, CC, DPI
+
+NOTE: A, B, CC, or OP may be pushed to (pulled from) either stack with PSHS, PSHU
+
+(PULS, PULU) instructions.
+
+4-11
+
+a
+
+
+
+===== Page 39 =====
+LF i]
+
+Table 4-3. 16-Bit Accumulator and Memory Instructions
+
+Instruction Description
+ADDO Add memory to D accumulator
+CMPD Compare memory from O accumulator
+EXGO,R Exchange D with X, Y, S, U, ar PC
+LBD Load D accumulator from memory
+SEX Sign Extend B accumulator into A accumulator
+STD Store D accumulator to memory
+SUBD Subtract memory fram D accumulator
+TFR OD, R Transfer BD to X, Y, S, U, or PC
+TFR R, D Transfer X, ¥, S, U, ar PC ta D
+
+NOTE: D may be pushed (pulled) to sither stack with PSHS, PSHU {PULS, PULU)
+instructions.
+
+Table 4-4. Index/Stack Pointer Instructions
+
+Instruction Deecription
+CMPS, CMPU Compare memory from stack pointer
+CMPX, CMPY Compare memory from index register
+EXG Ri, R2 Exchange D, %, Y, 5, U or PC with D, &, ¥, 5, U or Pe
+LEAS, LEAU Load effective address into stack pointer
+LEAX, LEAY Load effective address into index register
+LOS, LOU Load stack pointer from memory
+LOX, LOY Load index register from memory
+PSHS Push A, B, CC, OP, BD, X, ¥, U, or PC onto hardware stack
+PSHU Push A, B, CC, DP, D, X, Y, X, or PC onto user stack
+PULS Pull A, B, CC, OP, O, X, ¥, U, or PC from hardware stack
+PULU Pull A, 8B, CC, DP, D, X, ¥, S, or PC from hardware stack
+STS, STU Stara stack pointer to memory
+STX, STY Store index register to memory
+TFR A1, RZ Transfer 0, X, ¥,:S, U, or PC to D, X, ¥, S, U, ar PC
+ABX Add B accumulator to X (unsigned)
+
+4-12
+
+
+
+===== Page 40 =====
+Table 4-5. Branch Instructions
+
+Instruction | Description
+SIMPLE BRANCHES
+BEQ, LBEQ Branch if equa}
+BNE, LBNE Branch if not equal
+BMI, LBM) Branch if minus
+BPL, LBPL Branch if pius
+BCS, LBCS Branch if carry set
+BCC, LBCC Branch if carry clear
+BYS, LBVS Branch if overflow set
+BYVC, LBVC Branch if overflow clear
+SIGNED BRANCHES
+BGT, LBGT Branch if greater (signed)
+8VS, LBVS Branch if invalid twos complement result
+8GE, LBGE Branch if greater than or equal {signed}
+BEQ, LBEQ Branch if equal
+BNE, LBNE Branch if not equat
+BLE, LBLE Branch if less than or equal {signed}
+BYVC, LBVC Branch if valid twos complement result
+BLT, LBLT Branch if jess than (signed)
+UNSIGNED BRANCHES
+BHi, LBHI Branch if higher (unsigned)
+BCC, LBCC Branch if higher or same (unsigned!
+BHS, LBHS Branch if higher or same (unsigned}
+BEG, LBEQ Branch if equal
+BNE, LBNE Branch if not equal
+BLS, LBLS Branch if lower or same (unsigned)
+BCS, LBCS Branch if ijower (unsigned
+BLO, LBLO Branch if jower (unsigned!
+OTHER BRANCHES
+BSR, LBSR Branch to suproutine
+BRA, LBRA Branch always
+BRN, LBRN Branch never
+
+Table 4-6. Miscellaneous Instructions
+
+Instruction Description
+ANDCC AND condition code register
+CWA AND condition code register, then wait for interrupt
+NOP No operation
+ORCC OR condition code register
+JMP Jump
+JSR Jump to subroutine
+ATI Retum from interrupt
+RTS Return from subroutine
+SWI, SWI2, SWI3 Software interrupt (absolute indirect)
+SYNC Synchronize with interrupt fine
+
+4-13/4-14
+
+
+
+===== Page 41 =====
+APPENDIX A
+INSTRUCTION SET DETAILS
+
+A.1 INTRODUCTION
+
+This appendix contains detailed information about each instruction in the MC68909 in-
+struction set. They are arranged In an alphabetical order with the mnemonic heading set
+In larger type for sasy reference.
+
+A.2 NOTATION
+
+In the operation description for each instruction, symbols are used to indicate the opera-
+tion. Table A-1 lists these symbois and their meanings. Abbreviations for the varlous
+registers, bits, and bytes are also used. Table A-2 lists these abbreviations and their
+meanings.
+
+Table A-1. Operation Notation
+
+Symbol Meaning
+- ts transferred to
+A Boolean AND
+Vv Boolean OR
+® Boolean exclusive OR
+~ (Overling)  Boclean NOT
+: Concatenation
+
+Arithmetic plus
+- Anthmetic minus
+X Arithmetic multiply
+
+A-1
+
+
+
+===== Page 42 =====
+|
+
+- te me eo,
+
+Table A-2.
+
+Abbreviation
+ACCA or A
+ACCB or B
+ACCA:ACCB or D
+ACCX
+CCR or CC
+DPR or OP
+EA
+IFF
+1X or X
+t¥ or ¥
+LSN
+M
+Ml
+MSN
+PC
+R
+R’
+
+TEMP
+xxH
+xxL
+Spoor S$
+Us or U
+
+BDDD
+
+_—
+
+Register Notation
+
+Meaning
+Accumulator A
+Accumulator B
+Double accumulator D
+Either accumulator A or B
+Condition code register
+Direct page register
+Effective address
+If and only if
+Index register X
+Index register Y
+Least significant nibble
+Memory location
+Memory immediate
+Most significant nibble
+Program counter
+A register before the operation
+A register after the operation
+Temporary storage location
+Most signifcant byte of any 16-bit register
+Least significant byte of any 16-bit register
+Hardware Stack pointer
+User Stack pointer
+
+A memery argumant with Immediate, Di-
+rect, Extended, and Indexed addressing
+modes
+
+A read-modify-write argument with Direct,
+Indexed, and Extended addressing modes
+
+The data pointed to by tha enclosed
+(18-bit address)
+
+8-bit branch offset
+
+16-bit branch offset
+Immediate value follows
+Hexadecimal value foliows
+indirection
+
+Indicates indexed addressing
+
+
+
+===== Page 43 =====
+ABX Add Accumulator B into Index Register X ABX
+
+Source Form: ABX
+
+Operation: IX’'— 1X + ACCB
+
+Condition Codes: Not affected.
+
+Description: Add the 8&-bit unsigned value in accumulator B into index register X.
+
+Addressing Mode: Inherent
+
+A-3
+
+
+
+===== Page 44 =====
+ADC
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Add with Carry into Register ADC
+
+ADCA P; ADCB P
+R'—R+M+C
+
+H — Set if a half-carry is generated; cleared otherwise.
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result Is zero; cleared otherwise.
+
+V — Set if an overflow is generated; cleared otherwise.
+C — Set if a carry is generated; cleared otherwise.
+
+Adds the contents of the C (carry) bit and the memory byte into an
+8-bit accumulator.
+
+Immediate
+Extended
+Direct
+Indexed
+
+A-4
+
+
+
+===== Page 45 =====
+ADD (8-Bit) Add Memory into Register ADD (8-Bit)
+
+Source Forms: ADDA P; ADDB P
+Operation: R'—-R+M
+
+Condition Codes: H — Set if a half-carry is generated; cleared otherwise.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Set if an overflow is generated; cleared otherwise.
+C — Set if a carry is generated; cleared otherwise.
+
+Description: Adds the memory byte into an 8-bit accumulator.
+Addressing Modes: Immediate
+
+Extended
+
+Direct
+
+Indexed
+
+A-5
+
+
+
+===== Page 46 =====
+ADD (1 6-Bit) Add Memory Into Register AD D (1 6-Bit)
+
+Source Forms: ADDD P
+Operation: R’--R + M:M+1
+
+Condition Codes: H — Not affected.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Set if an overflow is generated; cleared otherwise.
+C — Set if a carry is generated; cleared otherwise.
+
+Description: Adds the 16-bit memory value into the 16-bit accumulator
+Addressing Modes: Immediate
+
+Extended
+
+Direct
+
+Indexed
+
+A-6
+
+
+
+===== Page 47 =====
+AND
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Logical AND Memory into Register AN D
+
+ANDA P; ANDB P
+R’—-RAM
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+
+V -— Always cleared.
+
+C — Not affected.
+
+Performs the logical AND operation between the contents of an ac-
+cumulator and the contents of memory iocation M and the result is
+stored in the accumulator.
+
+Immediate
+Extended
+Direct
+Indexed
+
+A-7
+
+
+
+===== Page 48 =====
+AN D Logical AND Immediate Memory into Condition Code Register AN D
+
+Source Form: ANDCC #xx
+
+Operation: R’'—-RAMI
+
+Condition Codes: Affected according to the operation.
+
+Description: Performs a logicat AND between the condition code register and the
+immediate byte specified in the instruction and places the result in
+the condition code register.
+
+Addressing Mode: Immediate
+
+A-8
+
+
+
+===== Page 49 =====
+ASL
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Arithmetic Shift Left ASL
+
+ASL Q; ASLA; ASLB
+
+C+ +0
+
+b7 «+—— bo
+
+H — Undefined
+
+N — Set if the result is negative; cleared otherwise.
+
+2 — Set if the result is zero; cleared otherwise.
+
+V — Loaded with the result of the exclusive OR of bits six and
+seven of the original operand.
+
+C — Loaded with bit seven of the original operand.
+
+Shifts ali bits of the operand one place to the left. Bit zero is loaded
+with a zero. Bit seven is shifted into the C (carry) bit.
+
+Inherent
+Extended
+Direct
+Indexed
+
+A-9
+
+
+
+===== Page 50 =====
+ASR Arithmetic Shift Right AS R
+Source Forms: ASR Q; ASRA; ASRB
+
+Operation: Cat oto «
+b7 bO
+
+Condition Codes: WH — Undefined.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Not affected.
+C — Loaded with bit zero of the original operand.
+
+Description: Shifts all bits of the operand one place to the right. Bit seven is held
+constant. Bit zero is shifted into the C (carry) bit.
+
+Addressing Modes: Inherent
+Extended
+Direct
+Indexed
+
+A-10
+
+
+
+===== Page 51 =====
+B C C Branch on Carry Clear B Cc C
+
+Source Forms: BCC dd; LBCC DDDD
+
+Operation: TEMP—MI
+lFF C=0 then PC’ PC + TEMP
+
+Condition Codes: Not affected.
+Description: Tests the state of the C (carry) bit and causes a branch if it is clear.
+Addressing Mode: Relative
+
+Comments: Equivatent to BHS dd; LBHS DDDD
+
+A-11
+
+
+
+===== Page 52 =====
+BCS Branch on Carry Set BCS
+
+Source Forms: BCS dd; LBCS DDDD
+
+Operation: TEMP—MI
+IFF C=1 then PC'—PC + TEMP
+
+Condition Codes: Not affected.
+
+Description: Tests the state of the C (carry) bit and causes a branch if it is set.
+Addressing Mode: Relative
+
+Comments: Equivalent to BLO dd; LBLO DDDD
+
+A-12
+
+
+
+===== Page 53 =====
+BEQ
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Branch on Equal B EQ
+
+BEQ dd; LBEGQ DDDD
+
+TEMP=—Mi
+IFF Z=1 then PC’—PC+ TEMP
+
+Not affected.
+
+Tests the state of the Z (zero) bit and causes a branch if it is set.
+When used after a subtract or compare operation, this instruction
+will branch if the compared values, signed or unsigned, were exactly
+
+the same.
+
+Relative
+
+A-43
+
+
+
+===== Page 54 =====
+BGE
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Branch on Greater than or Equal to Zero BG E
+
+BGE dd; LBGE DDDD
+
+TEMP+MI
+IFF [N @ V]=0 then PC’+ PC + TEMP
+
+Not affected.
+
+Causes a branch if the N (negative) bit and the V (overflow) bit are
+either both set or both clear. That ts, branch if the sign of a valid
+twos complement result is, or would be, positive. When used after a
+subtract or compare operation on twos complement values, this in-
+struction will branch if the register was greater than or equal to the
+memory operand.
+
+Relative
+
+A-14
+
+
+
+===== Page 55 =====
+BGT
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Branch on Greater B GT
+
+BGT dd; LBGT DDDD
+
+TEMP~—MI
+IFF ZA [N@ V]=0 then PC’—PC+ TEMP
+
+Not affected.
+
+Causes a branch if the N (negative) bit and V (overflow) bit are either
+both set or both clear and the Z (zero) bit is clear. In other words,
+branch if the sign of a valid twos complement result is, or would be,
+positive and not zero. When used after a subtract or compare opera-
+tion on twos compiement values, this instruction will branch if the
+register was greater than the memory operand.
+
+Relative
+
+A-15
+
+
+
+===== Page 56 =====
+BHI
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch if Higher B H I
+
+BHI dd; LBH! DDDD
+
+TEMP = Mi
+IFF [C v Z]}=0 then PC’ PC + TEMP
+
+Not affected.
+Causes a branch if the previous operation caused neither a carry nor
+a zero result. When used after a subtract or compare operation on
+
+unsigned binary values, this instruction wili branch if the register
+was higher than the memory operand.
+
+Relative
+
+Generally not useful after INC/DEC, LD/TST, and TST/CLR/COM in-
+structions.
+
+A-16
+
+
+
+===== Page 57 =====
+BHS
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch it Higher or Same B H S
+
+BHS dd; LBHS DDDD
+
+TEMP =~ MI
+IFF C=0 then PC’—PC+MI
+
+Not affected.
+Tests the state of the C (carry) bit and causes a branch if it is clear.
+When used after a subtract or compare on unsigned binary values,
+
+this instruction will branch if the register was higher than or the
+same as the memory operand.
+
+Relative
+This is a duplicate assembly-language mnemonic for the single
+
+machine instruction BCC. Generally not useful after INC/DEC,
+LD/ST, and TST/CLR/COM instructions.
+
+A-17
+
+
+
+===== Page 58 =====
+BIT
+
+Source Form:
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Bit Test B IT
+
+Bit P
+TEMP--RAM
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+Z —Set if the result is zero; cleared otherwise.
+
+V — Always cleared.
+
+C -— Not affected.
+
+Performs the logical AND of the contents of accumulator A or B and
+the contents of memory location M and modifies the condition
+codes accordingly. The contents of accumulator A or B and memory
+location M are not affected.
+
+immediate
+Extended
+Direct
+Indexed
+
+A-18
+
+
+
+===== Page 59 =====
+BLE
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Branch on Less than or Equal to Zero B L E
+
+BLE dd; LBLE DDDD
+
+TEMP—MI
+lIFF Z v (N@® V]=1 then PC’—PC + TEMP
+
+Not affected.
+
+Causes a branch if the exclusive OR of the N (negative) and V
+(overflow) bits is 1 or if the Z (zero) bit is set. That is, branch if the
+sign of a valid twos complement result is, or would be, negative.
+When used after a subtract or compare operation on twos comple-
+ment values, this instruction will branch if the register was less than
+
+or equa! to the memory operand.
+
+Relative
+
+A-19
+
+
+
+===== Page 60 =====
+BLO
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch on Lower B LO
+
+BLO dd; LBLO DDDD
+
+TEMP~—MI
+IFF C= 1 then PC’-PC + TEMP
+
+Not affected.
+Tests the state of the C (carry) bit and causes a branch if it is set.
+When used after a subtract or compare on unsigned binary values,
+
+this instruction will branch if the register was lower than the
+memory operand.
+
+Relative
+This is a duplicate assembly-language mnemonic for the single
+
+machine instruction BCS. Generally not useful after INC/DEC,
+LDIST, and TST/CLR/COM instructions.
+
+A-20
+
+
+
+===== Page 61 =====
+BLS
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch on Lower or Same B LS
+BLS dd; LBLS DDDD
+
+TEMP MI
+IFF (C v Z)=1 then PC’ PC+ TEMP
+
+Not affected.
+
+Causes a branch if the previous operation caused either a carry or a
+zero result. When used after a subtract or compare operation on un-
+signed binary values, this instruction will branch if the register was
+lower than or the same as the memory operand.
+
+Relative
+
+Generally not useful after INC/DEC, LD/ST, and TST/CLR/COM in-
+structions.
+
+A-21
+
+
+
+===== Page 62 =====
+BLT
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Branch on Less than Zero B LT
+
+BLT dd; LBLT DDDD
+
+TEMP MI
+IFF [N@ V]/=1 then PC’+- PC + TEMP
+
+Not affected.
+
+Causes a branch if either, but not both, of the N (negative) or V
+(overflow) bits is set. That is, branch if the sign of a valid twos com-
+plement result is, or would be, negative. When used after a subtract
+
+or compare operation on twos complement binary values, this in-
+struction will branch if the register was less than the memory
+operand.
+
+Relative
+
+A-22
+
+
+
+===== Page 63 =====
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch on Minus B M |
+
+BMI dd; LBMI DDDD
+
+TEMP = MI
+IFF N=1 then PC’+-PC + TEMP
+
+Not affected.
+
+Tests the state of the N (negative) bit and causes a branch if set.
+That is, branch if the sign of the twos complement result is negative.
+
+Relative
+When used after an operation on signed binary values, this instruc-
+
+tion will branch if the result is minus. It is generally preferred to use
+the LBLT instruction after signed operations.
+
+A-23
+
+
+
+===== Page 64 =====
+B N E Branch Not Equal B N E
+
+Source Forms: BNE dd; LBNE DODD
+
+Operation: TEMP=+MI
+IFF Z=0 then PC’— PC +TEMP
+
+Condition Codes: Not affected.
+
+Description: Tests the state of the Z (zero) bit and causes a branch if it is clear.
+When used after a subtract or compare operation on any binary
+values, this instruction will branch if the register is, or would be, not
+equal to the memory operand.
+
+Addressing Mode: Relative
+
+A-24
+
+
+
+===== Page 65 =====
+BPL
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch on Plus B Pp L
+
+BPL dd; LBPL DDDD
+
+TEMP+—MI
+IFF N=0 then PC’— PC + TEMP
+
+Not affected.
+
+Tests the state of the N (negative) bit and causes a branch if it is
+clear. That is, branch if the sign of the twos complement result is
+
+positive.
+Relative
+When used after an operation on signed binary values, this instruc-
+
+tion will branch if the result (possibly invalid) is positive. It is general-
+ly preferred to use the BGE instruction after signed operations.
+
+A-25
+
+
+
+===== Page 66 =====
+BRA
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Branch Always
+
+BRA dd; LBRA DDDD
+
+TEMP—MI
+PC’ -— PC + TEMP
+
+Not affected.
+
+Causes an unconditional branch.
+
+Relative
+
+A-26
+
+BRA
+
+
+
+===== Page 67 =====
+BRN
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Branch Never B RN
+
+BRN dd; LBRN DDDD
+TEMP MI
+
+Not affected.
+
+Does not cause a branch. This instruction is essentially a no opera-
+tion, but has a bit pattern logically related to branch always.
+
+Relative
+
+A-27
+
+
+
+===== Page 68 =====
+BSR
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Branch to Subroutine BS R
+
+BSR dd; LBSR DDDD
+
+TEMP—MI
+SP'—SP—1, (SP)—PCL
+SP’--SP—1, (SP)—PCH
+PC’—PC + TEMP
+
+Not affected.
+
+The program counter is pushed onto the stack. The program counter
+is then loaded with the sum of the program counter and the offset.
+
+Relative
+
+A return from subroutine (RTS) instruction is used to reverse this pro-
+cess and must be the last instruction executed tn a subroutine.
+
+A-28
+
+
+
+===== Page 69 =====
+BVC
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Branch on Overflow Clear BVC
+
+BVC dd; LBVC DDDD
+
+TEMP —MI
+IFF V=0 then PC’— PC + TEMP
+
+Not affected.
+Tests the state of the V (overflow) bit and causes a branch if it is
+clear. That is, branch if the twos complement result was valid. When
+
+used after an operation on twos complement binary values, this in-
+struction will branch if there was no overflow.
+
+Relative
+
+A-29
+
+
+
+===== Page 70 =====
+BVS
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Branch on Overflow Set BVS
+
+BVS dd; LBVS DDDD
+
+TEMP—MI
+IFF V=1 then PC’—PC+TEMP
+
+Not affected.
+Tests the state of the V (overflow) bit and causes a branch if it is set.
+That is, branch if the twos complement result was invalid. When us-
+
+ed after an operation on twos complement binary values, this in-
+struction will branch if there was an overflow.
+
+Relative
+
+A-30
+
+
+
+===== Page 71 =====
+CLR
+
+Source Form:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Clear C L R
+
+CLR Q
+
+TEMP—M
+M0016
+
+H — Not affected.
+
+N -- Always cleared.
+Z — Always set.
+
+V — Always cleared.
+C — Always cleared.
+
+Accumulator A or B or memory location M is loaded with O0OG0000.
+Note that the EA is read during this operation.
+
+Inherent
+Extended
+Direct
+Indexed
+
+A-31
+
+
+
+===== Page 72 =====
+C M P (8- Bit) Compare Memory from Register CM P (8- Bit)
+
+Source Forms: CMPA P; CMPB P
+Operation: TEMP—R-M
+
+Condition Codes: H — Undefined.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Set if an overflow is generated; cleared otherwise.
+C — Set if a borrow is generated; cleared otherwise.
+
+Description: Compares the contents of memory location to the contents of the
+specified register and sets the appropriate condition codes. Neither
+memory location M nor the specified register is modified. The carry
+flag represents a borrow and Is set to the inverse of the resulting
+binary carry.
+
+Addressing Modes: Immediate
+Extended
+Direct
+indexed
+
+A-32
+
+
+
+===== Page 73 =====
+C M P (1 6- Bit) Compare Memory from Register CM P (1 6- Bit)
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+CMPD P; CMPX P; CMPY P; CMPU P; CMPS P
+TEMP~R — M:M +14
+
+H —Not affected. —
+
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Set if an overflow is generated; cleared otherwise.
+C — Set if a borrow is generated; cleared otherwise.
+
+Compares the 16-bit contents of the concatenated memory locations
+M:M+1 to the contents of the specified register and sets the ap-
+propriate condition codes. Neither the memory locations nor the
+specified register Is modified unless autoincrement or autodecre-
+ment are used, The carry flag represents a borrow and is set to the
+inverse of the resulting binary carry.
+
+immediate
+Extended
+Direct
+Indexed
+
+A-33
+
+
+
+===== Page 74 =====
+COM
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Complement CO M
+
+COM Q; COMA; COMB
+M’-—-O+M
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+
+V — Always cleared.
+
+C — Always set.
+
+Replaces the contents of memory location M or accumulator A or B
+with its logical complement. When operating on unsigned values,
+only BEQ and BNE branches can be expected to behave property
+foliowing a COM instruction. When operating on twos complement
+values, all signed branches are available.
+
+Inherent
+Extended
+Direct
+Indexed
+
+A-34
+
+
+
+===== Page 75 =====
+CWAIl Clear CC bits and Walt for Interrupt CWAI
+
+Source Form: CWAI #$XX EIFIJHIITIN;IZIEVIC
+
+Operation: CCR+CCR A MI (Possibly clear masks)
+set E (entire state saved)
+SP’ — SP — 1, (SP)— PCL
+SP’— SP — 1, (SP)— PCH
+SP’— SP -—1, (SP)— USL
+SP’- SP —1, (SP)—-USH
+SP’'—SP—1, (SP}—IYL
+SP’ —SP —- 1, (SP)—IYH
+SP’ — SP — 1, (SP)—IXL
+SP’ SP — 1, (SP)—IXH
+SP’—SP-—1, (SP)— DPR
+SP’-—SP—1, (SP) ACCB
+SP‘'—SP—1, (SP)— ACCA
+SP’— SP —1, (SP)}——COR
+
+Condition Codes: Affected according to the operation.
+
+Description: This instruction ANDs an immediate byte with the condition code
+register which may clear the interrupt mask bits | and F, stacks the
+entire machine state on the hardware stack and then looks for an in-
+terrupt. When a non-masked interrupt occurs, no further machine
+state information need be saved before vectoring to the interrupt
+handling routine. This instruction replaced the MC6800 CLI WAI se-
+quence, but does not place the buses in a high-impedance state. A
+FIRQ (fast interrupt request) may enter its interrupt handler with its
+entire machine state saved. The ATI {return from interrupt) instruc-
+tion will automatically return the entire machine state after testing
+the E (entire) bit of the recovered condition code register.
+
+Addressing Mode: ‘mmediate
+
+Comments: The following immediate values will have the following resuits:
+FF = enable neither
+EF = enable IRQ
+BF = enable FIRQ
+AF = enable both
+
+A-35
+
+
+
+===== Page 76 =====
+DAA
+
+Source Form:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Decimal Addition Adjust DAA
+
+DAA
+
+ACCA'~—ACCA + CF (MSN):CF(LSN)
+where CF is a Correction Factor, as follows: the CF for each nibble
+(BCD) digit is determined separately, and is either 6 or 0.
+
+Least Significant Nibble
+CF(LSN) =6 IFF 1)C=1
+or 2) LSN>9
+
+Most Significant Nibble
+CF(MSN)=6 IFF 1) C=1
+or 2) MSN>9
+or 3) MSN>8 and LSN>9
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Undefined.
+
+C — Set if a carry is generated or if the carry bit was set before the
+operation; cleared otherwise.
+
+The sequence of a single-byte add instruction on accumulator A
+(either ADDA or ADCA) and a following decimai addition adjust in-
+struction results in a BCD addition with an appropriate carry bit.
+Both values to be added must be in proper BCD form (each nibble
+such that: 0<nibble<9). Multiple-precision addition must add the
+carry generated by this decimal addition adjust into the next higher
+digit during the add operation (ADCA) immediately prior to the next
+decimal addition adjust.
+
+Inherent
+
+A-36
+
+
+
+===== Page 77 =====
+DEC
+
+Source Forms:
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Decrement
+
+DEC Q; DECA; DECB
+
+M'-—M-—14
+
+H — Not affected.
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Set if the original operand was 10000000; cleared otherwise.
+C —Not affected.
+
+Subtract one from the operand. The carry bit is not affected, thus
+allowing this instruction to be used as a loop counter in multiple-
+precision computations. When operating on unsigned values, only
+BEQ and BNE branches can be expected to behave consistently,
+When operating on twos complement values, all signed branches
+are available.
+
+Inherent
+Extended
+Direct
+Indexed
+
+A-37
+
+
+
+===== Page 78 =====
+EO R Exclusive OR EO R |
+
+Source Forms: EORA P; EORB P
+Operation: R'—ReM
+
+Condition Codes: WH — Not affected.
+N -— Set if the resuit is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Always cleared.
+C — Not affected.
+
+Description: The contents of memory location M is exclusive ORed into an 8-bit
+register.
+
+Addressing Modes: immediate
+Extended
+Direct
+= indexed
+
+A-38
+
+
+
+===== Page 79 =====
+EXG Exchange Registers EXG
+
+Source Form: EXG R1,R2
+
+Operation: R1—-R2
+
+Condition Codes: Not affected (unless one of the registers is the condition code
+register).
+
+Description: Exchanges data between two designated registers. Bits 3-0 of the
+postbyte define one register, while bits 7-4 define the other, as
+follows:
+
+0000 = A:B 1000 =A
+
+0001 =X 1001=B
+0010=Y 1010=CCR
+0011=US 1011 = DPR
+0100 =SP 1100 = Undefined
+0101 =PC 1101 = Undefined
+
+0110 = Undefined 1110 = Undefined
+0111 = Undefined 1111 = Undefined
+
+Only like size registers may be exchanged. (8-bit with 8-bit or 16-bit
+with 16-bit.)
+
+Addressing Mode: Immediate
+
+A-39
+
+
+
+===== Page 80 =====
+INC
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Increment I N C
+
+INC Q; INCA; INCB
+M’—M + 4
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Set if the original operand was 01111111; cleared otherwise.
+C — Not affected.
+
+Adds to the operand. The carry bit is not affected, thus allowing this
+instruction to be used as a loop counter in multiple-precision com-
+putations. When operating on unsigned values, only the BEQ and
+BNE branches can be expected to behave consistently. When
+operating on twos complement values, all signed branches are cor-
+rectly available.
+
+Inherent
+Extended
+Direct
+indexed
+
+A-40
+
+
+
+===== Page 81 =====
+JMP
+
+Source Form: JMP EA
+
+Operation: PC’—EA
+
+Condition Codes: Not affected.
+
+Description: Program control is transferred to the effective address.
+Addressing Modes: Extended
+
+Direct
+
+Indexed
+
+A-41
+
+
+
+===== Page 82 =====
+J S R Jump to Subroutine J S R
+
+Source Form: JSR EA
+
+Operation: SP’— SP —1, (SP) PCL
+SP’ +-SP — 1, (SP}~— PCH
+PC'’—EA
+
+Condition Codes: Not affected.
+
+Description: Program control is transferred to the effective address after storing
+the return address on the hardware stack. A RTS instruction should
+be the last executed instruction of the subroutine.
+
+Addressing Modes: Extended
+Direct
+Indexed
+
+A-42
+
+
+
+===== Page 83 =====
+LD (8-Bit)
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Load Register from Memory L D (8- B it)
+
+LDA P; LDB P
+R’-—-M
+
+H — Not affected.
+
+N — Set if the loaded data is negative; cleared otherwise.
+Z — Set if the loaded data is zero; cleared otherwise.
+
+V — Always cleared.
+
+C — Not affected.
+
+Loads the contents of memory location M into the designated
+register.
+
+Immediate
+Extended
+Direct
+Indexed
+
+A-43
+
+
+
+===== Page 84 =====
+LD (1 6- Bit) Load Register from Memory L D (1 6- Bit)
+
+Source Forms: LDD P; LDX P: LDY P; LDS P; LDU P
+Operation: R’—M:M +1
+
+Condition Codes: WH — Not affected.
+N — Set if the loaded data is negative; cleared otheriwse.
+Z — Set if the loaded data is zero; cleared otherwise.
+V — Always cleared.
+C — Not affected.
+
+Description: Load the contents of the memory ‘ocation M:M+1 into the
+designated 16-bit register.
+
+Addressing Modes: Immediate
+Extended
+Direct
+Indexed
+
+A-44
+
+
+
+===== Page 85 =====
+LEA
+
+Source Forms:
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Comments:
+
+Load Effective Address L EA
+
+LEAX, LEAY, LEAS, LEAU
+PR’ EA
+
+H — Not affected.
+
+N — Not affected.
+
+Z — LEAX, LEAY: Set if the result is zero; cleared otherwise.
+LEAS, LEAU: Not affected.
+
+V — Not affected.
+
+C — Not affected.
+
+Calculates the effective address from the indexed addressing mode
+and places the address in an indexable register.
+
+LEAX and LEAY affect the Z (zero) bit to allow use of these registers
+as counters and for MC6800 INX/DEX compatibility.
+
+LEAU and LEAS do not affect the Z bit to allow cleaning up the stack
+while returning the Z bit as a parameter to a calling routine, and also
+for MC6800 INS/DES compatibility.
+
+Indexed
+
+Due to the order in which effective addresses are calculated inter-
+nally, the LEAX, X+ + and LEAX, X + do not add 2 and 1 (respective-
+ly) to the X register; but instead leave the X register unchanged. This
+aiso applies to the Y, U, and S registers. For the expected results,
+use the faster instruction LEAX 2, X and LEAX 1, X.
+
+Some examples of LEA instruction uses are given in the following
+table.
+
+Instruction Operation Comment
+
+LEAX 10, X X+10—X Adds 5-bit constant 10 to X
+LEAX 500, xX X+500-X Adds 16-bit constant 500 to X
+
+LEAY A,Y Y+A-Y Adds 8-bit accumulator to Y
+LEAY D,Y Y+D-Y Adds 16-bit D accumulator to Y
+LEAU —-10,U U-10-U Subtracts 10 from U
+
+LEAS -10,5 $-10-S Used to reserve area on stack
+LEAS 10,S $+10-S$ Used to ‘clean up’ stack
+
+LEAX 5,8 $+5-X Transfers as well as adds
+
+A-45
+
+
+
+===== Page 86 =====
+LSL
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Comments:
+
+Logical Shift Left LS L
+
+LSL Q; LSLA; LSLB
+
+Cc 0
+b?7 bd
+
+H — Undefined.
+
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Loaded with the result of the exclusive OR of bits six and
+seven of the original operand.
+
+C — Loaded with bit seven of the original operand.
+
+Shifts all bits of accumulator A or B or memory location M one place
+to the ieft. Bit zero is loaded with a zero. Bit seven of accumulator A
+or B or memory tocation M is shifted into the © (carry) bit.
+
+Inherent
+Extended
+Direct
+Indexed
+
+This is a duplicate assembly-language mnemonic for the single
+machine instruction ASL.
+
+A-46
+
+
+
+===== Page 87 =====
+LSR
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Logical Shift Right LS R
+
+LSR Q; LSRA; LSRB
+
+0» —+C
+
+b7 bo
+
+H — Not affected.
+
+N — Always cleared.
+
+Z — Set if the result is zero; cleared otherwise.
+V —Not affected.
+
+C — Loaded with bit zero of the original operand.
+
+Performs a logical shift right on the operand. Shifts a zero into bit
+seven and bit zero into the C (carry) bit.
+
+Inherent
+Extended
+Direct
+indexed
+
+A-47
+
+
+
+===== Page 88 =====
+MUL
+
+Source Form:
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+Comments:
+
+Uesaipty MUL
+
+MUL
+ACCA':ACC8’ — AQCA x ACCB
+
+H — Not affected.
+
+N — Not affected.
+
+Z — Set if the reeut is zeru, cleared otherwise.
+
+V — Not affected.
+
+C — Set if ACCS bh 7 of reeult is set; cleared otherwise.
+
+Multiply the unsigned binary numbers in the accumulators and
+place the reeutt in both accumulators (ACCA contains the most-
+
+signiticam byte of the reeuit). Unsigned multiply allows multiple-
+precision operations.
+
+inherent
+
+The C (carry) bit allows rounding the most-significant byte through
+the sequence: MUL, ADCA #0.
+
+
+
+===== Page 89 =====
+NEG
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Negate N EG
+
+NEG Q; NEGA; NEGB
+M’-O-M
+
+H — Undefined.
+
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+
+V — Set if the original operand was 10000000.
+
+C — Set if a borrow is generated; cleared otherwise.
+
+Replaces the operand with its twos complement. The C (carry) bit
+represents a borrow and is set to the inverse of the resulting binary
+carry. Note that 8046 is replaced by itself and only in this case is the
+V (overflow) bit set. The value 0046 is also replaced by itself, and only
+in this case is the C (carry) bit cleared.
+
+Inherent
+Extended
+Direct
+
+A-49
+
+
+
+===== Page 90 =====
+N O P No Operation N O P
+
+Source Form: NOP
+Operation: Not affected.
+
+| Condition Codes: This instruction causes only the program counter to be incremented.
+No other registers or memory locations are affected.
+
+Addressing Mode: Inherent
+
+A-50
+
+
+
+===== Page 91 =====
+OR Inclusive OR Memory into Register O R
+
+Source Forms: ORA P; ORB P
+Operation: R’—RvVM
+
+Condition Codes: H — Not affected.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Always cleared.
+C — Not affected.
+
+Description: Performs an inclusive OR operation between the contents of ac-
+cumulator A or B and the contents of memory location M and the
+result is stored in accumulator A or B.
+
+Addressing Modes: Immediate
+Extended
+Direct
+Indexed
+
+A-51
+
+
+
+===== Page 92 =====
+O R Inclusive OR Memory Immediate into Condition Code Register O R
+
+Source Form:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+ORCC #XX
+
+R’'—Rv Mi
+
+Affected according to the operation.
+
+Performs an inclusive OR operation between the contents of the
+condition code registers and the immediate vajue, and the result is
+placed in the condition code register. This instruction may be used
+to set interrupt masks (disable interrupts) or any other bit(s).
+
+immediate
+
+A-52
+
+
+
+===== Page 93 =====
+PS H S Push Registers on the Hardware Stack PS H S
+
+Source Form: PSHS register list
+PSHS #LABEL
+Postbyte:
+b7 b6 bS b4 b3 b2 b1 b0
+IPc{u |y |x j/op{B] A icc
+push order---~--»
+
+Operation: IFF b7 of postbyte set, then: SP’—SP-—1, (SP)-—PCL
+SP’'— SP —- 1, (SP)— PCH |
+IFF b6 of postbyte set, then: SP’--SP-—1, (SP}-—USL |
+SP’— SP — 1, (SP)—USH |
+\FF b5 of postbyte set, then: SP’—SP-—1, (SP)--{fYL |
+SP’ — SP — 1, (SP)—IYH
+\FF b4 of postbyte set, then: SP’-SP-—1, (SP)—IXL
+SP’ — SP — 1, (SP)—IXH
+\FF b3 of postbyte set, then: SP’-SP—1, (SP)—DPR
+IFF b2 of postbyte set, then: SP’—SP-—-1, (SP)—ACCB
+IFF b1 of postbyte set, then: SP’--SP—1, (SP)}—ACCA
+IFF 60 of postbyte set, then: SP’—SP-—1, (SP)--CCR
+
+Condition Codes: Not affected.
+
+Description: Ali, some, or none of the processor registers are pushed onto the
+hardware stack (with the exception of the hardware stack pointer
+itself).
+
+Addressing Mode: Immediate
+
+Comments: A single register may be placed on the stack with the condition
+codes set by doing an autodecrement store onto the stack (example:
+STX ,— —S).
+
+A-53
+
+
+
+===== Page 94 =====
+PS H U Push Registers on the User Stack PS H U
+
+Source Form: PSHU register list
+PSHU #LABEL
+Postbyte:
+b7 b6 bS b4 b3 b2 bi b0
+IPC}U |/Y |x |[DP{B]AICC}
+push order----- >»
+
+Operation: IFF b7 of postbyte set, then: US’—US ~ 4, (US}— PCL
+US’+-US — 1, (US)— PCH
+IFF b6 of postbyte set, then: US’-US—1, (US)-—SPL
+US’—US — 1, (US)—SPH
+IFF b5 of postbyte set, then: US’-—US-—1, (US)—IYL
+US’+-US -— 1, (US)—IYH
+IFF b4 of postbyte set, then: US’—US-—1, (US)—IXL
+US'—US — 1, (US)+—IXH
+IFF b3 of postbyte set, then: US’+-US—1, (US)—DPR
+IFF b2 of postbyte set, then: US’-US—1, (US)—ACCB
+IFF b1 of postbyte set, then: US’-—US-—1, (US)—ACCA
+\FF bO of postbyte set, then: US’-—US—1, (US)—CCR
+
+Condition Codes: Not affected.
+
+Description: All, some, or none of the processor registers are pushed onto the
+user stack (with the exception of the user stack pointer itself).
+
+Addressing Mode: immediate
+Comments: A single register may be placed on the stack with the condition
+
+codes set by doing an autodecrement store onto the stack (example:
+STX ,— —U).
+
+A-54
+
+
+
+===== Page 95 =====
+PU LS Pull Registers from the Hardware Stack PU LS
+
+Source Form: PULS register list
+PULS #LABEL
+Postbyte:
+
+b7 b6 b5 b4 b3 b2 b1 bO
+ipciu]y |x {DPI BA {Cc
+&------ pull order
+
+Operation: IFF bO of postbyte set, than: CCR’ (SP), SP’—SP+1
+IFF b1 of postbyte set, then: ACCA'—(SP), SP’--SP +1
+IFF b2 of postbyte set, then: ACCB’—(SP), SP’~SP +1
+IFF 63 of postbyte set, then: DPR’ -—(SP), SP’—SP+1
+IFF b4 of postbyte set, then: IXH’ —(SP), SP’—SP+1
+
+XL’ +-—({(SP), SP’—SP+1
+FF b5 of postbyte set, then: IYH’ (SP), SP’—SP+1
+IYL' +({SP), SP’—SP +1
+IF F b6 of postbyte set, then: USH’ (SP), SP’—SP+1
+USL’ -(SP), SP’—SP +1
+IFF b7 of postbyte set, then: PCH’ —(SP), SP’—SP+1
+PCL’ +-(SP), SP’-SP +1
+
+Condition Codes: May be pulled from stack; not affected otherwise.
+Description: All, some, or none of the processor registers are pulled from the
+hardware stack (with the exception of the hardware stack pointer
+itself).
+Addressing Mode: immediate
+Comments: A single register may be pulled from the stack with condition codes
+
+set by doing an autoincrement load from the stack (example:
+LDX ,S + +).
+
+A-55
+
+
+
+===== Page 96 =====
+P U L U Puil Registers from the User Stack P U L U
+
+Source Form: PULU register list
+PULU #LABEL
+
+Postbyte:
+
+b7 b6 bS b4 b3 b2 bi bd
+
+(Pcolu ly |x |lpp]B]AIcc
+“------ pull order
+
+| Operation: IFF bO of postbyte set, then: CCR’ (US), US’—US+1
+| I1FF b1 of postbyte set, then: ACCA’-—(US), US'—US +1
+| iIFF b2 of postbyte set, then: ACCB’--(US), US’—US +1
+IFF b3 of postbyte set, then: DPR’ +(US), US'—US+1
+
+iFF b4 of postbyte set, then: IXH’ +—(US), US'—US+1
+
+IXL’ +-(US), US’—US +1
+
+IFF b5 of postbyte set, then: IYH’ +—(US), US’'—US +1
+
+IYL' +—({US), US'—US +1
+
+IFF b6 of postbyte set, then: SPH’ +(US), US‘'—US+1
+
+SPL’ -—({US), US'—US +1
+
+IFF b7 of postbyte set, then: PCH -—(US), US’'—US+1
+
+PCL’ +—(US), US’—US +1
+
+Condition Codes: May be pulied from stack; not affected otherwise.
+
+Description: All, some, or none of the processor registers are pulled from the user
+stack (with the exception of the user stack pointer itself).
+
+Addressing Mode: Immediate
+
+Comments: A single register may be pulled from the stack with condition codes
+set by doing an autoincrement load from the stack (example:
+LDX ,U + +).
+
+A-56
+
+
+
+===== Page 97 =====
+ROL
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Rotate Left. RO L
+
+ROL Q; ROLA; ROLB
+
+>| C
+
+b7 ~ bo
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Loaded with the result of the exclusive OR of bits six and
+seven of the original operand.
+
+C — Loaded with bit seven of the original operand.
+
+Rotates all bits of the operand one place Jeft through the C (carry)
+bit. This is a 9-bit rotation.
+
+Inherent
+Extended
+Direct
+Indexed
+
+A-57
+
+
+
+===== Page 98 =====
+ROR
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Rotate Right RO R
+
+ROR Q; RORA; RORB
+
+ey
+
+b7 * b0
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+
+V — Not affected.
+
+C — Loaded with bit zero of the previous operand.
+
+Rotates all bits of the operand one place right through the C (carry)
+bit. This is a 9-bit rotation.
+
+Inherent
+Extended
+Direct
+Indexed
+
+A-58
+
+
+
+===== Page 99 =====
+RTI Return from Interrupt RTI
+
+Source Form: RTI
+Operation: CCR’ —(SP), SP’ — SP +1, then
+
+IFF CCR bit Eis set, then: | ACCA’—(SP), SP’—SP+1
+ACCB’ +(SP), SP'—SP +1
+DPR’ +-(SP), SP’-SP+1
+IXH' (SP), SP’—SP4+1
+IXL’ +—(SP}, SP’—SP+1
+1YH’ (SP), SP’—SP +1
+YL’ +(SP), SP’—SP +1
+USH’ =—(SP), SP’—SP+1
+USL' (SP), SP’—SP+1
+PCH’ (SP), SP’—SP+1
+PCL’ (SP), SP’—SP+1
+
+lIFF CCR bit E is clear, then: PCH’ -(SP), SP’—SP +14
+PCL’ +-(SP), SP’-SP+1
+
+Conditlon Codes: Recovered from the stack.
+
+Description: The saved machine state is recovered from the hardware stack and
+control is returned to the interrupted program. If the recovered E (en-
+tire) bit is clear, it indicates that only a subset of the machine state
+was saved (return address and condition codes) and only that subset
+is recovered.
+
+Addressing Mode: inherent
+
+A-59
+
+
+
+===== Page 100 =====
+RTS Return from Subroutine RTS
+
+Source Form: RTS
+
+Operation: PCH’ — (SP), SP’--SP+1
+PCL’ —(SP), SP’—SP +1
+
+Condition Codes: Not affected.
+
+Description: Program control is returned from the subroutine to the calling pro-
+gram. The return address is pulled from the stack.
+
+Addressing Mode: Inherent
+
+A-60
+
+
+
+===== Page 101 =====
+SBC
+
+Source Forms:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Subtract with Borrow S B C
+
+SBCA P; SBCB P
+R’-R-M-C
+
+H — Undefined.
+
+N — Set if the resuit is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Set if an overflow is generated; cleared otherwise.
+C — Set if a borrow is generated; cleared otherwise.
+
+Subtracts the contents of memory jocation M and the borrow (in the
+C (carry) bit) from the contents of the designated 8&bit register, and
+places the result in that register. The C bit represents a borrow and
+is set to the inverse of the resulting binary carry.
+
+Immediate
+
+Extended
+
+Direct |
+
+Indexed
+|
+
+A61
+
+
+
+===== Page 102 =====
+S EX Sign Extended S EX
+
+Source Form: SEX
+
+Operation: If bit seven of ACCB is set then ACCA’—FFig
+else ACCA’ 0016
+
+Condition Codes: H — Not affected.
+N — Set if the result Is negative; cleared otherwise.
+Z — Set If the result is zero; cleared otherwise.
+V — Not affected.
+C — Not affected.
+
+Description: This instruction transforms a twos complement 8-bit value in ac-
+cumulator B into a twos complement 16-bit value in the D ac-
+cumulator.
+
+Addressing Mode: inherent
+
+A-62
+
+
+
+===== Page 103 =====
+ST (8- B it) Store Register into Memory ST (8- B t)
+
+Source Forms: STA P; STB P
+Operation: M’—R
+
+Condition Codes: H — Not affected.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Always cleared.
+C — Not affected.
+
+Description: Writes the contents of an 8-bit register into a memory location.
+Addressing Modes: Extended
+
+Direct
+
+Indexed
+
+A63
+
+
+
+===== Page 104 =====
+ST (1 6-Bit) Store Register Into Memory ST (1 6-Bit)
+
+Source Forms:
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+STD P; STX P; STY P; STS P; STU P
+MM +t’-—R
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+
+V — Aljways cleared.
+
+C — Not affected.
+
+Writes the contents of a 16-bit register into two consecutive memory
+locations.
+
+Extended
+Direct
+Indexed
+
+A-64
+
+
+
+===== Page 105 =====
+SU B (8- Bit) Subtract Memory from Register SU B (8- Bit)
+
+Source Forms:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+SUBA P; SUBB P
+R’--R-M
+
+H — Undefined. |
+
+N — Set If the result is negative; cleared otherwise.
+
+Z — Set if the result is zero; cleared otherwise.
+
+V — Set if the overflow is generated; cleared otherwise.
+C — Set if a borrow is generated; cleared otherwise.
+
+Subtracts the value in memory location M from the contents of a
+designated 8-bit register. The C (carry) bit represents a borrow and is
+set to the inverse of the resulting binary carry.
+
+Immediate
+Extended
+Direct
+Indexed
+
+A-65
+
+
+
+===== Page 106 =====
+SU B (1 6-Bit) Subtract Memory from Register SU B (1 6-Bit)
+
+Source Forms: SUBD P
+Operation: R’-R —- M:M+1
+
+Condition Codes: H — Not affected.
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+V — Set if the overflow is generated; cleared otherwise.
+CG — Set if a borrow is generated; cleared otherwise.
+
+Description: Subtracts the value in memory location M:M + 1 from the contents of
+a designated 16-bit register. The C (carry) bit represents a borrow
+and is set to the inverse of the resulting binary carry.
+
+Addressing Modes: Immediate
+Extended
+Direct
+Indexed
+
+A-66
+
+
+
+===== Page 107 =====
+SW Software Interrupt SW l
+
+Source Form: SWI
+
+Operation: Set & (entire state wiil be saved)
+SP’— SP - 1, (SP)— PCL
+SP’ — SP — 1, (SP)-- PCH
+SP’ --SP — 1, (SP)—USL
+SP’ — SP - 1, (SP)— USH
+SP’ SP — 1, (SP)—IYL
+SP’—SP - 1, (SP)—IYH
+SP’-—SP — 1, (SP)—IXL
+SP’— SP — 1, (SP)—IXH
+SP’-—SP- 1, (SP)—DPR
+SP’—SP —1, (SP)—ACCB
+SP’+-SP—1, (SP)}— ACCA
+SP'— SP —1, (SP)—CCR
+Set |, F (mask interrupts)
+PC' — (FFFA)(FFFB)
+
+Condition Codes: Not affected.
+
+Description: All of the processor registers are pushed onto the hardware stack
+(with the exception of the hardware stack pointer itself), and control
+is transferred through the software interrupt vector. Both the normal
+and fast interrupts are masked (disabled).
+
+Addressing Mode: Inherent
+
+A-67
+
+
+
+===== Page 108 =====
+SWI2
+
+Source Form:
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Software Interrupt 2
+
+SWI2
+
+Set E (entire state saved)
+SP'+-SP- 1, (SP}— PCL
+SP’'—SP—1, (SP)— PCH
+SP’—SP-—1, (SP)-—USL
+SP’—SP — 1, (SP)—USH
+SP’—SP — 1, (SP(—IYL
+SP’ SP — 1, (SP)—IYH
+SP’ — SP — 1, (SP)*+-IXL
+SP’ — SP — 1, (SP)-— IXH
+SP’+-SP— 1, (SP) DPR
+SP’'+ SP —1, (SP}— ACCB
+SP’ — SP - 1, (SP) ACCA
+SP’— SP —- 1, (SP)~-CCR
+PC’ —(FFF4):(FFF5)
+
+Not affected.
+
+SWI2
+
+All of the processor registers are pushed onto the hardware stack
+(with the exception of the hardware stack pointer itself}, and control
+is transferred through the software interrupt 2 vector. This interrupt
+is available to the end user and must not be used in packaged soft-
+ware. This interrupt does not mask (disable) the normal and fast in-
+
+terrupts.
+
+Inherent
+
+A-68
+
+
+
+===== Page 109 =====
+SWI 3 Software Interrupt 3 SWI 3
+
+Source Form: SWI 3
+
+Operation: Set E (entire state will be saved)
+SP’+ SP — 1, (SP)— PCL
+SP’ — SP — 1, (SP)— PCH
+SP’ — SP — 1, (SP)—USL
+SP’ — SP — 1, (SP) USH
+SP’—SP— 1, (SP)—IYL
+SP’ SP — 1, (SP)—IYH
+SP’— SP —1, (SP)+-IXL
+SP‘'—SP — 1, (SP)}—IXH
+SP'— SP — 1, (SP)-- DPR
+SP’—SP —1, (SP}— ACCB
+SP’—SP-—1, (SP}-+-ACCA
+SP’ SP — 1, (SP}—CCR
+PC’ — (FFF2):(FFF3)
+
+Condition Codes: Not affected.
+
+Description: All of the processor registers are pushed onto the hardware stack
+(with the exception of the hardware stack pointer itself), and control
+is transferred through the software interrupt 3 vector. This interrupt
+does not mask (disable) the normal and fast interrupts.
+
+Addressing Mode: Inherent
+
+A-69
+
+
+
+===== Page 110 =====
+SYNC
+
+Source Form:
+Operation:
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Synchronize to External Event SY N C
+
+SYNC
+Stop processing instructions
+Not affected.
+
+When a SYNC instruction is excuted, the processor enters a syn-
+chronizing state, stops processing instructions, and waits for an In-
+terrupt. When an interrupt occurs, the synchronizing state is cleared
+and processing continues. If the interrupt is enabled, and it lasts
+three cycles or more, the processor will perform the Interrupt
+routine. if the interrupt is masked or is shorter than three cycles, the
+processor simply continues to the next instruction. While in the syn-
+chronizing state, the address and data buses are in the high-
+impedance state.
+
+This instruction provides software synchronization with a hardware
+process. Consider the foltowing example for high-speed acquisition
+of data:
+
+FAST SYNC WAIT FOR DATA
+interrupt!
+LDA DISC DATA FROM DISC AND CLEAR INTERRUPT
+STA X+ PUTIN BUFFER
+DECB COUNT IT, DONE?
+BNE FAST GO AGAIN IF NOT,
+
+The synchronizing state is cleared by any interrupt. Of course, enabl-
+ed interrupts at this point may destroy the data transfer and, as
+such, should represent only emergency conditions.
+
+The same connection used for interrupt-driven I/O service may also
+be used for high-speed data transfers by setting the interrupt mask
+and using the SYNC instruction as the above example
+demonstrates.
+
+Inherent
+
+A-70
+
+
+
+===== Page 111 =====
+TFR
+
+Source Form:
+Operation:
+Condition Code:
+
+Description:
+
+Addressing Mode:
+
+Transfer Register to Register T F R
+
+TFR Rt, R2
+
+R1i— R2
+
+Not affected unless R2 is the condition code register.
+
+Transfers data between two designated registers. Bits 7-4 of the
+
+postbyte define the source register, while bits 3-0 define the destina-
+tion register, as follows:
+
+0000 = A:B 1000 =A
+
+0001 = X 1001 =B
+0010=Y 1010=CCR
+0011=US 1011=DPR
+0100 =SP 1100 = Undefined
+0101 =PC 1101 = Undefined
+
+0110=Undefined 1110=Undefined
+0111=Undefined 1111=Undefined
+
+Only like size registers may be transferred. (8-bit to 8-bit, or 16-bit to
+16-bit.)
+
+Immediate
+
+A-71
+
+
+
+===== Page 112 =====
+TST
+
+Source Forms:
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Modes:
+
+Comments:
+
+Test TST
+
+TST Q; TSTA; TSTB
+TEMP--M-—O
+
+H — Not affected.
+
+N — Set if the result is negative; cleared otherwise.
+Z — Set if the result is zero; cleared otherwise.
+
+V — Always cleared.
+
+C — Not affected.
+
+Set the N (negative) and Z (zero) bits according to the contents of
+memory location M, and clear the V (overflow) bit. The TST instruc-
+tion provides only minimum information when testing unsigned
+values; since no unsigned value is less than zero, BLO and BLS have
+no utility. While BHI could be used after TST, it provides exactly the
+same control as BNE, which is preferred. The signed branches are
+available.
+
+Inherent
+Extended
+Direct
+Indexed
+
+The MC6800 processor clears the C (carry) bit.
+
+A-72
+
+
+
+===== Page 113 =====
+FIRQ
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Addressing Mode:
+
+Fast interrupt Request (Hardware interrupt) Fl R Q
+
+\FF F bit clear, then: SP’—SP-—1, (SP)—PCL
+SP’+-SP—1, (SP) PCH
+Clear E (subset state is saved)
+SP’+-SP— 1, (SP)—CCR
+Set F, | (mask further interrupts)
+PC' — (FFF6):(FFF7)
+
+Not affected.
+
+A FIRQ (fast interrupt request) with the F (fast interrupt request
+mask) bit clear causes this interrupt sequence to occur at the end of
+the current instruction. The program counter and condition code
+register are pushed onto the hardware stack. Program control is
+transferred through the fast interrupt request vector. An RTI (return
+from interrupt) instruction returns the processor to the original task.
+It is possible to enter the fast interrupt request routine with the en-
+tire machine state saved if the fast interrupt request occurs after a
+clear and wait for interrupt instruction. A normal interrupt request
+has lower priority than the fast interrupt request and is prevented
+from interrupting the fast interrupt request routine by automatic set-
+ting of the I (interrupt request mask) bit. This mask bit could then be
+reset during the interrupt routine if priority was not desired. The fast
+interrupt request allows operations on memory, TST, INC, DEC, etc.
+instructions without the overhead of saving the entire machine state
+on the stack.
+
+Inherent
+
+A-73
+
+
+
+===== Page 114 =====
+IRQ
+
+Operation:
+
+Condition Codes:
+
+Description:
+
+Poet ¢ Pee apse &
+
+Addressing Mode:
+
+2)
+
+Interrupt Request (Hardware Interrupt) | R
+
+IFF | bit clear, then: SP’-—SP-—1, (SP)—PCL
+SP’-- SP —1, (SP)— PCH
+SP’— SP —-1, (SP)-- USL
+SP’+-SP —1, (SP)— USH
+SP’—SP — 1, (SP}—IYL
+SP’—SP — 1, (SP)+-1YH
+SP’ — SP — 1, (SP)-—- IXL
+SP’ — SP — 1, (SP}—IXH
+SP’+- SP — 1, (SP) DPR
+SP’ —SP - 1, (SP}— ACCB
+SP’— SP —1, (SP)— ACCA
+Set E (entire state saved)
+SP’—SP—1, (SP)—CCR
+Set | (mask further JRQ interrupts)
+PC' —(FFF8):(FFF9)
+
+Not affected.
+
+If the | (interrupt request mask) bit is clear, a iow fevel on the IRQ in-
+put causes this interrupt sequence to occur at the end of the current
+instruction. Control is returned to the interrupted program using a
+RTI (return from interrupt) instruction. A FIRQ (fast interrupt request)
+may interrupt a normal iRQ (interrupt request} routine and be
+recognized anytime after the interrupt vector is taken.
+
+Inherent
+
+A-74
+
+
+
+===== Page 115 =====
+N M I Non-Maskable Interrupt (Hardware Interrupt) N M [
+
+Operation: SP'— SP — 1, (SP)— PCL
+SP’ SP —1, (SP}— PCH
+SP’— SP — 1, (SP)— USL
+SP’ — SP — 1, (SP)—USH
+SP’ SP -1, (SP}—IYL
+SP'--SP—1, (SP)—IYH
+SP’ SP —1, (SP)—IXL
+SP’ SP — 1, (SP)—IXH
+SP’ SP —1, (SP)—DPR
+SP’=-- SP — 1, (SP)— ACCB
+SP’—SP—-1, (SP)--ACCA
+Set E (entire state save)
+SP'+ SP -— 1, (SP)—CCR
+Set I, F (mask interrupts)
+PC’ —(FFFC)(FFFD)
+
+Condition Codes: Not affected.
+
+Description: A negative edge on the NMI (non-maskable interrupt) input causes
+all of the processor’s registers (except the hardware stack pointer)
+to be pushed onto the hardware stack, Starting at the end of the cur-
+rent instruction. Program control is transferred through the NMI vec-
+tor. Successive negative edges on the NMI input will cause suc-
+cessive NMI operations. Non-maskable interrupt operation can be
+internaily blocked by a RESET operation and any non-maskable in-
+terrupt that occurs will be latched. If this happens, the non-
+maskabie interrupt operation will occur after the first load into the
+Stack pointer (LDS; TFR r,s; EXG r,s; etc.) after RESET.
+
+Addressing Mode: Inherent
+
+A-75
+
+
+
+===== Page 116 =====
+R ESTA RT Restart (Hardware Interrupt) R ESTA RT
+
+Operation: CCR’ — X1X1XXXX
+DPR’ — 0016
+PC’ — (FFFE):(FFFF)}
+
+Condition Codes: Not affected.
+
+Description: The processor is initialized (required after power-on) to start pro-
+gram execution. The starting address is fetched from the restart vec-
+tor.
+
+Addressing Mode: Extended Indirect
+
+A-76
+
+
+

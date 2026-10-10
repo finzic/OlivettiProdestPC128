@@ -1,0 +1,5231 @@
+# assperiph -- English text (machine translation from 'fr' OCR)
+
+===== Page 1 =====
+ASSEMBLEUR
+AND
+
+PERIPHERIQUES
+THE
+
+MO5 ET TO7/70
+
+
+===== Page 2 =====
+Other works relating to M05 and T07/70
+
+— MO5 and T07/70 for young children — Daniel Nielsen
+
+— MO5 and T07/70 at school — Daniel Nielsen
+
+— MO5 and T07/70 for all — Jacques Boisgontier and Sophie Brébion — Le Basic des M05 and T07/70 — Gilles Blanchard
+
+— The discovery of the M05 — Dominique Schraen and Maurice Charbit — Exercises for M05 — Dominique Schraen and Maurice Charbit
+
+— The discovery of T07/70 — Dominique Schraen and Maurice Charbit — Exercises for T07/70 — Maurice Charbit and Dominique Schraen — Games, tricks and accounts for T07/70 — Michel Benelfoul
+
+— MO5 and T07/70 with family — Jean-François Séhan
+
+— 102 programmes for M05 and T07/70 — Jacques Deconchat
+
+— MO5 and T07/70: practical methods — Jacques Boisgontier
+
+— 102 programmes for T07 — Jacques Deconchat
+
+— MO5 and T07/70 on the poster — Jean-François Séhan
+
+To be issued:
+
+— Keys for M05 — Gilles Blanchard
+
+The Act of 11 March 1957 authorizing, pursuant to paragraphs 2 and 3 of article 41, only "copies or reproductions strictly reserved for the private use of the copyist and not intended for collective use", and, on the other hand, that analyses and short quotations for the purpose of example and illustration, "any full or partial representation or reproduction, without the consent of the author or his successors or successors in title, is unlawful" (article 40, paragraph 1).
+
+Such representation or reproduction, by any means whatsoever, would therefore constitute an infringement punishable by articles 425 et seq. of the Penal Code.
+
+© Editions du P.S.I., B.P. 86, 77402 LAGNY CEDEX, 1985
+ISBN : 2-86595-206-1
+
+
+===== Page 3 =====
+ASSEMBLEUR
+AND
+
+PÉRIPHÉRIQUES
+THE
+
+MOS ET TO7/70
+
+Frédéric Blanc and Francois Normand
+
+Practical Guide
+
+Editions of the ISP 1985
+
+
+===== Page 4 =====
+Introduction
+
+There are two parts to this book that are oriented differently but built in the same perspective.
+
+First it allows you to learn how to program your MOS and TO7/70 directly in the language that the microprocessor understands, the machine language. Machine language offers you many advantages over BASIC, including considerable speed gain (a machine language program runs ten to a thousand times faster than a sasic program) and also a memory saving. Despite its rebarbatory side at first glance, you will quickly be conquered by its capabilities.
+
+Then it offers you the possibility to use the routines found in ROM, in the section entitled "Useful Routines and Addresses". This set of tricks and tricks allows the programmer to save time and space. This part is not intended to be exhaustive because our research has not allowed us to discover everything.
+
+The only imperative before approaching the reading of this book is to have fully assimilated BASIC and the basic concepts of programming that we will not return to. If so, we hope that this book will allow you to familiarize yourself with your MO5 so that you can extract the quintessence.
+
+Without further delay, let us go to the "serious things" without forgetting to thank the Loriciels company for its cooperation in the preparation of this book.
+
+
+===== Page 5 =====
+ASSEMBLEUR ET PERIPHERIQUES DES MOS5 ET TO7/70 | 5
+
+Part I. — Machine language on MO5
+
+Table of mnemonics
+
+Basic or machine language General presentation Disadvantages of machine language Advantages of machine language Basic differences Assembly language
+
+Conciusion
+
+Representation of information Representation in simple binary Representation in hexadecimal Representation in signed binary Representation in complement to two Representation in DCB Representation in floating point Representation of alphanumeric characters Representation of variables Organization of a line Basic Conclusion
+
+The MO5 system
+
+Links
+
+Clock
+
+The ROM and RAM memories, the 6821 The microprocessor
+
+Addressing modes
+
+The battery concept
+
+The organizational structure concept
+
+Contents
+
+10
+
+12 12 13 14 14 15 15
+
+16 16 17 19 19 20 20 22 22 23 28
+
+29 30 30 30 32 34 38 39
+
+
+===== Page 6 =====
+Disruptions
+
+Introduction
+
+Characteristics
+
+Interruptions of 6899 Diversion of an interruption
+
+The 6899 instruction set
+
+Notes
+
+Method of indexing
+
+Loading and storage
+
+Trade and transfers
+
+Operations on the stack
+
+Incrementations — Decrementations Comparisons and tests
+
+Boolean operators
+
+Arithmetic operators
+
+Decals and rotations
+
+Unconditional connections and return Conditional connections Instructions for processing interruptions
+
+Part two. — Useful Routines and Addresses
+
+Screen and optical pencil
+
+The screen system
+
+Background and ink colors The cursor
+
+Exhaust character (ESC) Monitor routines
+
+The character generator
+
+Display Routines
+
+The joystick
+
+Keyboard
+
+Quick keyboard scan
+
+Keyboard scan with ASCII code return
+
+Using the Basic line entry Repetition delay change Keyboard tables
+
+The tape recorder
+
+Save Program Name Storage Loading Program Using Monitor Routines
+
+40 40 40 40 43
+
+44 44 46 47 49 50 51 52 54 56 60 63 65 71
+
+73
+
+74 74 75 76 76 79 82 83
+
+84
+
+87 87 88 89 90 90
+
+91 91 92 93 95
+
+
+===== Page 7 =====
+ASSEMBLEUR ET PERIPHERIQUES DES MO5 ET TO7/70 | 7
+
+The disk drive 98 Function addresses DOS MO5 99 Backup and loading in Basic 100 Format Microsoft 100 Disk Using Monitor Routines 102
+
+Communication interface 106
+
+Sound and music 108 Beep keyboard 108 Musical synthesizer 109
+
+System variables 111
+
+Appendix 1. — Conversion table 113
+
+Appendix 2. — Colour code 118
+
+Appendix 3. — Control characteristics 118
+
+Appendix 4. — Special features of TO7/70 119
+
+
+===== Page 8 =====
+MACHINE LANGUAGE
+ON MOS5
+
+
+===== Page 9 =====
+Table of mnemonics
+
+Mnemonic Page Mnemonic Page
+ABX ................. 57 BVC ................. 70
+ADCA................ 57 BVS ................. 70
+ADCB................ 57
+ADDA................ 57 CLR ................. 49
+ADDB................ 57 CLRA ................ 49
+ADDD................ 57 CLRB................ 49
+ANDA................ 54 CMPA ............... 53
+ANDB................ 54 CMPB ............... 53
+ANDCC .............. 54 CMPD ............... 53
+ASL ................. 60 CMPS ............... 53
+ASLA ................ 61 CMPU ............... 53
+ASLB ................ 61 CMPX ............... 53
+ASR ................. 61 CMPY ............... 53
+ASRA ................ 61 COM................. 56
+ASRB................ 61 COMA ............... 56
+COMB. ............... 56
+BCC ................. 65 CWAI................ 71
+BCS ................. 66
+BEQ ................. 66 DAA ................. 58
+BGE ................. 67 DEC ................. 52
+BGT ................. 68 DECA................ 52
+BHI .................. 69 DECB................ 52
+BHS ................. 67
+BITA................. 53 EORA................ 55
+BITB................. 53 EORB................ 55
+BLE ................. 67 EXG ................. 49
+BLO ................. 69
+BLS ................. 68 INC.................. 52
+BLT.................. 68 INCA ................ 52
+BMI.................. 69 INCB ................ 52
+BNE ................. 66
+BPL ................. 70 JMP ................. 63
+BRA ................. 63 JSR ................. 64
+BRN ................. 64
+
+
+===== Page 10 =====
+TABLE DES MNEMONIQUES | 11
+
+Mnemonic Page
+
+ns
+
+This
+
+Cr
+
+This
+
+Co
+
+This
+
+nn
+
+ss
+
+CCC
+
+meaning
+
+so
+
+ss
+
+ss
+
+sn
+
+CC
+
+
+===== Page 11 =====
+12
+
+Basic or machine language?
+
+OVERVIEW
+
+This book is intended as an introduction to machine language and assembler programming on MOS, and it is quite possible that you have no idea what this mode of programming is.
+
+In fact, the difference between machine language and assembly language, or their specificities in relation to BASIC, can be totally alien to you. So let's look at the simplified operation of the computer together:
+
+Microprocessor
+
+I Dialogue
+
+d
+
+Screen Operating system ke Keyboard
+
+[
+
+y
+
+User
+
+This diagram shows the existing barrier between the user and the microprocessor often called central unit and rated CPU (Central Processing Unit).
+
+
+===== Page 12 =====
+BASIC OU LANGAGE MACHINE | 13
+
+In MO5, this CPU is a 6899E and we will see that this circuit can only understand a very particular language and difficult to decipher by a human.
+
+When you communicate with your MO5, you send the information via the keyboard. This information is then encoded by the operating system and translated into electrical impulses. It is only from this stage that the information reaches the CPU and can understand it. In fact, your information is translated by the operating system to be understandable by the machine. This translator is called "BASIC interpreter".
+
+Now let's see how the electrical impulses get to the CPU.
+
+On all pins of the circuit, eight are used for this purpose. He can therefore accept only eight signals simultaneously. When you combine these signals, you get a machine code. By convention, we note the presence of 5 volts on a pin by a 1, and that of @ volt by a 9. This results in either 0 or 1; We are therefore based 2 or binary. These numbers are called bits (English, Binary Digits) and are the basic unit of information. Associated by eight, the byte group is named.
+
+As can be seen, information reaching the CPU is 1909 0119. 1900 9119 is an byte, eight-bit association. If we compare, for example, the machine language operation, 19999119 11111111, etc. of the Basic, LET A = 255, we see a slight difference and a more rebarbative side of the d-bytes group because as this good lord of PALICE would have said, machine language is a language for... machines!
+
+But it's a joke, because you have to ask yourself: "Why bother yourself with all these numbers when you can use advanced languages like
+le BASIC, le FORTH... ? »
+
+Let's try to answer by comparing an advanced language, in this case BASIC, with a low-level language, in this case machine language.
+
+DISADVANTAGES OF MACHINE LANGUAGE
+
+B impossibility of adapting to other computers: the portability of Basic already poses certain problems according to its type. Machine language is practically insolvent because a program is system specific (it is not enough to have the same microprocessor).
+
+m Hard-to-read programs. and to be corrected: a sequence of numbers is not very expressive, even if there is equivalence with a so-called assembly language (see below). Moreover, the identification of the error is quite critical.
+
+# Difficult arithmetic calculations: Managing floating point numbers is very complicated. If it is really needed, it is better to use advanced and specialized language such as PASCAL, for example.
+
+
+===== Page 13 =====
+14 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+m= Need for more important learning: Basic learning takes a few weeks, machine language learning takes much longer because it requires a lot of rigour and attention.
+
+# Difficult structuring of a programme: there is no question, for example, of adding instructions inside, if there is no room for this (unless there is a assembler, see below). Everything must be thought of, otherwise the work of modification is very important.
+
+ADVANTAGES OF MACHINE LANGUAGE
+
+m Maximum speed of execution: much time is lost by the interpretation of a Basic order. The differences are flagrant between the two languages and it can be saved up to a hundred times in execution time.
+
+# More rational use of memory size: a program written in machine language occupies less space in memory and thus allows to make very powerful programs with 32 K.
+
+The only limits are practically those of your imagination.
+
+= Use of all computer resources: MO5 has virtually untapped possibilities in Basic.
+
+= Possibility of combining Basic and machine language: a program does not always require absolute speed in all its parts. Only a few can be written in machine language and used as sub-programs, the others will be in BASIC.
+
+BASIC DIFFERENCES
+
+m No variables within the meaning of the Basic: there are only internal registers in the microprocessor (see Chapter 3). They do not really match the BASIC variables themselves.
+
+m No lines: in machine language the instructions follow according to their memory addresses, while the lines are listed according to their numbers. For example, you can lengthen or shorten a line, or even add one; the readjustment is automatic whereas it is not mentioned in machine language (unless you have a assembler, see below).
+
+# No syntax correction: if an error is made in machine language, the computer has every chance of "planting" itself and there is only the solution left to disconnect the power supply!
+
+
+===== Page 14 =====
+BASIC OU LANGAGE MACHINE | 15
+
+ASSEMBLY LANGUAGE
+
+The only difference with machine language is the greatest ease of understanding for a human. As a result, the assembly language is not really understandable by the machine. In fact, it is an adaptation into a language more legible than a succession of bytes.
+
+But be careful, it is only a translation, like that of an advanced language, of each code in the form of abbreviations called MNEMONICS. By abuse of language, they say it's equivalent.
+
+This process translates for example 19999119 11111111 by LDA # FF$. This means "put SFF in Register A" (LD being the abbreviation of LOAD, load in English).
+
+CONCLUSION
+
+When you design a program, you will do so in the form of MNEMONICS, which you will then translate into machine code, either using tables or using a program called ASSEMBLEUR, such as the Monitor-Assembler-Disassembly ODIN software, marketed by LORICELS.
+
+All this is complicated, long, confusing, distasteful, but you will be very satisfied with your achievements, be sure!
+
+
+===== Page 15 =====
+16
+
+Representation of information
+
+We have seen in the previous chapter that information is coded as numbers called bytes and that each byte consists of eight bits. When talking about information, it is necessary to differentiate, on the one hand, the representation of instructions, and on the other hand the representation of data: the former have one or more bytes specific to each instruction, this is the set of instructions that we will see below; Seconds have a much more complicated representation for which we have to distinguish several cases. ~
+
+SIMPLE BINARY REPRESENTATION
+
+A number is simply represented by its base two value. We will first see the logic of the representation of a decimal number: in this system, each number represents, going from the right to the left, the number of units, tens, hundreds, thousands.
+
+Each digit of a number expressed in base ten is between zero and nine times a power of ten corresponding to its rank.
+
+Thus 6899 represents:
+
+6 x 19° + 8 x 19° + gx 19° + 9 x 19°
+
+= 6999 + 890 + 00 + 9
+= 6899
+
+Each number represents in base ten a power of ten, in binary (base two) it represents a power of two.
+
+
+===== Page 16 =====
+REPRESENTATION DE L'INFORMATION | 17
+
+Thus 19191119 represents:
+
+1xX 27 +9 x 2 +1 x 25 + D x 2° + 1 x 25 +1 x 2°+1 x 2'+ ÿ x 2
+= 128 + 69 + 32 + Ÿ + 8 + 4 + 2 + 9ÿ
+= 174 in decimal
+
+value for each bit:
+
+No bit 7 6 5 4 3 2 1 ')
+
+Valeur 128 64 32 16 8 4 2 1
+
+Bit of higher (more significant) weight is called bit 7 and bit of lower (less significant) weight is called bit @, with weight increasing from right to left. Thus, eight bits can be represented with a decimal number between  However, if you want to encode a larger number, you use two bytes. There is a strong weight byte and a low weight byte, the first is the extension (left) of the second:
+
+N° bit 15 14 13 12 11 19 9 8 7 6 5 4 8 2 1 @
+
+Valeur 215 214 213 212 oN 210 29 28 27 26 25 24 23 22 21 90
+
+The value of a number coded on two bytes is also equal to the value of the low weight byte added to the value of the high weight byte previously multiplied by 256.
+
+Exemple : 11119199 09191191
+= 244 x 256 + 45
+_ 62599
+
+HEXADECIMAL REPRESENTATION
+
+The binary, as we have seen, is not the most convenient to use; Therefore, an equivalent rating was chosen but better suited to programming.
+
+Decimal has been set aside because it is not practical to use it in conjunction with binary. Therefore, hexadecimal, a basic numbering system 16 is used. The hexadecimal numbers are numbers 9 to 9 and letters A to F. In addition, each hexadecimal digit represents a binary quartet (four-bit set), resulting in a great ease of conversion.
+
+The advantage of this is that it can be converted very easily and represents a byte on two digits. That is why this numbering system has become a convention in microcomputers.
+
+
+===== Page 17 =====
+18 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+Binaire Hexadecimal Decimal
+0000 p p
+0001 1 1
+0010 2 2
+0911 3 3
+0190 4 4
+0101 5 5
+01 19 6 6
+01 11 7 7
+1000 8 8
+1091 9 9
+1919 A 19
+1911 B 11
+1100 C 12
+1191 D 13
+1119 E 14
+1111 F 15
+
+For example, let's try some conversions:
+
+— conversion 19919919 to hexadecimal
+
+9 2 or 92 hexadecimal.
+
+— conversion 73 hexadecimal to binary
+
+7 3 we, eae, took tT
+
+or 91119911 in binary.
+
+One number on two bytes will be coded the same way but on four hexadecimal digits.
+
+— conversion 1111909 99191191 to hexadecimal
+1111 0100 0010 1191
+ns ——_ _—— be a
+
+F 4 2 D is F42D in hexadecimal.
+
+— conversion CB94 to binary C B 9 4
+
+soit 1199191119919199 en binaire.
+
+
+===== Page 18 =====
+REPRESENTATION DE L'INFORMATION | 19
+
+SIGNED BINARY REPRESENTATION
+
+We have seen that by previous representations only natural integers can be coded. The representation here allows to encode the relative integers. In this mode, the sign is given by the higher weight bit (MSB). We use an @ for a positive number and a 1 for a negative number.
+
+Thus:
+01901991 représente + 73;
+11991991 représente — 73.
+
+The use of bit number 7 for sign can only be used to code numbers with an absolute value of less than 128.
+
+This representation is not ideal, however, because if we try to add a negative number and a positive number, the negative being greater in absolute value (because of its number 7 which is worth 1), the result will be wrong. That's why we introduced another representation.
+
+REPRESENTATION IN ADDITION TO TWO
+
+With this system, the positive numbers have the same representation as in binary signed, the difference is visible for the negative numbers. The representation of a negative number is done by complementing this number (i.e. inverting each bit 1 in @ and @ in 1) and adding 1.
+
+Example: representation of — 17 in addition to two
+17 — 99919991
+Complementing — 11191119
+On ajoute 1 — 11191111
+
+We admit here without mathematical demonstration that the representation in: complement to two allows to perform arithmetic operations on the bytes, using the usual rules that we will recall:
+
+p+ D = 9
+1 + 6 = 1
+9+ 1 = 1
+1 + 1 = (1)9
+
+(1) being the restraint.
+
+Examples of calculation in addition to two:
+
+— add + 8 to — 19
+
+00001000
++ 11119119
+
+TTP - 2
+
+
+===== Page 19 =====
+20 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+— add + 17 to — 6
+
+2001001
+
++ 11111919
+(1) 0009 191 1 soit + 11
+
+It may be noted here that there is no need to consider withholding, which can be very practical.
+
+REPRESENTATION IN DCB
+
+The principle is the coding of each decimal digit separately over four bits. So we need N x four bits to code in DCB a number of N digits.
+
+A quartet (four bits) allows the coding of sixteen combinations; In need of only ten, six are unused. As a result, two digits can be placed in one byte, which allows the number to be coded from @ to 99 on one byte.
+
+DCB code
+0009 ......... )
+0001 ......... 1
+0919 ......... 2
+0911 ......... 3
+0109 ......... 4
+9191 ......... 5
+0119 ......... 6
+0111......... 7
+1900 ......... 8
+1991 ......... 9
+1919
+
+1911
+
+9 a.m. —— {sunused 1119
+
+1111
+
+Example: 91119911 is read
+
+to gu
+
+7 3
+
+or 73 in decimal.
+
+FLOATING POINT REPRESENTATION
+
+With previous coding systems, it is not possible to code relative decimals. We will now address a process that allows it.
+
+
+===== Page 20 =====
+REPRESENTATION DE L'INFORMATION | 21
+
+First, let's look at the coding logic of a decimal to comma number: for example 12.31. We have seen that the number of units corresponds to the row @: 19 = 1, that of the tens in row 1: 19! = 19 and so on. But you should also know that the number of the tenths corresponds to the rank — 1: 19 = 6.1, that that of the hundredths corresponds to the rank — 2: 19°? = 9.91 and so on. Thus 12,31 is equal to:
+1 x 19! + 2 x 19° + 3 x 19! + 1 x 192
+= 10 + 2 + 9,3 + 0,01
+= 12,31
+
+Let us now look at the principle of coding with mantisse and exponent.
+
+Exemple : 191325,12.
+It can be normalized by 9,19132512 x 19°. The mantisse is then called 19132512 and the exhibitor.
+
+In binary, exactly the same principles are used. Thus 191911,191 to convert to decimal gives:
+
+1x2° + @x2* + 1x23 + px2? + 1x2 + 1x2° + 1x2 + Dx22 + 1x25
+= 82 + @ + 8 + @ + 2 + 1 + 95 + D + 9,125
+= 43,625
+
+Similarly, this number can be put in mantisse form — exhibitor:
+
+191011,191 = 9191911191 x 28
+
+191011191 is the mantisse, the exhibitor.
+
+Let's see how the MO5 code a floating point number. This coding is done on five bytes: four are reserved for mantisse, one for exhibiting:
+
+7 9 —1 —7 —8 —15 -16 —23 —-24 —-31
+Exhibiting
+
+However, coding is quite complex.
+
+The exponent is represented as a pair with bit 7 to @ if it is positive and bit 7 to 1 if it is negative.
+
+For mantisse, the same phenomenon is observed. When the number is positive, bit number — 1 is set to @ (while it is interpreted for calculations as if it were 1). When negative, it is set to 1. It is a kind of sign bit as in signed binary but the difference that it is always taken equal to 1 for conversion.
+
+For example — 9,90919191:
+
+It is normalized in — 9,19101 x 272.
+
+
+===== Page 21 =====
+22 | ASSEMBLEUR DES MO5 ET TO7/70
+
+Mantisse : 19191. Exhibitor: 11111191 — 91111191 because the exhibitor is negative.
+
+hence coding:
+
+7 g-1
+
+91111191 | 19191999 | P——# | P——_-# | D——p
+70, , A8 00 00 00 ,
+Exhibiting Mantisse
+
+We note the retention of bit 1 to 1 because the mantisse is negative and the inversion of bit 7 of the exponent, also negative.
+
+Floating point coding therefore appears to be very complicated and the routines for processing floating point numbers are even more complicated. This is why it is generally preferable to choose an advanced language for any digital application; At least at the amateur level.
+
+ALPHANUMERIC CHARACTER REPRESENTATION
+
+The MOS5 operates on the ASCII standard, the most common standard in the IT field. Let's just say that this system allows you to encode the twenty-six letters of the alphabet (in upper and lower case on the one hand), the ten digits and twenty special characters, all over seven bits. This ASCII standard is attached.
+
+VARIABLE REPRESENTATION
+
+m Coding variable name
+
+This coding is done on n + 1 bytes: n for the number of the variable and 1, byte of coding. First is the coding byte:
+
+Bit used to determine if it 3 bits used to code 4 bits used to determine is an array or variable type the number of letters of the simple variable name: (up to 15)
+
+simple variable : bit 7 to ÿ
+
+variable table : bit 7 to 1
+
+
+===== Page 22 =====
+REPRESENTATION DE L'INFORMATION | 23
+
+Coding of variable type:
+
+Variable Example Type Whole A 2 Real A 4 Chain A$ 3
+
+Then comes the name of the variable: it is coded in standard ASCII.
+
+m Variable coding
+
+O Integer numerical variable
+
+The value is encoded in addition to two bytes or a range of — 32,768 to + 32767. The first byte is the byte of strong weight, the second of low weight.
+
+Table cases: successively n + 1 bytes (for coding and name), two bytes for the number of bytes of the table, one byte for the number of dimensions, p bytes for the number of indices of each dimension.
+
+O Floating point numerical variable
+
+The value is coded as a floating point. A real variable therefore occupies 1 + n + 5 bytes: 1 for coding, n for name and 5 for value (1 for exhibitor and 4 for mantisse).
+
+Table cases: identical to the process described for entire variables except that the variable is coded on five bytes instead of two.
+
+O Alphanumeric variable
+
+Following the name of the variable, we find a byte for the length of the variable, then two bytes for its address in memory. The case of the tables is identical to that of the entire variables except for the coding of the variable itself which is then done in standard ASCII.
+
+ORGANIZATION OF A BASIC LINE
+
+Basic lines are coded in a certain way. Here we explain their structure. This will allow you, using POKE and PEEK to do whatever you want in a Basic line. For example, you can build a line of more than 256 bytes (maximum original value set by the size of the input buffer) or display REMs in
+
+Color! In MO5, there are two system variables that define the beginning and end of the
+
+Basic program in memory. These variables are found at addresses 2113 and 2115 respectively (on the zero page of Basic).
+
+
+===== Page 23 =====
+24 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+Start the computer, then type:
+
+19 REM COUCOU
+20 REM BONJOUR
+30 FORI = 9636 TO 9688 : ?PEEK (I); : NEXT
+
+(9636 is the address obtained by typing ?PEEK (&H2113)*256 + PEEK(&H2114))
+
+Make RUN: then you see a series of numbers that match the code of the instructions you just entered.
+
+— The first two bytes give the address in memory of the following line: here, this address is 37 * 256 + 176 = 9648.
+
+— The following two bytes give the number of the line: so the number of our first line is: @ * 256 + 19 = 19.
+
+— The following bytes encode the instructions until we find a @ that indicates the end of this line, here the 149 is the REM code, the following six bytes are the ASCII codes of the letters of the word "COUCOU".
+
+Now that you know this coding principle (except for the BASIC words we give you in a few lines), you can work as you please on BASIC lines; Thus, you can "hide" a line by moving the address of the first two bytes from the previous line. You can also make lines as long as you want (this prevents direct modification of these lines since they cannot be re-edited). This can also allow you to make REMs in color by the system of attributes described in the chapter "Screen".
+
+Reset the MO5. Type:
+
+19 REM***COUCOU™*
+2 REM*COUCOU*
+
+Then type:
+
+POKE 9641,27 : POKE 9642,&H41 : POKE 9651,27
+POKE 9652,&H44
+
+Make LIST: the REM 19 COUCOU appears in red while that of REM 29 remains in blue. (The coding of red by the exhaust character is explained in the chapter "Screen").
+
+We now give you the codes of all functions of BASIC with their ROM address as well. If you are interested in the inside of the machine, simply disassemble the ROM from the address that we provide you with the software Assembly and Disassembly Monitor, ODIN.
+
+
+===== Page 24 =====
+Code (decimal)
+
+128 129 130 131 132 133 134 135 136 137 138 139 149 141 142 143 144 145 146 147 148 149 159 151 152 153 154 155 156 157 158 159 169 161 162 163 164 165 166 167 168 169 179
+
+Code (hexaecimal)
+
+89 81 82 83 84 85 86 87 88 89 8A 8B 8C 8D 8E 8F 99 91 92 93 94 95 96 97 97 98 9A 9B 9C 9D 9E OF AQ Al A2 A3 A4 A5 A6 A7 A8 A9
+
+REPRESENTATION OF INFORMATION
+
+Function Address
+
+END
+FOR NEXT DATA DIM READ GO RUN IF
+
+RESTORE
+
+RETURN REM
+
+STOP ELSE TRON TROFF DEFSTR DEFINT DEFSNG ON ONE ERROR RESUME AUTO DELETE LOCATE CLS
+
+CONSOLE
+
+PSET MOTOR SKIPF EXEC BEEP COLOR LINE BOX ATTROB DEF POKE
+
+C49E CF97 DSC C5E2 CA61 DD3B C55F C54B C5EA C48A C5C1 C5E5 C5E5 C4A7 C5E5 CF1F CF29 CEEC EWC9 C61F E99 CF24 CF2D 2236 CEC5 E5FE E8FC E649 E793 EC6C EBCE E8E9 E8FA E6B3 E81B E82C E61C E868 CCDD
+
+25
+
+
+===== Page 25 =====
+26 | ASSEMBLEUR DES MOS ET TO7/70
+
+Code Code (decimal) (hexa-function Address to decimal)
+171 AB PRINT CD7A
+172 AC CONT C4CF
+173 AD LIST EY6A
+174 AE CLEAR C4DE
+175 AF DOS F000
+176 Bd — —
+177 B1 NEW. C422
+178 B2 SAVE EYA3
+179 B3 LOAD E28C
+189 B4 MERGE E258
+181 B5 OPEN E1E9
+182 B6 CLOSE  E1B8
+183 B7 INPEN E8C3
+184 B8 PEN 21F9
+185 B9 PLAY EF2D
+186 BA TAB < CD4A
+187 BB TO CFC9
+188 BC SUB C5FA
+189 BD FN 3761
+190 BE SPC <  CE12
+191 BF USING  DÿE2
+192 CO USR 37C8
+193 C1 ERL C6DA
+194 C2 ERR C6D6
+195 C3 OFF ECIE
+196 C4 THEN C660
+197 C5 NOT C71F
+198 C6 STEP CFE9
+199 C7 + D2AC
+200 C8 — D29F
+201 C9 * D2EE
+202 CA / D51C
+203 CB t D6B4
+204 CC AND C886
+205 CD OR C88C
+206 CE XOR C892
+207 CF EQV C89D
+208 D9 IMP C898 The following codes (from 214 to 255) do not 209 D1 MOD D377 correspond to functions of 210 D2 @ D34A BASIC. In contrast, other functions of 211 D3 > C87F BASIC (here missing) are coded on 212 D4 = C865 two bytes. Details of 213 D5 < C86D are given below.
+
+
+===== Page 26 =====
+REPRESENTATION DE L'INFORMATION | 27
+
+Precode Code (hexa- function) decimal
+
+Precode (decimal) (decimal) d
+
+255 128 FF 89 SGN D5D9
+255 129 FF 81 INT D6D8
+255 139 FF 82 ABS D59E
+255 131 FF 83 FRE CA6A
+255 132 FF 84 SQR  D6AB
+255 133 FF 85 LOG D6F1
+255 134 FF 86 EXP D734
+255 135 FF 87 COS  D7AE
+255 136 FF 88 SIN D7B5
+255 137 FF 89 TAN D8¢B
+255 138 FF 8A PEEK  CCDA4
+255 139 FF 8B LEN CC11
+255 149 FF 8C STR$  CB64
+255 141 FF 8D VAL CB9F
+255 142 FF 8E ASC  CCŸE
+255 143 FF 8F CHR$  CC5B
+255 144 FF 99 EOR  E3BE
+255 145 FF 91 CINT 0627
+255 148 FF 94 FIX D5EŸ
+: 255 149 FF 95 HEX$  223C
+255 151 FF 97 STICK  E89F
+255 152 FF 98 STRIG  E8B1
+255 153 FF 99 GR$ CC52
+255 154 FF 9A LEFT$  CC25
+255 155 FF 9B  RIGHT$ CCIE
+255 156 FF 9C MID$  CC67
+255 157 FF 9D INSTR  CCE7
+255 158 FF 9E VARPTR DÿD9
+255 159 FF 9F RND  DBB6
+255 169 FF A INKEY$ E46E
+255 161 FF Al INPUT DDÿA
+255 162 FF A2  CSRLIN E469
+255 163 FF A3 POINT  E714
+255 164 FF A4  SCREEN E6AA
+255 165 FF A5 POS E436
+255 166 FF A6 PTRIG  E8AD
+
+There are also other functions of BASIC that are absent in these tables such as GOTO, GOSUB, INPUTPEN. Their coding is easy from the previous tables; Thus the GOSUB function is coded on two bytes, that of GO: 135 followed by that of SUB: 188.
+
+
+===== Page 27 =====
+28 | ASSEMBLEUR DES MOS ET TO7/70
+
+CONCLUSION
+
+This chapter is indispensable to assimilate because it is the basis of programming in machine language. We also advise you to read it several times and to dwell on every detail that seems unclear to you; Indeed, these ratings must become quite familiar to you in order to program effectively.
+
+Only the representation of MO5 variables is not fundamental to know because it serves only to develop utility. However, we believe that it should not be overlooked, as it is always interesting to deepen the internal management of a system.
+
+If you have read us so far and think you are "to the point", then let's not wait for a less rebarbative reading!
+
+
+===== Page 28 =====
+29
+
+The MO5 system
+
+Some basic concepts will be presented in this chapter, including address modes and internal registers. We will also quickly visualize the internal architecture of the system, especially the CPU.
+
+MO5 Data Bus [的 CPU basic RAM he
+6 16K 32K 6821
+p 9 Address bus E Control bus Clock 1 Mhz
+
+As can be seen on this synoptic, the microprocessor 6899 is connected with the other organs of the computer and also externally thanks to its PIA.
+
+
+===== Page 29 =====
+30 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+LINKS
+
+The 6899 communicates with its entourage by three buses.
+
+= Data bus
+
+It is on eight bits and therefore carries one byte at a time. It will allow data from the CPU to be transferred to other boxes (memories and input-outputs) and vice versa.
+
+= Address Bus
+
+It is on 16 bits and will be used to carry an address generated by the microprocessor, address that will select the source or destination of the data that passes on the bus intended for this purpose.
+
+The maximum number of addressable bytes is 65536, or 64K.
+
+As can be seen on the diagram, the bus is connected to all the other boxes, allowing all of them to be selected and thus physically connected to the CPU.
+
+= Control bus
+
+It is a line that carries the various synchronization signals needed by the system.
+
+L'HORLOGE
+
+Another part of the diagram, the clock provides a time base for the microprocessor. It beats at the rhythm of its quartz which has a frequency of 1Mhz, either a period or a clock cycle of a microsecond (us). An instruction is characterized by its number of cycles from which its running time is derived (time that we will indicate when analyzing each instruction).
+
+LES MÉMOIRES ROM ET RAM, LE 6821
+
+= The ROM
+
+This is called dead memory, i.e. one can just read the data it contains, not record new ones (what one sees on the synoptic thanks to the one-way arrow).
+
+Its other feature is to stay frozen even when the system is off-voltage.
+
+The MOS ROM makes 16K and contains the Basic, the monitor (system management: screen, memory, peripherals...). Many ROM routines are usable in machine language; they are presented in the second part of this book.
+
+
+===== Page 30 =====
+LE SYSTEME MOS | 31
+
+= RAM
+
+It makes 32K user. This is what is called the living memory; data can be read or entered in it, but they are deleted when off.
+
+It extends from $2609 to S9FFF, the remaining space being taken by extensions and ROM.
+
+With regard to the storage of programs in machine language, it is important to know that the machine code can be put in any free RAM space for the user (see memory card).
+
+As we have said, it is possible to mix Basic and machine language, but some precautions must be taken: BASIC and machine language must be slightly distant to avoid overlap. The best way is to protect the program in machine language by a CLEAR, &HXXXX, $XXXX being the beginning address of the program in machine language.
+
+The call to a machine language program is made by an EXEC &HXXXX, SXXXX, SXXXX being the running address of the program.
+
+MO5 MEMORY CARD
+
+Addresses Occupied by
+
+(in hexadecimal)
+
+0000 — 1F3F Screen (points or color according to the value of $ A7CQ@) 1F49 — 1FFF Free for the user
+
+2000 — 20FF Zero page of the monitor
+
+2109 — 21FF Basic page zero
+
+2200 — 9FFF Memory available for user
+
+A009 — A7BF Reserved for floppy
+
+A7CD — A7C3 System 6821 (PIA)
+
+A7C4 — A7CB Free
+
+A7CC — A7CF Reserved for the 6821 Joystick
+
+A7D¢ — A7DF Reserved to control floppy
+
+A7E9 — A7E7 6821: parallel interface
+
+A7E8 — Free A7FF, reserved for PIA or CFIA extensions A809 — Free AFFF (place = 2K)
+
+B009 — BFFF Reserved for plug-in cartridges
+
+C009 — EFFF BASIC (12K)
+
+F000 — FFFF Monitor (4K)
+
+The backup of a program in machine language is done by: SAVEM "Program Name", &HXXXX, &HYYYY, &HZZZ, SXXXX being the start address of the
+
+
+===== Page 31 =====
+32 | ASSEMBLEUR DES MO5 ET TO7/70
+
+program, SYYYY program end and $ZZZ program delivery.
+
+= Le 6821
+
+It allows the MO5 to communicate with peripheral organs to the microprocessor: keyboard, tape recorder, screen, optical pencil.
+
+It is located from S$A7C@ to SA7CS3.
+
+LE MICROPROCESSEUR
+
+Two main parts can be distinguished: the control unit we will leave aside and the arithmetic and logical unit including the internal registers (UAL).
+
+UAL as its name indicates allows arithmetic operations (addition and subtraction) and logical operations (masks, rotations, offsets...). To perform these calculations, the microprocessor has internal registers that we will study in detail.
+
+m Internal registers
+
+They are nine and usually represented as follows:
+
+7 A p|7 B p
+15 D p 15 x p 15 Y p 15 U p 15 S p
+15 PC p
+
+? DP?
+
+7 CC p
+
+
+===== Page 32 =====
+LE SYSTEME MOS | 33
+
+o Accumulators: A, B and D
+
+A and B are eight bits. They are used to accumulate data as their name indicates. They are therefore used in any arithmetic operation, during data transfers or analyses.
+
+A is used especially for DCB calculations (DAA), while B is used more for indexing (ABX).
+
+D is a 16-bit register, resulting from the concatenation of A and B, A is the byte of strong weight, B is that of low weight. D is used in the same way as A and B.
+
+O Index records: X and Y
+
+On both 16 bits, they are most often used as indexing registers or meters.
+
+They can also be used for temporary storage of data or addresses. Preferably X is used as the Y instructions require a pre-byte.
+
+QO Battery pointers: S and U
+
+S is the pointer of the system stack, it is used to index the battery managed by 6899 in RAM.
+
+U is the pointer of the user stack that allows the programmer to save or recharge values, without altering the system stack.
+
+S and U always point at the last stacked byte (see below "The pile concept").
+
+O The ordinal counter: PC It is used in 6899 to store the address of the next instruction to be executed. It is therefore modified to each instruction executed. PC is therefore 16 bits.
+
+O Direct Page Registry: DP
+
+On eight bits, this register allows you to specify a direct page that is easily accessed (see Addressing modes).
+
+Be careful to always remit DP to $21 when returning to BASIC.
+
+O Status Register: CC
+
+This register allows the user to know the state of the microprocessor. Each bit has a precise meaning. It is usually represented as follows:
+
+
+===== Page 33 =====
+34 | ASSEMBLEUR DES MO5 ET TO7/70
+
+— The bit @ (symbol C) is the holding bit. I! indicates if there is a hold on the bit of higher weight.
+
+Example: add 197 and 153
+
+197 = % 11999191
+153 = % 19611901
+
+11990191
++ 19911901
+= 3191911119
+
+The result, being on eight bits, can only be % 91911119 or 94 and hold C is set to 1.
+Vérifions : 197 + 153 = 94 + 256 = 350
+
+Result / * Deduction
+
+— Bit 1 (symbol V) indicates a higher result than a given byte can represent in signed binary.
+
+— The bit 2 (symbol Z) is set to 1 when the result of an operation is null, otherwise it is set to @.
+
+— Bit 3 (symbol N) has the higher weight bit value of the byte considered. In signed binary arithmetic, N = 1 indicates a negative result, while N = @ indicates a positive result. If you do not work in signed binary arithmetic, you can use N to determine the value of bit 7.
+
+— Bit 4 (symbol) is the IRQ interruption indication. If it is at 1 these interruptions are prohibited, otherwise they are allowed.
+
+— Bit 5 (symbol H) is the half holding bit. I! indicates a hold of bit 3 on bit 4.
+
+— Bit 6 (symbol F) is the FIRQ interruption indication. Same as the one in the case.
+
+— Bit 7 (symbol E) indicates the status of the record backup during an interruption; E = @ indicates that only CC and PC are stacked, E = 1 indicates that all records are saved (see "Disruptions").
+
+ADDRESSING MODES
+
+After having seen the records of the 6899 together, we now have to deal with the methods of address. There are six main address modes.
+
+@ Inherent mode
+
+All instructions are on one byte. The operation code implicitly specifies the information allowing the instruction to be performed.
+
+Example: CLRA: Setting To Zero
+ABX :                    ; addition of B and X
+
+
+===== Page 34 =====
+LE SYSTEME MOS | 35
+
+= Immediate mode A distinction must be made between exchange, transfer and stacking functions and all other functions using the same mode. The first are on two bytes, the second byte specifying the registers.
+
+The seconds are on two bytes or more. In this case the data necessary to perform the function is present in the byte following the function.
+
+Example: LDA #$FF loads the $FF value in the accumulator. The # indicates the mode is immediate.
+
+= Extended mode
+
+This mode allows to perform operations on data in memory. Indeed, the bytes that follow the operator code represent the memory address of the operand. The 6899 syntax is either nothing or a ">" followed by the address.
+
+Example: LDA $C000 or LDA >$C999 load in A value that is in PCO0P.
+
+= Direct page mode
+
+This mode is identical to the extended mode, except that the strong weight of the address is not specified and will be equal to DP.
+
+This mode is used to gain memory space (the instruction has one byte less).
+
+The assembler syntax is either "/"; "<>" followed by the low weight byte of the address.
+
+Example:‘LDA /SF@ or LDA <$Fÿ with DP = $29 load in A value in $29F0.
+
+Note: DP powering is $21 and must be updated upon return to BASIC.
+
+® Relative mode
+
+This mode is used by all conditional connections and certain unconditional connections. On the one hand there are short connections whose operand is on one byte, and on the other hand the long connections for which the operand is on two bytes.
+
+In this mode will be added or removed (in addition to two, depending on whether the operand is positive or negative) to the PC ordinal counter (recall: PC points to the next instruction to execute).
+
+A short connection allows a displacement of — 128 to + 127 bytes, while a long connection allows a displacement of — 32768 to + 32767 compared to PC.
+
+
+===== Page 35 =====
+36
+
+ASSEMBLEUR DES MO5 ET TO7/70
+
+= Indexed mode
+
+This is the most powerful mode on 6899 since it allows multiple addresses.
+
+In this mode the operand consists of a basic address contained either in an index register or in a stack pointer or in PC, and a displacement which is either absolute or contained in A, B or D.
+
+The sum, in binary signed, of the basic address and the displacement is the address. OQ Direct Address
+
+In this mode the address is loaded directly into the accumulator. Distinguish the various accessible addresses.
+
+— Absolute displacement from X, Y, U, S:
+
+e zero displacement
+
+The address is contained in the register, it is in fact equal to the basic address. The assembler syntax is "registry".
+
+Example: LDB ,U load B with value pointed by U. e displacement 5 bits
+
+The displacement is coded on five bits in addition to two. Bit 4 serves as a sign bit. The assembler syntax is "n,record".
+
+Example: LDB 2,X load B with the value pointed to by X + 2. e displacement 8 bits
+
+Same as the previous one, but displacement can occur on — 128 to + 127 bytes.
+
+Example: LDB $69,X charge B with the value pointed to by X + $69. e displacement 16 bits
+
+Similar to the previous one, but the displacement can be made on — 32768 to
++ 32767 octets.
+
+Example: LDB $1999,Y charge B with value pointed by Y + $1000. Accumulator displacement relative to X, Y, U, S:
+
+The address is equal to A plus the register in addition to two. The displacement is therefore — 128 to + 127 bytes.
+
+Example: LDB A,X load B with the value pointed to by A + X.
+
+e displacement from B
+
+
+===== Page 36 =====
+LE SYSTEME MOS | 37
+
+Same as the previous one. Example: LDA B,U load A with the value pointed by B + U. e. displacement from D
+
+Similar to the previous ones, but the displacement can be made from — 32768 to
++ 32767 octets.
+
+Example: LDA D,Y load A with the value pointed by D + Y. Self-incrementation and self-decrement of the basic register: e simple increment
+
+The instruction is done by using the basic register as an address, and then it is incremented by 1. The syntax is ",registree+".
+
+Example: LDA ,U+ load A with the value pointed by U and increment U of 1.
+
+Same as the previous one, but the base register is incremented by 2. The syntax is ",registrete++"
+
+Example: LDA,U+ + load A with the value pointed by U and increment U of 2.
+
+The basic register is first decremented by 1, then the instruction is done using the new value of the basic register. The syntax is ", — register".
+
+Example: LDA , — X decrement X of 1 and load A with the value pointed to by the new value of X.
+
+e double decrementation
+
+Same as the previous but the decrementation is 2. The syntax is ", — — register".
+
+Example:LDA , — — X decrement X of 2 and load A with the value pointed to by the new value of X.
+
+Absolute displacement from PC: e displacement 8 bits
+
+The displacement is coded on one byte in addition to two. This move is added to PC in signed binary (let's remember that PC points to the next instruction to execute).
+
+The assembler syntax is "n,PC".
+
+Example: LDB $91, PC charge B with value pointed by PC + 1. e displacement 16 bits
+
+Same as the previous one but the displacement is coded on two bytes.
+
+
+===== Page 37 =====
+38 | ASSEMBLEUR DES MO5 ET TO7/70
+Example: LDB $1999,PC charge B with value pointed by B+ $1609.
+
+OQ Indirect Address
+
+In this mode, the final address is obtained by loading the address contained in a register.
+
+The assembler syntax is identical to that of the direct mode to the difference that the operand is preceded and followed by hooks.
+
+Example: LDA [B,X] load A with the address value, the address pointed by B + X.
+
+All modes accessible live, are indirect with the exception of 5-bit displacement, simple self-increation and simple self-decrementation.
+
+However, there is the extended indirect mode. — Extended indirect:
+
+As its name indicates, this address is an extended address whose address is given indirectly. The assembler syntax is "[n]".
+
+Example: LDA [$2999] load A with the address value, the address
+
+located in 52000.
+
+THE BATTERY CONCEPT
+
+In the paragraph concerning address modes, it was assumed that the exact address, or at least a relationship with an exact address, was known for any address. However, it is true that in many programs, some applications require that the microprocessor does not work with known memory locations, but rather with a stack system. It is a set of memory locations for which the CPU has a specific address generator that allows access to these locations. The address generator uses the stacking-skinning concept.
+
+The classic example is that you are given three cards: an ace, a king and a valet (the order of distribution matters). You stack them on the table in the order you were given them. So you first lay the ace, then the king and finally the valet at the top. Then you are asked to take each card one by one. The first depilated card will be the valet while it was the last stacked. For the ace, it will be the opposite: it will be depilated last while it was stacked first.
+
+The microprocessor stack has exactly the same principle as in this example. The available commands are numerous due to the possibility of indexing with S or U. It is very important to remember the first-last concept that came out.
+
+The presence of a system battery will facilitate:
+
+
+===== Page 38 =====
+LE SYSTEME MOS | 39
+
+— returns after interruption, — returns from subprogrammes, — storage of temporary data.
+
+The presence of a user stack will facilitate the storage of temporary data or the reading of memory areas.
+
+We will now focus on managing the addresses of each pile.
+
+The stack pointer (S or U) identifies the address of the top of the stack (example: LDA ,S loads the last stacked byte).
+
+The stack always starts at the highest address and it regresses, the pointer being decremented at each stack.
+
+However, all this is not necessary to know because management is automatic (unless you want to use indexing with program pointers). We just have to worry about the order in which the elements entered.
+
+THE ORGANIZATIONAL STRUCTURE CONCEPT
+
+In order to succeed in a programme, an algorithm has to be designed, i.e. to analyse all the different phases that lead to the result. To be able to clearly realize this algorithm, a schematic representation called flowchart (or ordinogram) is used.
+
+It includes rectangles to represent the actions (reading, loading...) and diamond to represent the tests (if the information is true, then do such action, if not do such other).
+
+The organization chart allows for a well-built program and must allow another user to understand and use it.
+
+Example:
+
+- Set A to zero
+
+Makes a 255 loop and makes
+
+Increment A
+
+yes
+
+Back to BASIC
+
+
+===== Page 39 =====
+40
+
+Disruptions
+
+INTRODUCTION
+
+Interruptions are signals sent by an input-output device of the microprocessor to signal that it needs its services. The microprocessor searches each cycle, i.e. all micro-sedons, a possible interruption, allowing an instant response.
+
+It's a very practical system, because the microprocessor doesn't need to scrutinize the peripherals, it just waits to be warned and continues to run.
+
+CARACTÉRISTIQUES
+
+In response to an interruption, when the processor detects one and it is authorized, it completes the instruction it was performing. It then prohibits other less priority interruptions and stacks PC, CC and possibly other registers. Then plugs into the address of the interruption routine. The interruption being completed, it depilates the stacked records and continues the program that was interrupted.
+
+INTERRUPTIONS DU 6899
+
+m Quick Interruptions FIRQ
+
+These are the least priority interruptions, so they are maskable, i.e. depending on the value of indicator F, they will take place or not.
+
+
+===== Page 40 =====
+LES INTERRUPTIONS | 41
+
+The PC and CC registers are the only ones stacked, it's up to the user to stack all those that it will alter.
+
+The connection address is the FIRQ vector located in SFFF6/FFF7, i.e. SF649. At this location is a RAM connection on a vector located in $2067-$2068. The interest of this passage through RAM, is the possibility of diverting the interruption to use it (see below).
+
+FIRQ interruptions are not used by MOS5, so it is up to the user to generate them by extension.
+
+Normal IRQ interruptions
+
+They are maskable according to the state of the CC bits. All records are stacked.
+
+The connection address is the IRQ vector located in SFFF8-SFFFY, that is SF657.
+
+At the end of the treatment of the interruption is a connection located on a vector in
+S2064-$2065.
+
+IRQ is used to flash the cursor and repeat keys. The IRQ frequency is 50 Hz, i.e. an interruption every 29 mieroseconds. \t
+
+IRQ may have to pass through another RAM vector when there is repetition or flashing; It is located in $2061-2062.
+
+Non-maskable interruptions NMI
+
+They are unused on MO5 and also not vectored in RAM, which prevents access to them.
+
+Software interruptions SWI
+
+They are of particular use on MO5, since they allow access to all monitor routines and therefore to peripherals (optical pencil, keyboard, joystick, screen, cassette, disk).
+
+When running a SWI, the complete status of the records is saved in the system stack. Rapid and normal interruptions are invalidated. PC is then loaded with the address located in SFFFA-SFFFB, i.e. $F63C.
+
+The SWI routine consists of a LDB [$@A,S] which means that the byte following the SWI is loaded into the B accumulator. It is this byte that is crucial: indeed, its value will allow indexing in a table, thus opening the possibility to access various routines. It is for this reason that on MO5, SWI is considered to have an immediate address: SWI #$n, Sn being the index specific to each routine.
+
+The results of an operation are given in the various registers of 6809 (often B and CC).
+
+
+===== Page 41 =====
+42 | ASSEMBLEUR DES MO5 ET TO7/70
+
+We show you in the second part, the call and return settings of each monitor routine.
+
+Let us now look at the indexing byte structure.
+
+7 ÿ
+
+The @ to 6 bits are used to determine the index, while the bit 7 is used to determine the type of connection.
+
+If bit 7 is 9, SWI behaves like a JSR (i.e., it performs the monitor routine and continues the program running).
+
+If bit 7 is 1, SWI behaves like a JMP (i.e. it performs the monitor routine and returns the hand to the higher program level, i.e. the program that called the SWI sub-program).
+
+Example: SWI #$98 Instructions:
+RTS
+
+This performs a BEEP and then continuous execution (bit 7 is @).
+SWI #£88
+
+This performs a BEEP and then returns the hand to the call program; in this case the Basic (bit 7 is 1).
+
+The swi routine passes through a RAM vector located in $205E-205F. It is at this level that it can be diverted.
+
+Attention: the vector must be restored to its initial value when returning to BASIC.
+
+= /SWI 2 and SWI3 software interruptions They are unused on MO5 and also not vectored in RAM, which prevents access to them.
+
+nm RESET
+
+O Cold
+
+This routine ‘corresponds to the powering of the computer: system variables are reset. It is located in SF000.
+
+
+===== Page 42 =====
+LES INTERRUPTIONS | 43
+
+O Hot
+
+This routine corresponds to a push on the program reset button. Only variable pointers are updated. It is located in SF003.
+
+Note: if the $2,209 byte is different from $A5, then a cold reset is performed.
+
+Note: Hot reset can also be called by a SWI 4900.
+
+DIVERSION OF AN INTERRUPTION
+
+Diversion is done by modifying the vector in RAM. This vector has three bytes: the first two contain the address of the interruption routine, the third is an indicator. This indicator must be set to 1 to indicate to the system that you have diverted the switch; it must be set to @ when you deliver the original address.
+
+Your own hijacking routine will have to end with an ITR.
+
+
+===== Page 43 =====
+44
+
+The 6899 instruction set
+
+This long chapter details all the instructions of 6899. There are 59 of them and we thought it was right to classify them by theme to facilitate their assimilation.
+
+You will find eleven groups:
+
+— Loading and storage
+
+— Trade and transfers
+
+— Operations on the stack
+
+— Incrementation/decrementation
+
+— Comparisons and tests
+
+— Boolean operators
+
+— Arithmetic operators
+
+— Decals and rotations
+
+— Unconditional connections and return — Conditional connections
+
+— Instructions for processing interruptions
+
+It is essential to understand well an instruction to have assimilated perfectly the address modes developed earlier.
+
+NOTATIONS
+
+The abbreviations are as follows:
+
+: memory operand : A accumulator
+
+Accumulator B
+
+: index register X : index register Y
+
+<XWUb=
+
+
+===== Page 44 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 45
+
+U: user stack pointer S: system stack pointer
+DP :                     ; direct page register DP
+PC :                     ; ordinal meter
+
+CC :                     ; status register
+
+LELFIHIIINTzfv}e]
+
+For each function studied, we indicate its influences on the CC status register as follows:
+
+Nothing: no bit affection the name of the bit: allocation of bit 1 : bet 1 of bit 1) : bet @ of bit
+
+The arithmetic and logical operations are noted:
+
++ for addition
+
+— for subtraction A for logic
+
+V for logic V for exclusive or exclusive
+
+Each instruction is summarized in one table:
+
+Addressing mode
+
+code used byte
+
+Number of bytes f / \ used by the instruction
+
+T v Mnemonic / Runtime
+
+in microseconds Hexadecimal code
+
+The "+" for the execution time means adding to the base time the time specific to the indexing mode (see table).
+
+The "*" indicates that a micro-second should be added to the base time when the connection takes place.
+
+The "+" for the number of execution bytes means that the number of bytes specific to the indexing mode must be added to the base number (see table).
+
+
+===== Page 45 =====
+46 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+METHOD OF INDEXING
+
+As we have seen, indexed mode gives access to many possibilities.
+
+The address submode is defined by a post-byte which is calculated from the table
+
+following:
+INDIRECT DIRECT
+TYPES: Imnemo-mnemonic post-byte byte nique post-bytes: us- byte nique post-byte: us- byte nique - in 5 bits: n,R---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16 bits nR  |1RRd1991 | 4 | 2 [n,R]} |1RR11991 | 7 | 2
+(i) [AR]
+en B BR |1RRGG191 | 1 | 9 | [BR] |1RR19191 | 4 | @
+Supplement
+à 2 D DR |1RR91911 | 4 | 9 | [DR] |1RR11911 | 7 | @
++1 R+
+2 ,——R | 1RR99911 | 3 | 9 |[--R] | 1RR19911 p
+8-bit displacements,PCR1XX#1199
+sur PC 16                ; bits
+indirect extended 16 bits non-existent [n] 19911111 5 2
+
+RR represents the registry coding:
+
+X =
+
+OO EC <
+
+09 01 19 11
+
+n represents displacement.
+
+XX indicates 2 indifferent bits: they can be any.
+
+Examples: — 5-bit displacement: $8.X
+
+post-byte coded 09991000 or $08
+
+— accu A: A,U post-byte coded 11999119 or SC6
+
+
+===== Page 46 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 47
+
+— self-increation: ,S+ post-byte coded 11199999 or SEP
+
+— extended indirect: coded post-byte 19911111
+
+Note: Indirect mode differs from direct mode by the presence of bit 4 to 1 (except for 5-bit displacement).
+
+LOADING AND STORAGE
+
+These functions are used to load the records of 6899 by values obtained either directly or by any address, or to store these records in a similar way.
+
+= LD: loading a register from memory
+
+DIRECT IMMEDIAT AND END INDEX
+
+code
+LDA 86 2 2 96 4 2 B6 5 3 A6 | 4+] 2+
+LDB C6 2 2 D6 4 2 F6 5 3 E6 4+] 2+
+LDD CC 3 3 DC 5 2 FC 6 3 EC | 5+] 2+
+LDS 19CE| 4 4 |19DE| 6 | 3 |19FE| 7 4 |19EE| 6+] 3+
+LDU CE 3 3 DE 5 2 FE 6 3 EE | 5+] 2+
+LDX 8E 3 3 9E 5 2 BE 6 3 AE | 5+] 2+
+LDY 198E| 4 4 | 199E| 6 3 |10BE| 7 4 |1Y9AE| 6+] 3+
+
+State Registry:
+
+Example: LDA #$093 — A = 93
+LDX #$C000 — X = SCHOO
+
+
+===== Page 47 =====
+48 | ASSEMBLEUR DES MOS ET T07/70
+
+m ST: storage of a register in memory
+
+DIRECT AND END INDEX
+
+code
+STA 97 4 2 B7 5 3 A7 4+ |2+
+STB D7 4 2 F7 5 3 E7 4+ |2+
+STD DD 5 2 FD 6 3 ED | 5+ |2+
+STS | 19DF| 6] 3 | 19FF| 7 | 4 [IEF | 6+ | 3+
+STU DF 5 2 FF 6 3 EF 5+ | 2+
+STX OF 5 2 BF 6 3 AF 5+ | 2+
+STY | 199F} 6] 3 | 19BF| 7 | 4 |19AF | 6+ | 3+
+
+State Registry:
+
+Exemple: A = $03 STA $6000 — $6000 = 03
+X = SCHOO STX $7999 — $7099 = SCHPP
+
+m LEA: loading of an effective address
+
+INDEX  code
+LEAS 32 | 4+] 2+
+LEAU 33 | 44+) 2+
+LEAX | 39 | 4+] 2+
+LEAY 31 4+] 2+
+
+Status register: — not affected by LEAU and LEAS — affected by LEAX and LEAY
+
+LJ} i | | zt ff
+
+Note: LEA is a very practical and complementary function, as it replaces non-existent increments, additions and subtractions for index records.
+
+
+===== Page 48 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 49
+
+Example: LEAX 1,X — X = X + 1
+LEAY —1,Y > Y = Y - 1
+LEAX AU — X = U +
+
+= CLR: set to @ register or memory
+
+INHERENT DIRECT AND END INDEX
+code
+CLR OF 6 2 7F 7 3 6F 6+} 2+
+
+CLRA | 4F 2 1
+CLRB SF 2 1
+
+State Registry:
+
+Example: CLRA > To = 09
+CLR $6909 — 56009 = Op
+
+TRADE AND TRANSFERS
+
+These instructions allow the exchange or transfer of data between registers. For example, they can be used to store data for subsequent comparisons.
+
+These instructions do not affect the status register unless CC is exchanged or transferred. Exchanges or transfers may be made only on registers of the same length (8
+
+or 16 bits).
+
+m EXG :                  ; exchange of two registers
+
+IMMEDIATE code
+[EXG | 1£ | 8 | 2
+
+The second byte, post-byte, determines the two registers of the exchange, each coded on a quartet.
+
+Post-byte
+
+Register 2
+
+
+===== Page 49 =====
+50 | ASSEMBLEUR DES MO5 ET TO7/70
+
+The quartet value for each of the ten records is as follows:
+
+Register Code
+À .............. 8
+B.............. 9
+CC............. A
+D .............. 0
+DP............. B
+PC............. 5
+S .............. 4
+U .............. 3
+X .............. 1
+Y.............. 2
+
+Example: EXG A,B coded 1E 89
+EXG S,U                  ; code 1E 43
+EXG D,Y                  ; code 1E 92
+
+= TFR: transfer from one register to another
+
+IMMEDIATE code
+TFR 1F 6 2
+
+Post-byte coding is the same as the EXG function (previous).
+
+Example: TFR A,B coded 1F 89
+TFR B,A                  ; code 1F 98
+
+OPERATIONS ON THE STACK
+
+These instructions stack or depilate one, more or all of the CPU records.
+
+— Registry coding is done on the post-byte.
+
+716 3
+
+BSS — SoS
+
+CC,A,B,DP is coded OF A,B,X,Y is coded 36 CC,A,B,DP,X,Y,U,PC is coded FF
+
+
+===== Page 50 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 51
+
+— The U index can be stored in the system stack, while the S index can be stored in the user stack.
+
+— The running time is calculated by adding to the base value 5 us, one for the eight bit registers and two for the sixteen bits.
+
+= PSH: stacking of registers
+
+IMMEDIATE code
+PSHS | 34 5+] 2
+PSHU | 36 5+] 2
+
+The stacking order is PC — CC. Status register: not affected.
+
+Example: PSHS U,X,B,A — 34 56
+PSHU S,X,B,A — 36 56
+
+mTM PUL: removal of records
+
+IMMEDIATE code; byte
+PULS 35 5+] 2
+PULU 37 5+] 2
+
+The removal order is CC — PC. Status register: not affected, except when CC is itself depilated.
+
+Example: PULS CC,A,B,DP — 35 OF
+PULU X,Y,S,PC — 37 F@
+
+INCREMENTS — DECREMENTATIONS
+
+These instructions allow the creation or decrementation of 1, a register or a memory. They can be used for various tasks: counting events, making
+
+loops...
+
+
+===== Page 51 =====
+52 | ASSEMBLEUR DES MOS ET TO7/70
+
+@ INC: registry or memory increment
+
+INHERENT ETENDU DIRECT INDEXE
+code
+INC 7C 7 | 3 OC 6 | 2 6C | 6+] 2+
+
+INCA 4C 2 1
+INCB 5C 2 1
+
+Status Register:
+
+Example: A = ÿ2 INCA > To = 93
+D600 — 98 INC $6009 — $S61ÿp = po
+
+= DEC: decrementation of a register or memory
+
+INHERENT ETENDU DIRECT INDEXE
+code
+DEC 7A 7 3 OA 6 2 6A | 6+] 2+
+
+DECA| 4A 2 1
+DECB | 5A 2 1
+
+State Registry:
+
+Example: A = $2 DECA > A= ÿ1
+D6PPH = $8 DEC $ 6009 — HEPPP = 97
+
+COMPARISONS AND TESTS
+
+These instruments allow to position the CC state registry according to the value of a register or memory position. In no case shall they alter the records or the memory positions tested.
+
+
+===== Page 52 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 53
+
+= ILO: bit test
+
+DIRECT IMMEDIAT AND END INDEX
+code
+BITA 85 2 2 95 4 2 B5 5 3 A5 | 4+] 2+
+BITB C5 2 2 D5 4 2 F5 5 3 E5 | 4+] 2+
+
+Note: A logical ET is performed between the content of a accumulator and the content of the specified memory operand. Z = (R) A (M)
+
+Status Register:
+
+Example: A = $D9 — BITA #$41 — Z = ÿ
+B = $F9 — BITB #$F@ > Z = 1
+
+= CMP: comparison between registry and memory content
+
+DIRECT IMMEDIAT AND END INDEX
+
+code
+CMPA| 81 2 | 2 91 4 2 B1 5 3 Al 4+) 2+
+CMPB| Ci 2 | 2 D1 4 | 2 F1 5 3 E1 4+] 2+
+CMPD | 1983; 5 | 4 | 1993) 7 | 3 |19B3| 8 4 {|19A3} 7+} 3+
+CMPS | 118C; 5 | 4 |119C| 7 | 3 |11BC| 8 4 11AC} 7+ | 3+
+CMPU| 1183 5 4 1193 7 3 11B3| 8 4 11A3] 7+] 3+
+CMPX| 8C 4 | 3 9C 6 | 2 BC 7 | 3 AC | 6+| 2+
+CMPY | 198C| 5 | 4 |199C| 7 | 3 |19BC} 8 | 4 |1@AC] 74+} 3+
+
+Status Register: - Yes.
+
+
+===== Page 53 =====
+54 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+a TST: register test or memory content
+
+INHERENT DIRECT AND END INDEX
+code
+TST gD 6 | 2 7D 7 | 3 6D | 6+| 2+
+TSTA 4D 2 1
+TSTB 5D 2 1
+
+Status Register:
+
+LIT INIZ197 |
+
+Note: TST positions N and Z depending on the registry or memory content tested.
+
+Example: A = $12 TSTA > N = Get Z = ÿ A = $00 TSTA — N = ÿetZ = 1
+A = $86 TSTA — N = 1 et Z = ÿ
+BOOLEAN OPERATORS
+= AND: AND logic between memory and registry
+DIRECT IMMEDIAT AND END INDEX
+code byte
+ANDA 84 | 2 | 2 | 94 | 4 | 2 | B4 | 5 | 3 | A4 | 44+] 2+
+ANDB C4 2 2 D4 4 2 F4 5 3 E4 | 4+] 2+
+ANDCC| 1C 3 2
+
+Status register: for ANDA/ANDB
+
+- What?
+
+| IN| Zz} 9] |
+
+for ANDCC
+
+LELFIH] IN
+
+Truth table:
+
+ARS:
+
+
+===== Page 54 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 55
+
+Example: A = $FF ANDA #$7F — A = $7F
+B = SEE ANDB #$7F — B = $6E
+@ OR: or logic between memory and registry
+DIRECT IMMEDIAT AND END INDEX
+code
+ORA 8A 2 2 9A 4 2 BA 5 3 AA | 44+] 2+
+ORB CA 2 2 DA 4 2 FA 5 3 EA | 4+] 2+
+ORCC} 1A 3 2
+Status Register: 
+LE; FIH] I IN| Z{v{c|
+Truth table: V ) 1 y g 1 1 1 Example: A = $63 ANDA #$19 —> A = $73
+B = $55 ANDB #$AA — B = SFF
+= EOR: or exclusive between memory and register
+DIRECT IMMEDIAT AND END INDEX
+
+code
+EORA | 88 2 2 98 4 2 B8 5 3 A8 | 4+
+EORB | C8 2 2 D8 4 2 F8 5 3 E8
+
+2+
+4+ | 2+
+
+Status Register:
+
+
+===== Page 55 =====
+56 | ASSEMBLEUR DES MOS ET TO7/70
+
+Truth table:
+
+v 9 1 4 p 1 1 1 ÿ
+
+Example: A = $9C EORA #$8A > A = $16
+
+COM: Supplement to 1
+
+INHERENT DIRECT AND END INDEX
+code byte
+COM 03 6 2 73 7 3 63 6+} 2+
+COMA| 43 2 1
+COMB| 53 2 1
+State Registry: 
+B = $69 COM — B = $FF
+@ NEG: addition to 2
+INHERENT DIRECT AND END INDEX
+code} us
+NEG 09 6 | 2 70 7 | 3 69 | 6+] 2+
+NEGA| 49 2 1
+NEGB| 59 2 1
+
+Status Registry: 
+A = $66 NEGA — A = $69
+
+ARITHMETIC OPERATORS
+
+The 6899 is very powerful from the arithmetic point of view, particularly as regards the
+
+operations with or without restraint and 8-bit multiplication.
+
+
+===== Page 56 =====
+# ABX: Unsigned addition of B and X
+
+(B)+ (9 > (X)
+
+LE JEU D'INSTRUCTIONS DU 6899 | 57
+
+INHERENT code
+| ABX | 3A 1
+
+Status register: not affected.
+
+Example: B = $29 X = SCOP
+ABX — X = $Cÿ2ÿ
+
+= ADC: addition of memory to accumulator with retention
+
+(A ou B) + (M) + (C) — (A ou B)
+
+DIRECT IMMEDIAT AND END INDEX
+code
+ADCA | 89 2 2 99 4 2 B9 5 3 AQ | 4+] 2+
+ADCB | C9 2 2 D9 4 2 F9 5 3 E9 | 4+]| 2+
+Status Register: 
+B = $65 ADCB #$20 — B = $26
+C= 1 = ADD: addition of memory to the non-detention accumulator
+(A,B ou D) + (M) — (A,B ou D)
+DIRECT IMMEDIAT AND END INDEX
+code
+ADDA | 8B 2 2 9B 4 2 BB 5 3 AB | 4+] 2+
+ADDB | CB 2 2 DB 4 2 FB 5 3 EB | 4+] 2+
+ADDD | C3 4 3 D3 6 2 F3 7 3 E3 | 6+] 2+
+
+
+===== Page 57 =====
+58 | ASSEMBLEUR DES MO5 ET TO7/70
+
+Status register: for ADDA and ADDB Lt TH] IN
+
+Lt tt Ni zivic
+
+Example: A = $E4 ADDA #$1F — A = $63
+B = $95 ADDB #926 > B = $25
+
+# AAD: decimal adjustment of Accumulator A
+
+This instruction only works after an 8-bit addition.
+
+A correction factor is added to each quarter to restore the result of a DCB operation. 6 is added to the low weight quartet if the H half holding is positioned or if the quartet has a strictly higher value than 9. 6 is added to the weight quartet if the C holding is positioned or if the quartet has a strictly higher value than 9.
+
+INHERENT code
+[DAA | 19 | 2] 1
+
+Status Register: - Yes.
+
+Note: V has no meaning here, the same is true for N.
+
+Example: A = $66 in DCB
+ADDA #$64 > A = $6A
+
+DAA — A = $7
+A = $70 en DCB
+
+ADDA #244 > A = $B4
+
+DAA >A = $14
+
+= MUL: multiplication of A by B (unsigned)
+
+(A)*(B) — (D)
+
+
+===== Page 58 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 59
+
+INHERENT code
+[MUL | 3D | 11] 1
+
+State Registry: 
+
+Example: A = $6A B = $29
+MUL — D = $9149
+A= $93 B= $96
+MUL > D = $9912
+
+= SBC: subtraction from memory to the accumulator with borrowing (withhold)
+
+(A ou B) — (M) — (C) — (A ou B)
+
+DIRECT IMMEDIAT AND END INDEX
+code
+SBCA | 82 2 2 92 4 2 B2 5 3 A2 | 4+]| 2+
+SBCB | C2 2 2 D2 4 2 F2 5 3 E2 | 4+] 2+
+
+State Registry: 
+
+C= 1
+
+B = $26 SBCB #$19 — B = $19
+
+C= 9
+
+= SUB: subtraction from memory to non-borrowed accumulator (withholding)
+
+(A, B ou D) — (M) — (A, B ou D)
+
+DIRECT IMMEDIAT AND END INDEX
+code
+SUBA | 89 2 | 2 99 4 | 2 BO 5 | 3 Ad | 4+] 2+
+SUBB | Cÿ 2 | 2 Dÿ 4 | 2 FO 5 | 3 E9 | 4+] 2+
+SUBD} 83 4 | 3 93 6 | 2 B3 7 | 3 A3 | 6+] 2+
+
+
+===== Page 59 =====
+60 | ASSEMBLEUR DES MO5 ET TO7/70
+
+Status register: for SUBA and SUBB
+
+LT? INIzfvI)
+
+Example: A = SFC SUBA #$F9 — A = SOC
+B = $26 SUBB #$19 > B = $19
+
+@ SEX: B sign extension on A
+
+The purpose of this instruction is to transform a number into a complement to two in B, into a complement to two in D.
+
+A is set to $FF if B is negative (bit 7 a 1). A is set to $09 if B is positive (bit 7 a 9).
+
+INHERENT code
+[SEX | 1D | 2] 1
+
+Status register: 
+
+Example: B B
+
+$19 SEX — D
+$84 SEX > D
+
+50919 SFFB4
+
+DECALS AND ROTATIONS
+
+These functions perform bit shifts within a memory area or register. Their use is very common in many algorithms: multiplications, divisions...
+
+= ASL: left arithmetic offset
+
+This instruction replaces bit 1 with ÿ, bit 2 with ex-bit 1... until the ex-bit 8 is transferred to the carrier. This operation is therefore in fact a twofold multiplication.
+
+c bit
+| 7165143121 11|9
+
+
+===== Page 60 =====
+LE JEU D’INSTRUCTIONS DU 6899 | 61
+
+INHERENT DIRECT AND END INDEX
+code
+ASL 08 6 2 78 7 3 68 | 6+] 2+
+ASLA 48 2 1
+ASLB 58 2 1
+State Registry:  - Yes.
+
+Example: A = $A9 A = % 19191001
+ASLA A = % #1919919 et C = 1
+A = $52
+
+# ASR: arithmetic offset to the right
+
+Same as ASL but the shift is to the right. C takes the value of ex-bit 9, and bit 7 takes the value of ex-bit 7.
+
+bit bit bit bit bit bit bit bit bit bit bit bit bit bit
+7 *[716151413121110 |
+INHERENT DIRECT AND END INDEX
+code
+ASR 7 6 2 77 7 3 67 6+} 2+
+ASRA | 47 2 1
+ASRB | 57 | 2 | 1
+Status Registry: 
+[716151431211 ) |
+
+
+===== Page 61 =====
+62 | ASSEMBLEUR DES MOS5 ET TO7/70
+
+INHERENT DIRECT AND END INDEX
+code
+LSR 04 6 2 74 7 3 64 6+] 2+
+
+LSRA 44 2 1
+
+LSRB 54 2 1
+
+State Registry: 
+
+Example: A = $A7 A = % 19199111
+
+LSRA A = % 91919911 et C = 1
+A = $53
+
+TM ROL: left rotation via restraint
+
+(ei Bit 9 takes the value of fex-bit 2) Bit 1 takes the value of ex-bit 9... and bit 7 takes the value of ex-bit 6. C takes the value of ex-bit 7.
+
+bit
+
+C
+INHERENT DIRECT AND END INDEX
+code
+ROL 99 6 2 79 7 3 69 6+ | 2+
+ROLA | 49 2 1
+ROLB | 59 2 1
+Status register: UT I [的 [N(z(vic.
+
+Example: A = $83 = % 19909911 and C
+ROLA
+
+A = % 00000111 = SO7 et C
+
+It —
+
+It —
+
+= ROR: Right rotation via restraint
+
+the same as ROL, but the rotation is to the right.
+
+
+===== Page 62 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 63
+
+bits bits bit bit bit bit bit bit bit bit 21119
+
+N oO on B=wo
+
+C -
+INHERENT DIRECT AND END INDEX
+code
+ROR 06 6 2 76 7 3 66 6+ | 2+
+
+RORA| 46 2 1
+RORB | 56 2 1
+
+State Registry: 
+
+Example: A = $81 = % 10090991 and C = 1
+RORA
+A = % 11000009 = SEO et C = 1
+
+UNCONDITIONAL CONNECTIONS AND RETURN
+
+@ BRA: Connecting to a new address
+
+This instruction makes a relative connection to move to a new address.
+
+BRANCHEMENT
+code
+BRA 20 3 2
+LBRA 16 5 3
+
+Status register: not affected.
+
+m= JMP: jump to a new address
+
+This instruction makes an absolute connection to move to a new address.
+
+DIRECT AND END INDEX
+code
+[JMP | gE} 3] 2 | 7 | 4 | 3 | 6 | 3+| 2+
+
+Status register: not affected.
+
+
+===== Page 63 =====
+64 | ASSEMBLEUR DES MO5 ET TO7/70
+
+= BSR: connection to a subprogramme
+
+This instruction makes a jump by storing in stack the address of the instruction following the BSR (return address). It's the GOSUB Basic pendant.
+
+BRANCHEMENT
+code
+BSR 8D 7 2
+LBSR 17 9 3
+
+Status register: not affected.
+
+= JSR: jump to a sub-program
+
+Same as BSR, but the connection is absolute.
+
+DIRECT AND END INDEX
+code
+JSR 9D 7 2 BD 8 3 AD 7+] 2+
+
+Status register: not affected.
+
+= BRN: no connection
+
+This instruction makes no connection. BRN replaces 2 NOP, LBRN replaces
+4 NOP.
+
+BRANCHEMENT
+code
+BRN 21 3 2
+LBRN | 1921; 5 | 4
+
+Status register: not affected.
+
+= NOP: no operation
+
+As the name indicates, this instruction does nothing. It can be used to make a delay or to replace unnecessary instructions. It can also be used to develop programs. The NOP instructions will be removed once the program has been debugged.
+
+
+===== Page 64 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 65
+
+INHERENT code
+[NOP | 12 [| 2] 1
+
+Status register: not affected.
+
+# RTS: return from sub-program
+
+This statement depletes the two bytes of the top of the stack in the ordinal counter. It allows the subsequent return of the program after the execution of a JSR. It also makes it possible to hand over the Basic at the end of a program.
+
+INHERENT code
+RTS 39 5 1
+
+Status register: not affected.
+
+Note: When an RTS is made, the stack must be in the state where it was when the return address was stacked; So don't forget to depilate everything
+
+has been stacked.
+
+CONDITIONAL CONNECTIONS
+
+These instructions allow for connections depending on the state of each bit in the CC register. These connections are used after testing instructions or comparisons.
+
+Note: the star after time in micro-seconds means adding a micro-second when the connection is made.
+
+# BCC: connection if zero
+
+BRANCHEMENT
+code}
+BCC 24 3 2
+LBCC | 1924] 5*| 4
+
+Condition: C = @
+
+Status register: not affected.
+
+
+===== Page 65 =====
+66 | ASSEMBLEUR DES MOS ET TO7/70
+
+= BCS: connection if restraint has a
+
+BRANCHEMENT
+code}
+BCS 25 3 2
+LBCS | 1925} 5* | 4
+
+Condition: C = 1
+
+Status register: not affected.
+
+= BEQ: connection if equality is achieved
+
+BRANCHEMENT
+
+code
+
+BEQ 27 3 2
+
+LBEQ | 1927] 5*| 4
+
+Condition: Z = 1
+
+Status register: not affected.
+
+@ BNE: so different connection
+
+BRANCHEMENT
+code
+BNE 26 3 2
+LBNE | 1926; 5* | 4
+
+Condition: Z = @
+
+Status register: not affected.
+
+
+===== Page 66 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 67
+
+TM BGE: connection if greater or equal (signed)
+
+BRANCHEMENT
+code
+BGE 2C 3 2
+LBGE | 192C| 5* | 4
+
+Condition: NW V = @
+
+Status register: not affected.
+
+BLE: connection if less than or equal (signed)
+
+BRANCHEMENT
+code
+BLE 2F 3 2
+LBLE | 192F| 5* | 4
+
+Condition: (NVV)+Z=1
+
+Status register: not affected.
+
+@ BHS: connection if higher or equal (unsigned)
+
+BRANCHEMENT
+code
+BHS 24 3 2
+LBHS | 1924) 5* | 4
+
+Contition: C = @
+
+Status register: not affected.
+
+Note: BHS is equivalent to BCC.
+
+
+===== Page 67 =====
+68 | ASSEMBLEUR DES MO5 ET TO7/70
+
+@ BLS: connection if lower or equal (unsigned)
+
+BRANCHEMENT
+code
+BLS 23 3 2
+LBLS | 1923] 5* | 4
+
+Condition: C + Z = 1
+
+Status register: not affected.
+
+= BGT: connection if strictly superior (signed)
+
+BRANCHEMENT
+code
+BGT 2E 3 2
+LBGT | 192E| 5* | 4
+
+Condition: (NV V)+Z=09
+
+Status register: not affected.
+
+= BLT: connection if strictly lower (signed)
+
+BRANCHEMENT
+code
+BLT 2D 3 2
+LBLT | 192D} 5*/] 4
+
+Condition: NV V = 1
+
+Status register: not affected.
+
+
+===== Page 68 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 69
+
+# BHI: connection if strictly superior (unsigned)
+
+BRANCHEMENT
+
+code
+BHI 22 3 2
+LBHI 1922| 5*| 4
+
+Condition: C + Z = @
+
+Status register: not affected.
+
+= BLO: connection if strictly inferior (unsigned)
+
+BRANCHEMENT
+code
+BLO 25 3 | 2
+LBLO | 1925} 5*| 4
+
+Condition: C = 1
+
+Status register: not affected.
+
+Note: BLO is equivalent to BCS.
+
+= BMI: connection if negative
+
+BRANCHEMENT
+code
+BMI 2B 3 | 2
+LBMI | 192B| 5*| 4
+
+Condition: N = 1
+
+Status register: not affected.
+
+
+===== Page 69 =====
+70 | ASSEMBLEUR DES MO5 ET TO7/70
+
+@ BPL: so positive connection
+
+BRANCHEMENT
+code
+BPL 2A 3 2
+LBPL | 192A} 5*] 4
+
+Condition: N = @
+
+Status register: not affected.
+
+= BVC: connection if no overflow
+
+BRANCHEMENT
+code
+BVC 28 3 2
+LBVC | 1928] 5*| 4
+
+Condition: V = @
+
+Status register: not affected.
+
+= BVS: connection if overflow
+
+BRANCHEMENT
+code
+BVS 29 3 2
+LBVS | 1929} 5*| 4
+
+Condition: V = 1
+
+Status register: not affected.
+
+
+===== Page 70 =====
+LE JEU D'INSTRUCTIONS DU 6899 | 71
+
+INSTRUCTIONS FOR PROCESSING INTERRUPTIONS
+
+These instructions all concern the treatment of interruptions. For more information, please refer to the chapter "/enterruptions".
+
+= CWAI: AND logic between CC and immediate operand, then waiting for interruption
+
+(CC) A (M) — (CC)
+
+The programme is suspended until the first interruption
+(IRQ, FIRQ ou NMI).
+
+IMMEDIATE code
+[CWAI | 3c | 26] 2
+
+Status register: [E;FLH] 1 {N[ z[v[c]
+
+Note: CWAI stacks all records and puts bit E at 1; therefore, a FIRQ interruption can be processed without saving any records.
+
+# SYNC: synchronization with the interrupt line
+
+The program is suspended until the first interruption (IRQ, FIRQ or NMI). If the interrupt signal lasts more than 3 us, the interruption is generated, otherwise the normal program continues.
+
+INHERENT code
+SYNC 13 4 1
+
+Status register: not affected.
+
+# SWI: Software interruption
+
+All records are saved in the system stack and a call is made to the processing routine.
+
+
+===== Page 71 =====
+72 | ASSEMBLEUR DES MOS ET TO7/70
+
+IMMEDIATE (on MOS)
+
+code
+SWI 3F 19; 1
+SWI2] 193F| 20] 2
+SWI3 |] 113F| 26) 2
+
+Status register: not affected.
+
+Note: the SWI statement has a special function since on MO5 it is set and serves as the entry point for monitor routines. Please refer to the chapter "/enterruptions".
+
+@ RTI: back from interruption
+
+This instruction degrades records that were stacked during an interruption.
+
+CC is depilated first. If the bit E is at 
+
+INHERENT
+
+code
+
+RTI 38 | ©] 14
+15
+
+Note: if E = @ then the instruction lasts 6 us, otherwise it lasts 15 us.
+
+State Registry: [E
+
+
+===== Page 72 =====
+ROUTINES ET
+USEFUL ADDRESSES
+
+
+===== Page 73 =====
+74
+
+Screen and optical pencil
+
+THE SCREEN SYSTEM
+
+The MOS screen consists of 299 x 32 points, or 64999 points. To avoid devoting one byte to each of these points, they were assembled in packages of eight, then constituting one byte. The screen memory (points) therefore uses 8999 bytes or $1F49 in hexadecimal (not $1FFF as claimed in the MO5 operating instructions). However, this is not enough: indeed, with only 8990 bytes, one can define each point as being lit or turned off but one cannot define its color. That's why 8909 other bytes are allocated to the definition of ink color and background of each byte. So it takes a total of 16999 bytes for the screen. Using addresses from 9 to 16099 would have taken too much space and limited user memory. That's why the manufacturer used a "ruse": the state of the screen points is housed from $009 to $1F49 and the color state from 0999 to $1F49.
+
+How can we accommodate two different things at the same addresses?
+
+This is achieved thanks to the input-output circuit: the bit @ (low weight bit) of the SA7CD address is used to direct the data on the dot status bytes or on the dot color bytes (this allows you to occupy only 1F49 bytes of address on the microprocessor and to have a screen image that corresponds to double the space).
+
+To convince you, type the following: first press the small white button (Initial. prog.), then type POKE 4990.1, so you see a small dot on the screen (the dot is dark blue). Now, type POKE &HA7CD,149: POKE 4900.1: the dot is black on a red dot.
+
+
+===== Page 74 =====
+L'ECRAN ET LE CRAYON OPTIQUE | 75
+
+The rule is: if the low weight bit of $A7Cÿ is 1, you act on the screen points. If the same bit is at Q, you act on the color according to the rule:
+
+strong weight quartet for ink, low weight quartet for bottom.
+
+(In our example, 1 is $1, a black ink (9) and a red background (1)).
+
+In fact, the $A70 address is used to define what has just been explained but is also used to define the color around the screen; the organization is as follows:
+
+$SA7Cd: ? ? ? 1] 1 1 g
+
+(149 is written in 19091199, which explains that the colour of the circumference remains cyan (code 6)
+
+BACKGROUND AND INK COLORS
+
+As we have just seen, bits 1, 2, 3, 4, of the system variable located in SA7CQ give us the color of the circle of the screen.
+
+To convince you, type POKE &HA7C{Q, 6 and you will see the edge dye in yellow; 6 is written in binary: bits 1, 2, 3, 4 give us 0911 or 3 in decimal which represents the yellow color.
+
+Another address is used to define the color of the ink and background of what is printed on the screen; this is the address $202B (the number of colors being 16, it is enough to code the color of ink and 4 bits to code the color of the background, i.e. 1 byte in total). At $202B, the heavy weight quartet defines the colour of ink and the low weight quartet that of the bottom; so if you make POKE &H292B, 18, you get an ink
+
+red on green background: 18 = 90919919 Red 1 2 Jane Green
+
+(according to the colour codes we remind you):
+
+9 : black 8 : grey (= light black) 1 : red 9 : light red
+
+2: green 10: light green
+
+3 : yellow 11 : light yellow
+
+4: blue 12: light blue
+
+5: magenta 13: light magenta
+
+6: cyan 14: clear cyan
+
+7 : white 15 : orange
+
+
+===== Page 75 =====
+76 | PERIPHERIQUES DES MO5 ET TO7/70
+
+Note that for a given color of the @ppp type (in binary), the corresponding light color is then coded 1ppp (except for white for which light white has no meaning and which is therefore replaced by orange).
+
+It is therefore unnecessary to want to retain the codes of all colours; Just know the codes of dark colors. The light color codes are then obtained by adding 8 (set to 1 of bit 3).
+
+However, you can object that our POKE &H292B,18 is equivalent to a COLOR 1,2 and therefore is of no interest. If this is true in Basic, it becomes false in machine language because at assembly level, our POKE &H292B,18 is equivalent to
+
+LDA #$12
+STA $292B
+
+while access to COLOR function is difficult and more saucrenuous because it takes much more time.
+
+LE CURSEUR
+
+On the screen, the cursor flashes continuously at a certain location: this place can be defined by a horizontal coordinate (understood between 1 and 49) and a vertical (understood between @ and 24). Two addresses take care of this: $201B and $201C
+
+$291B: current cursor line, $291C: current cursor column.
+
+These two addresses can be used, during various applications to move the cursor for example (with anything other than LOCATE inaccessible in assembler).
+
+EXHAUST CHARACTER (ESC)
+
+The ESC character (ASCII code 27) is a control character that allows many manipulations of the MOS screen.
+
+It allows first to manipulate colors. For example, type (in direct mode): ?CHRS$ (27); CHR$S(&H62); The round edge then becomes green. This can be done using the same method, ink and background.
+
+The codes are as follows:
+
+
+===== Page 76 =====
+L'ECRAN ET LE CRAYON OPTIQUE | 77
+
+4 strong bits
+
+4 —-> colour ink
+
+5 —- background colour
+
+6 —- colour around
+
+4 bits low
+
+9 —— black
+
+1 —— red
+
+2 — Green
+
+3 —— yellow
+
+4 — blue
+
+5 —— magenta 6 —— cyan
+
+7 —— white
+
+8 —— grey
+
+9 —— light red To —— light green B —— light yellow C —— light blue D ——» light magenta E —— cyan
+
+F —— orange
+
+Thus, if you want to pass in red ink, you type ?CHRS(27); CHRS(&H41). This may seem uninteresting in Basic because accessible by the COLOR function but is very interesting in machine language because the passage of two parameters is then easy while access to the COLOR function would have been long and heavy.
+
+But there are other attributes than those of colors: indeed, there are also character sizes, scrolls and video inversion.
+
+Try the following example: load in memory a small Basic program to make a listing, then type: LIST. The listing is done, but the scroll appears to be smacked. Type: ?CHR$(27); CHR$(&H75) then make LIST. The feeling of saccade is gone. Better, type: ?CHR$(27); CHR$(&H79), then make LIST. The listing then scrols very slowly (useful for a presentation!).
+
+These attributes have the following codes:
+
+$70 —— normal character size $71 —> double height, normal width $72 > double width, normal height $73 > double width, double height $74 >; characters + colours (for scrolling) $75 > single characters
+
+$76 —-' non-incrustation mode
+
+$77 —-> incrustation mode
+
+$78 — normal scroll
+
+$79 — slow scroll
+
+$7A — nothing
+
+$7B — video inversion
+
+
+===== Page 77 =====
+78 | PERIPHERIQUES DES MO5 ET TO7/70
+
+So if you want to make slow scrolls with colors, you have to type:
+?2CHRS(27); CHRS(&H79) ; CHRS(27); CHRS(&H74)
+There are therefore 4 different scrolls which are:
+
+— quick scroll without colour — quick scroll with colour — slow scroll without colour — slow scroll with colour
+
+The interest in scrolling without colors is important. You fix the colors in the screen and scroll the text over. The characters change color as they move vertically on the screen. This may be useful in a presentation, for example.
+
+The previous pages have offered you solutions when you have a BASIC program or even BASIC associated with machine language. But we can do the same and very simply in machine language. Let us start with the simplest: the system of attributes.
+
+We saw that to send an attribute, you must first send an ESC (code 27). Codes, whether ESC or attribute, are sent via a routine whose indexing byte is #2 (this routine is of course accessed by an SWI, in this case an SWI followed by an @2).
+
+To make a slow scroll (attribute $79) you must realize:
+
+LDB #$1B                 ; (ESC code)
+
+SWI #$02                 ; (calling)
+
+LDB #$79                 ; (Slow scroll code)
+SWI #$902                ; (calling)
+
+This takes a total of 8 bytes which are:
+
+C61B LDB #$1B
+3F 92 SWI #$02
+C679 LDB #$79
+3F #2 SWI #202
+
+The process is the same whether it is the attributes corresponding to the colors or the others.
+
+Note: we have seen here that the COLOR function can be realized in machine language, but we can also realize the SCREEN function which works in full screen. To do this, simply do the following sequence:
+
+
+===== Page 78 =====
+L'ECRAN ET LE CRAYON OPTIQUE | 79
+
+LDB #$1B                 ; (escape)
+
+SWI #$02
+
+LDB #$29                 ; (full screen)
+
+SWI 4502
+
+LDB #$??                 ; (code ink or bottom)
+SWI #$02
+
+RTS
+
+MONITOR ROUTINES
+
+All the routines we indicate in this sub-chapter work in the same mode: we load the input parameters in some records of the 6899, then we make a SWI followed by the code (which we give for each routine) of table indexing.
+
+= Point test
+
+This routine is used to find out what is in a given area of the screen: the input parameters are the abscisse and the point-to-test sequence that must be stored in X and Y respectively. The indexing code for this routine is $14. The return parameter is found in the B accumulator of 6899: it varies from — 16 to — 1 if the point is part of the bottom and from @ to 15 if it is part of the shape, the exact value being determined by the color.
+
+The test of coordinate point 5.5 will therefore be:
+
+LDX #$5                  ; (abscesses)
+LDY #$5                  ; (ordered)
+SWI #$14                 ; (calling)
+RTS (return)
+
+In this routine:
+
+X varies between 的 and 319 Y between @ and 199 B between — 16 and 15.
+
+= Character test
+
+This routine allows you to test if there is a character at one place on the screen. The input parameters are the column: from 1 to 49 placed in the X register, the line: from @ to 24 placed in the A accumulator. The indexing code for this routine is $1A. The return parameter is the ASCII code of the character found at this position and is placed in B. If there is no character to the requested position, the return provides 9. If the character is a accented character or "this, the procedure is somewhat different, three calls to the routine must be made:
+
+
+===== Page 79 =====
+80
+
+PERIPHERIQUES DES MO5 ET TO7/70
+
+The first returns $16, the second returns the accent code, the third returns the ASCII character code.
+
+A test in coordinate box 9; 4 is therefore done as follows:
+
+LDX #59999               ; (abscesses)
+LDA #204                 ; (ordered)
+SW! #$1A (call) RTS (return)
+
+What, encoded, gives:
+
+8E 09 99
+
+86 09 3F 1A
+
+39
+
+Optical pencil test
+
+This routine is used to test the position of the optical pencil with a test of the found values. There is no input parameter. The indexing code for this routine is $18. The return parameters are:
+
+the abscisse placed in X varying from @ to 319, the order placed in Y varying from @ to 199.
+
+If the measurement is correct, the carrier bit is set to @, otherwise it is at 1. The optical pencil test is thus done as follows: SWI #$18.
+
+Test of the optical pencil switch
+
+At the end of the optical pencil is a small switch. It is he who makes the difference between the INPEN and INPUTPEN instructions of Basic. The routine that tests this switch, and has for indexing code $16, does not require an input parameter and returns in the CC Carry bit the state of the optical pencil switch: Carry:
+
+1 if the switch is pressed, Q otherwise.
+
+The test of this switch is as follows: SW! #$16.
+
+Displaying a character on screen
+
+This routine allows the display of a character at the current position of the cursor (which we have previously defined in this chapter). The input parameter is the ASCII code of the character to be displayed that must be in B before execution. The indexing code is 92, there is no return parameter.
+
+Thus the display of an "A" at the current position of the cursor is as follows:
+
+
+===== Page 80 =====
+L'ECRAN ET LE CRAYON OPTIQUE | 81
+
+LDB #$41                 ; (code ASCII of ‘A' — B)
+SWI #$02                 ; (calling)
+RTS (return)
+
+Displaying a dot on screen
+
+This routine displays a point of color that is provided on the screen. The input parameters are the coordinates of the point: in the X register, the abcissus (from 9 to 319) is placed and in the Y ordered (from @ to 199). The address system variable $2636 to 09 and the address variable 2929 of the color you want to point in must also be set. The indexing code is $10.
+
+The display of a red dot in 96.96 is therefore as follows:
+
+CLR $2936                ; (removal of variable in 2936)
+LDA #$91                 ; (red code)
+
+STA $2629                ; (variable dot color)
+
+LDX #$0969               ; (abscesses)
+
+LDY #$9969               ; (ordered)
+
+SWI #$10                 ; (calling)
+
+This same routine can also be used to display a character at a given position and not at the current position of the cursor as before. To do this, you must put the ASCII code of the character to be displayed in the variable in $2036. However, this time, X can only vary from 1 to 49 (instead of @ to 319 for a point display). Similarly, Y must be between @ and 24.
+
+The display of an ‘A' in position 16.16 is therefore as follows:
+
+LDA #$41                 ; (ASCII code)
+STA $2036                ; (variable system)
+LDX #$9919               ; (abscesses)
+
+LDY #$9919               ; (ordered)
+
+SWI #919                 ; (calling)
+
+RTS (return)
+
+Draw a line of points
+
+This routine allows a line to be drawn between the position of the last point printed on the screen (by this routine or by the "Display of a point" described above) and a point that is provided by the colour that is supplied. The input parameters are: the position of the point of arrival by its abscissa placed in X (variant from  The starting point should eventually be placed by the routine "Display a point" because otherwise the line is drawn from the last printed point. On the other hand, the variable in $2036 (i.e. whether it is a character or not) must logically contain the value . The variable in $2029 must contain the color of the line.
+
+
+===== Page 81 =====
+82 | PERIPHERIQUES DES MO5 ET TO7/70
+
+The indexing code for this routine is QE. For example, if you want to draw a line from point (9.9) to point (96.96) in red, you do the following:
+
+CLR $2036                ; (deletion of system variable)
+LDA #$91                 ; (red code)
+STA $2629                ; (variable color system)
+LDX #$9999
+LDY #0000                ; (starting point)
+SWI #$16                 ; (point display)
+(indexing one point)
+LDX #5$9969              ; (point of arrival)
+
+LDX 459069
+SWI #$0E                 ; (trapped a line)
+RTS (return)
+
+With the same method as developed in the sub-chapter "Display a point", one can, thanks to this same routine, display a line of letters. For this purpose, the ASCII code of the intended letter must be placed in the variable in $2036 and the starting and finishing positions must be in the interval [1.49] for the abscisse placed in X and in the interval [9.24] for the order placed in Y.
+
+THE CHARACTER GENERATOR
+
+The MO5 has a table in which all the characters displayed on the screen are displayed, i.e. with ASCII code between 32 and 127. This table can be found in ROM from SFC9E. You can view it with the function B of the "ODIN" monitor by typing BFC9E. The characters appear backwards, meaning that the first byte of a character in the table corresponds to the bottom of the corresponding letter. This character set is not transferred to RAM when starting the MO5 as is sometimes the case with other computers. Therefore, these characters cannot be changed.
+
+However, if this is not possible, there is a system variable that defines the beginning of the character set: it is at $2073-$2074. After initialization, we find at these two addresses the $FC9E address of the ROM character set. For example, type POKE &H2973, &HC Then you see a series of things that are totally incomprehensible. However, despite these characters, your orders are interpreted and executed correctly. So if you build your own character set, you can use it provided you change the address in $2073, $2074.
+
+Now, nothing is easier for you than to create a clean character set or even to keep the same characters as those proposed but printing them backwards.
+
+
+===== Page 82 =====
+L'ECRAN ET LE CRAYON OPTIQUE | 83
+
+DISPLAY ROUTINES
+
+It may be useful to have a routine that allows to display a series of bytes (to display a particular message). Thus, this routine exists in the ROM.
+
+The input parameters are: the address — 1 of the table that must be in the X register. The table must also end with an @. The address of this routine in ROM is $CE2C. Thus, the execution of the routine:
+
+LDX #$EA8A
+JSR $CE2C
+RTS
+
+results in the display of the message that appears when the MOS is initialized:
+
+MO5 BASIC 1.9
+(C) Microsoft 1984
+
+This routine takes control characters into account, so you can skip lines, change colors, etc. Other routine:
+
+#
+
+A routine in ROM is in charge, you don't need to get tired of recreating it. This routine is in $D83E. Moreover, the display is done in decimal, which is much better than in hexadecimal (to count points of a game for example). If you do the following routine:
+
+LDD #$A090
+JSR $D83E
+
+RTS
+
+you see the number 49969 (which is the decimal expression of the hexadecimal number $AQ@9) at the current position of the cursor.
+
+
+===== Page 83 =====
+84
+
+The joystick
+
+On MO5, we can plug in two joysticks. These joysticks can be scanned through a monitor routine accessible by SWI followed by an indexing code. The input parameter is the number of the joystick to be scrutinized that must be in the A accumulator. This number is 99 or 91. The indexing code for this routine is $1C. The return parameters are: the direction of the handle in the B accumulator and the state of the firing button represented by the state of the Carry of the CC register.
+
+Return codes:
+
+Carry: 1 if shot button pressed % otherwise
+
+Accumulator B: a number between 
+
+1
+
+5
+
+Condition of battery B in return
+
+
+===== Page 84 =====
+LE JOYSTICK | 85
+The joystick can also be examined by directly testing the PIA located in SA7CC and SA7CD.
+
+m SA7CC: determines the orientation of the joystick
+
+The low weight quartet determines the right handle and the strong weight quartet, the left handle.
+
+$ A7CC (left handle)
+
+When the joystick is at rest, the quartet is at SF. When the joystick is oriented, the steering bits are set to 9.
+
+bit 3 bit 2 bit1 bit @
+
+Example: if the joystick is oriented north, the bit @ passes 49, the quartet will have as value
+
+SE.
+
+If the joystick is oriented southwest, bits 1 and 2 go to @, the quartet will be worth $9.
+
+E A 6 B F 7 C 5 D Examples: — right handle north, left handle east: $7E.
+
+— right handle to the southeast, left handle to the northeast: $65.
+
+= SA7CD determines the state of the firing button
+
+The bit 7 corresponds to the right handle, the bit 6 to the left handle.
+
+When no button is pressed, $A7CD is worth $C.
+
+
+===== Page 85 =====
+86 | PERIPHERIQUES DES MOS5 ET TO7/70
+
+If the right button is pressed, bit 7 passes to @, if the left button is pressed, bit 6 passes to @.
+
+Pressed button: SA7CD None: SCY Right only: $8ÿ Left only: $49 Right and left: SOP
+
+
+===== Page 86 =====
+87
+
+Keyboard
+
+QUICK KEYBOARD SCAN
+
+This monitor routine is called by an SWI indexed by the SGC value. It allows a quick exploration of the keyboard.
+
+— The zero flag is positioned if no key is pressed, otherwise it is void. — The matrix code of the key is given in B (see correlation table). — contains a value indicating pressure on BASIC, CNT or SHIFT:
+
+BASIC — A = 1
+CNT — À = 2
+
+SHIFT — A = 4
+Example appeal: SWI CALL #4$9C
+BEQ CALL
+RTS
+
+This routine has the advantage of doing a very fast scanning, but we do not get the ASCII code of the pressed key. Now let's see how to do it.
+
+
+===== Page 87 =====
+88 | PERIPHERIQUES DES MO5 ET TO7/70
+
+Matrix coding table
+
+Weight
+Pode l# 1213841516 |7|8l9lal8|c|olelr
+Forte NX 1) Basid swim STOPIACC err ENTIRAZ
+1 —|X/2/- |Z} / |S |B] J |SP/3]@]E] P| DIM
+2 >/@| 4/9 IR}OJF IL] TD}. }]5} 8] T] 1] GK
+3 INS} ,| 6 17 |Y] UH [J |EFFIN
+
+Coding examples: Z has for code $14 EFF has for code $38
+
+KEYBOARD SCAN WITH ASCII CODE RETURN
+
+This monitor routine is called via an SWI indexed by SQA. — The zero flag is positioned if acune key is pressed, otherwise it is void. — Register B contains the ASCII code of the pressed key.
+
+e If the SHIFT key is pressed at the same time as another key, you get the shifted code.
+
+e If the CNT key is pressed, you get the ASCII code with bit 6 to zero.
+
+e If the BASIC key is pressed, a special code is obtained (see correlation table). ;
+
+e If only the BASIC, CNT and SHIFT keys are pressed, B is zero.
+
+e In the case of an accented key, three calls must be made: the first detects the $16 (accent) code, the second detects the accent code, the third detects the letter code.
+
+The accent codes are:
+
+Grave: $41 Acute: $42 Circonflex: $43 Trema: $48
+
+Cedilla: $4B
+
+
+===== Page 88 =====
+LE CLAVIER | 89
+
+BASIC key coding table
+
+Weight
+Pod 2 l9l1121)314/5!617|8l9lal8lclolelr
+strong
+8 STOPIACC| |ENTIRAZ| C| t |W +/ Al *} Qi Vv
+9 —|x/2]/-/zZ/1/ |S |B] l isP}3/@/E;P/ DIM
+A >~|@| 419 |RIO;JFILID!]. |}5/}/8/TI11GIsK
+B INS} ,
+
+Coding examples: BASIC Z a for code $94 BASIC EFF a for code $B8
+
+USING BASIC LINE ENTRY
+
+This BASIC routine allows you to enter an entire line on the keyboard. We then benefit from all the functions of editor of the MOS: full page, insertion, deletion, moving the cursor with arrows, decontrol keys...
+
+The call must be made by the following sequence:
+
+ENL JSR $ECCF
+BCS
+
+When validated by RETURN, the line on which the cursor points will be stored in a buffer located in $2452. The end of the line is then indicated by a zero.
+
+To read this buffer, there is a routine called CHRGET located in $21AC. This routine increments a TXPTR text pointer, reads the pointed character by jumping white spaces and indicates the presence of numbers (in this case, the retention is set to 1, otherwise it is @). The read character returns in Accumulator A.
+
+The TXPTR pointer is located in $21B3 and needs to be updated after a line entry, with the
+valeur $2451.
+
+Various routines allow you to manage the line entry:
+
+$21AC: read point increment $21B2: read character without increment $21CA: decrementation of pointer without reading.
+
+
+===== Page 89 =====
+90 | PERIPHERIQUES DES MO5 ET TO7/70
+
+Example of use: ENL JSR $ECCF
+BCS
+LDX #$2451
+STX /$B3
+LECT JSR /SAC
+TSTA
+END
+' character processing ' by character
+BRA LCT
+FINE
+
+MODIFICATION OF THE REPETITION DELAY
+
+A system variable determines the time between pressing a key and the first repetition. This variable is in $2076. The smaller the stored value, the faster the repeat time will be.
+
+CHANGING KEYBOARD TABLES
+
+Each table pointer consists of three bytes. The first two bytes are the address of the table, the third is an indicator. You must set this indicator to 1 when you change the address, and to 9 when you provide the original address. m Keyboard decoding table $206D-206F By changing the table, you can change the meaning of keyboard keys (example: QWERTY keyboard). mTM Character Set Table $297ÿ-2972 By modifying this table you can redefine the whole character set (example: Gothic characters). = Additional character set table $2973-$2975
+
+This table corresponds to the characters you can set by the BASIC GR$ command. The character defined by GR$(9) has for code ASCII $89, GR&(1) has for code $81...
+
+
+===== Page 90 =====
+91
+
+The tape recorder
+
+STORAGE OF PROGRAM NAME
+
+The name of the program is located in a buffer with an address of $23FA. This buffer has a length of twelve bytes:
+
+— 1 byte for name length, — 8 bytes for name, — 3 bytes for extension (BAS, BIN, DAT, ASM...)
+
+2aFA|23FB] | | | | | |  |2492| |
+
+long. name extension
+
+Before attempting to save or load in machine language, the buffer must be updated. To do this, you must put the name length in $23FA, the name in $23FB (if it is less than eight characters, you must complete with spaces) and finally the extension in $2492.
+
+A ROM routine does this work, it is implemented in $E 076. Do EXEC&HE976 "ESSAI-BAS", you will get in memory:
+
+23FA | 23FB 2492
+E Ss S A ] B A S
+95 | 45 | 53 | 53 | 41 | 49 | 29 | 29 | 29 | 42 | 41 | 53
+
+
+===== Page 91 =====
+92 | PERIPHERIQUES DES MOS ET TO7/70
+
+This routine reads the name directly in the line entry provided that the TXPTR pointer has been positioned on the start quote (see the chapter "Keyboard").
+
+$E076 takes the BAS extension by default if you have not specified it. If you want another extension to be taken by default, you must do:
+
+LDU #$                   ; extension address
+JSR $E979
+
+RTS
+Three extensions are already encoded in the ROM:
+
+BAS en $E460
+DAT en $E463
+BIN en $E466
+
+In the case of a load, if you want the first program, you have to put @ in $23FA, and eight spaces for the name.
+
+SAVING A PROGRAM
+
+= binary file
+
+First of all, here is a clarification regarding the syntax of the SAVEM command. You must specify the start, end and imperative execution address (while according to the manual this address is only optional...).
+
+To make this order you must stack the return address of your sub-program, start, end and run address, and finally make a JMP $E167.
+
+Example: realize SAVEM "ESSAI.BIN", &H3090, &H3190, &H3090 After storing the name in the BUFFER,
+
+LDU #RETOUR
+LDY #$3909               ; start
+LDX #53199               ; end
+LDD #$3999               ; implementation
+PSHS U,Y,X,B,A
+JMP $E167
+BACK ...
+RTS
+
+As can be seen, passing the three backup addresses through the stack requires simulating a JSR by storing the return address in stack and making a JMP.
+
+
+===== Page 92 =====
+LE MAGNETOPHONE | 93
+
+a Basic file
+
+To perform a backup, just store the name and then make a $E12B JSR.
+
+O Protected file
+
+After storing the name, you must make a JSR $E9B9.
+
+QO File ASCII
+
+After you know the name, you must execute:
+
+LDA #$FF
+STA $2179
+JSR $E988
+
+LOADING A PROGRAM
+
+@ System Variables
+
+They can be found on page $21:
+
+$2199-$219A: defines the type of loading (RUN, MERGE, LOAD, LOADM, automatic departure...)
+
+$219B: loading type (Basic or binary)
+
+$219C-$219D: LOADM optional address
+
+a Binary file
+
+The call is made in $E2B3 after updating the buffer program name and system variables loading:
+
+put $2199 to @
+$219A à Ÿ
+$219B à 1
+
+O Automatic departure
+
+put $2199 to 3.
+
+Note: While the Basic manual does not specify anything, it is possible to run a binary program at the time of loading. To do this simply type: LOADM "program name", R.
+
+
+===== Page 93 =====
+94 | PERIPHERIQUES DES MOS5 ET TO7/70
+
+a Basic file
+
+The call is always made in $E2B3 after updating the buffer program name and system variables loading:
+
+put $2199 to @
+$219A à 9
+$219B à Ÿ
+
+0 Automatic Departure > LOAD "...", R put $2199 to 3
+
+O Automatic departure = RUN "..."
+
+put $2199 to 2
+
+O Merge
+
+put $219A to FF
+
+@ Summary table
+
+Orders Variables
+LOADM“” ) ü 1
+LOADM"”,,R 3 ; 5
+LOAD*“” d ÿ 0
+LOAD", R 3 ; 5
+RUN“” D 9 0
+MERGE“” i) FF ]
+MERGE“” R 3 FF )
+
+Common call in $E2B3
+
+Note: Based on the ROM coding, there is a LOADM command "...", &HXXXX. This allows to load a binary file to an address relative to that of normal loading. Thus LOADM "", &H2009 loads a program at the start address + 2999. The execution of this command in machine language is done by storing the address in $219C-219D.
+
+
+===== Page 94 =====
+LE MAGNETOPHONE | 95
+
+USING MONITOR ROUTINES
+
+= Remote control of the tape recorder
+
+As you may have noticed, the MO5 is specially designed for computer use. As a result, the remote control only acts on the playback and recording keys, and it can be called by the monitor. The call must be made by SW! having as index code $22.
+
+O MOTOR ON
+
+The engine can be started in two ways:
+
+— Before a backup, therefore, a delay of one second must be made to obtain a stabilization of the band.
+
+Make : LDA #$93
+SWI #$22
+RTS
+
+— Before loading, in this case there is no delay.
+
+Make : LDA #$91
+SWI #$22
+RTS
+
+co MOTOR OFF
+
+The engine is stopped after a backup or loading after a half-second delay.
+
+Make : LDA #$92
+SWI #$22
+RTS
+
+O Test for the presence of the tape recorder
+
+If after a SWI #$22, the restraint is set to 1, it is that the device is missing. We can test it by doing: LDA #$ value
+
+SWI #$22
+
+BCS error
+
+RTS
+
+TM Block backup and loading
+
+This routine allows you to transfer a memory block stored in a buffer to the tape recorder, or from the tape recorder to the computer. The call is made by an SWI indexed by $29.
+
+
+===== Page 95 =====
+96
+
+PERIPHERIQUES DES MOS ET TO7/70
+
+O Backup
+
+The call logs are A, B, Y. A must be set to @, it indicates the backup.
+
+It must contain the buffer address in which the data is located. This buffer must have a byte indicating the length of the block, the block by itself and finally a checksum byte (addition then supplement to two). The length is equal to the actual length of the block plus two.
+
+1 byte   n  bytes   1 byte length . checksum n+ 2 data
+
+B shall contain the type of block:
+
+800 for a block with file initialization signal $01 for a SFF data block for a block with file end signal
+
+Regardless of the type of block at each backup, the following bytes are found on the magnetic tape:
+
+16 bytes 2 bytes 1 byte 1 byte n bytes      1 byte \ byte type at 1 3C
+
+The block type is used only for loading, to determine the status of the loaded program.
+
+Example backup: Engine start-up
+
+CLRA
+
+LDB #                    ; type of block
+LDY #                    ; buffer
+
+SWI #9$20
+
+Engine shutdown
+
+
+===== Page 96 =====
+LE MAGNETOPHONE | 97
+
+O Loading The call records are Y and A: Y must contain the buffer address in which the data loaded A will be stored must be different from 9 — read.
+
+Example: Engine start-up
+
+LDA #501
+LDY #                    ; Buffer
+SWI #$20
+
+The return parameters are A and B:
+
+A indicates the checksum test, if it is at %, no error was encountered (calculated checksum and read checksum equal), otherwise it contains the calculated checksum.
+
+B contains the block type.
+
+
+===== Page 97 =====
+10
+
+The disk drive
+
+It is identical to the TO7 or TO7/70, only the DOS (Disk Operating System = disk management program) is specific to the MOS.
+
+The DOS occupies two memory locations: $2,700 to $4700 and SAGOP to SA7BF.
+
+It allows, in addition to disk management, the acquisition of new BASIC functions that make better use of the MO5.
+
+The major differences between DOS MO5 and DOS TO7 are the absence on MOS of: CVD,MKD$ (double precision calculations).
+
+However, there are new functions:
+
+HEX$: allows decimal conversion to hexadecimal.
+
+Example: ?HEX$(255)
+
+SEARCH: Searching for strings in a BASIC program.
+
+Example: SEARCH "REM" Search the Rems of the program and display them on the screen.
+
+AUTO: allows automatic numbering when between Basic lines: the first line is specified and uncreeded.
+
+Example: AUTO 169.19 DEFFN: allows you to define a numerical function. Example: DEFFN A(N) = N + 3
+
+DEFUSR: Sets the starting address of a sub-program in machine language.
+
+Example: DEFUSR = &HE8FC
+
+
+===== Page 98 =====
+THE DISK DRIVE
+
+FN: provides the result calculated by a predefined function. Example: ?NAF(N)
+
+USR: allows calling a sub-program in predefined machine language.
+
+Example: ?USR(@)
+
+For all other functions, please refer to the TO7 BASIC DOS manual.
+
+FUNCTION ADDRESSES BACK MOS5
+
+Here's how we gave you the basic, DOS function addresses
+
+MOS.
+
+Code
+
+(Hexadecimal)
+
+D6 D7 D8 D9 DA DB DC DD DE DF Ep E1 E2 E3 E4 E5 E6 E7 E8 E9 EA EB EC
+
+FF A7 FF AB FF A9 FF AA
+
+Function
+
+DSKINI DSKO$ KILL NAME FIELD LSET CSRT PUT GET VERIFY DEVICE DIR FILES WRITE UNLOAD BACKUP COPY CIRCLE PAINT DRAW RENUM SWAP SEARCH
+
+DSKF CVI Cvs None MKI$
+
+Address
+
+31FC
+44B3
+2AGA
+2A96 425B 4297 4296
+42DD
+42DE
+2A85 2A6D 2956 3E7A 3F69 3F34
+3FBD
+4112 33C 3462 3B28 38D7 3719 3675
+
+2EE9
+4489 448C None 44A ÿ
+
+
+===== Page 99 =====
+100 | PERIPHERIQUES DES MOS5 ET TO7/70
+
+Code (hexadecimal) Function Address
+
+FF AC MKS$ 44A3
+FF AD None None
+FF AE LOC 2F0F
+FF AF LOF 2F57
+FF Bÿ SPACES 3793
+FF B1 STRINGS 36E4
+FF B2 DSKI$ 4514
+
+Note: HEX$, AUTO, USR, FN functions are encoded in BASIC functions.
+
+BACKUP AND LOADING IN BASIC FORMAT
+
+The backup and loading routines on diskettes are identical to those on cassettes, only a system variable is to be positioned to select the device; It is located in $218E. Enter $2 to select the tape recorder and $80 to select the disk drive. Please refer to the chapter "Magnetophone" for calls to different routines.
+
+MICROSOFT DISK FORMAT
+
+The MO5 uses formatting derived from IBM 3749. Hey! works in single face, single or double density.
+
+There are 49 tracks, composed themselves of 16 sectors. Each sector has 128 bytes. So we have 89 Kbytes formatted. Some tracks are reserved for disk management, others are available for the user.
+
+
+This table allows the system to recognize the free place on the disk.
+
+The MO5 divides the 89 Kbytes of the disk into 89 blocks of 1 Kbytes. These blocks are numbered from 9 to 79. Each block has eight sectors, so there are two blocks per track. Here's how the blocks are coded:
+
+
+===== Page 100 =====
+LE LECTEUR DE DISQUETTES | 101
+
+Track Block Sectors
+g.......... g.......... 1-8
+1.......... Ü.......... 9-16
+2.......... 1.......... 1-8
+3 .......... 1.......... 9-16
+4.......... 2.......... 1-8
+5.......... 2.......... 9-16
+
+78.......... 39 .......... 1-8
+79 .......... 39 .......... 9-16
+
+The File Allocation Table lists each block and indicates its status. It's on Runway 29, Sector 2.
+
+Each block is listed by one byte.
+
+The byte is zero. Byte 1 corresponds to block @, byte 2 to block 1, ..., and byte 89 to block 79. The state of each block is defined as follows:
+
+SFF: free SFE block: system block or physically non-existent
+
+— value between [9,$8F]: occupied block. The value is the number of the next block of the file.
+
+— value between [$CI-$SC8]: last block of a file. The low weight quarter indicates the number of sectors used in the last block.
+
+= Directory
+
+It contains the name of the disk files and is located track 29, sectors 3 a 16.
+
+We can code in single density up to 56 names, and 112 in double density, each name making 32 bytes. These 32 bytes are distributed as follows:
+
+bytes $6 to $7: file name (8 letters)
+
+bytes $8 to SA: name extension (3 letters)
+
+
+===== Page 101 =====
+102 | PERIPHERIQUES DES MOS ET TO7/70
+
+byte $B: file type, @ BASIC program 1 data 2 binary file 3 source file
+
+SD byte: ASCII flag, SFF ASCII $00 binary bytes SE-$SF: number of bytes used in the last sector of the file
+
+bytes $19-$1F: unused The first byte of each location reserved for the name determines the status of this location:
+
+S00: Free location (in the case of file deletion, the location is coded as a free location, but will be a priority for creating the next file).
+
+[$20-$7E]: occupied location (the value corresponds to the first letter of the name). SFF: logical end of the directory. ® Boostrap
+
+This DOS loading program is located at Runway 9, Sector 1. It shall not exceed 128 bytes and shall be supplemented with two. The last byte must be the checksum of the first 127 bytes not supplemented + $55.
+
+USING MONITOR ROUTINES
+
+= Formatting a diskette
+
+The call is made by an SWI indexed by $2A. Parameters are system variables:
+8204F-52059, $2049 et $204D.
+
+$294F-$2059: must contain the address of a 256-byte buffer required in
+
+formatting $2949: must contain the diskette unit number $264D: must contain the interlacing factor (normally 4).
+
+The return parameters are the CC bit C which is 1 if there is an error. In this case, byte $2043 contains the error code:
+
+$91: disc protected in writing. $19: disk drive is not ready (engine running or lock is open)
+
+$49: Inoperative controller.
+
+
+===== Page 102 =====
+LE LECTEUR DE DISQUETTES | 103
+
+Example: SWI #$2A BCS error
+RTS
+
+Boostrap
+
+It allows the loading of the DOS and the program initialization saved under the name "AUTO-BAT". The call to this routine is made by an SWI indexed by $28.
+
+Return settings are $2943 and $2080:
+
+$2043: contains the error code if the boot was interrupted: — $69 checksum error, — for other values see next chapter.
+
+$2080: is the player's presence flag: — $FF disk present, — $0 disc absent.
+
+If the disc is missing, or if there is a checksum error, $2989 is set to zero and a call is made to the cold start routine ($F900).
+
+Example: SWI #$28
+RTS
+
+RWTS Routine
+
+It allows the writing or reading of an area of a track. The call is made by SWI indexed by $26.
+
+Q The call parameters are as follows:
+
+$2049: must contain the drive number [9.3]. $204B: must contain the runway number [9.39]. S294C: must contain the sector number [1.16].
+
+$294F-$2959: must contain the address of a 128-byte buffer. $2048: must contain the operating code defining the desired operation.
+
+- $1: controller initialization
+
+— $92: reading a sector
+
+— $68: writing a sector
+
+— $29: Head position runway 9 — $49: Head position runway n — $80: Backup check
+
+O Return parameters
+
+CC bit C is at 1 if there is a mistake. In this case, $2043 contains the error code:
+
+
+===== Page 103 =====
+104
+
+PERIPHERIQUES DES MO5 ET TO7/70
+
+591: 502: S04: 08: 19: $29: $49: $80:
+
+disc protected in writing
+
+Track error (it does not match expected)
+
+sector error (impossible)
+
+data error (impossible)
+
+disk not ready (engine running or lock not closed) verification error (there is a difference between buffer and saved sector) inoperative controller
+
+Unformatted diskette.
+
+— Initialisation of the controller
+
+This option allows to test the controller's condition and informs about drive density. If the carry is zero, $2943 contains the drive type ($43: single density, $44 double density). Otherwise $2943 contains $49, i.e. inoperative controller.
+
+Example: LDA #$91
+STA $2048
+SWI #$26
+BCS error
+RTS
+
+Positioning of the track tie n
+
+This operation positions the head on the specified track in $204B. If bit C is $1, $2043 can contain $10 or $89 errors.
+
+Example: LDA #$19
+STA $204B                ; — Runway 16 positioning
+LDA #$4¢
+STA $2648
+SWI #926
+BCS error
+RTS
+
+Head position on track 0
+
+Allows to position the head on track @. If bit C is $1, $2043 contains errors $19 or $89.
+
+Example: LDA #$£@
+STA $2948
+SWI #$26
+BCS error
+RTS
+
+
+===== Page 104 =====
+LE LECTEUR DE DISQUETTES | 105
+
+— Reading a sector
+
+Reads the area specified in $294C of the specified runway in $294B and stores it at the address specified in $204F-$2050.
+
+Example: LDA #$92
+
+STA $2948
+
+LDA #93
+
+STA $294C                ; — reading stage 29 sector 3
+LDA #29
+
+STA $2048
+
+LDX #$600¢
+
+STX $204F
+
+SWI #226
+
+BCS error
+
+RTS
+
+— Writing a sector
+
+Writes the buffer specified in $204F-$205¢ to the runway presaged in $204B, sector specified in $204C.
+
+Example: LDA #908
+
+STA $2048
+
+LDA #93
+
+STA $294C
+
+LDA #92                  ; — Writing track 2 sector 3
+STA $204B
+
+LDX #96909
+
+STX $204F
+
+SWI #$26
+
+BCS error
+
+RTS
+
+— Verification of an operation
+
+The operating code is $89 plus the operating code of the operation that we want to verify. So to check a sector backup, the operating code is
+
+$88.
+
+Example: LDA #%88
+
+STA $2948
+SWI #$26
+BCS error
+RTS
+
+
+===== Page 105 =====
+106
+
+11
+
+The communication interface
+
+The Thomson communication interface works on MO5 only in parallel mode, here's how it can be used with a Centronics standard printer. The call to the parallel output routine is made by an SWI indexed by $24.
+
+= Call settings are Registry B and system variables $2042 and $2077
+
+B contains the ASCII code to be sent to the printer. $2042 represents the type of transaction performed:
+
+Writing one byte: 1 Graphic copy: 2 Port opening: 4 Port closing: 16
+
+$2077 contains in the case of a graphic copy, the byte to send to the printer to switch it to graphic mode.
+
+The return parameters are the CC registry and the system variable $2043
+
+Deduction C is positioned at 1 if there is an error in the operation performed.
+
+$2043 contains the printer status after a routine call (error or type of operation).
+
+—
+
+Writing: Occupied device: 8 Graphic copy: 2 Closing: 16 Opening: 4
+
+
+===== Page 106 =====
+L'INTERFACE DE COMMUNICATION | 107
+
+= Port opening
+
+LDA #9504
+STA $2042
+SWI #24
+BCS error
+RTS
+
+= Writing one byte
+
+LDA #3201
+STA $2942
+LDB #octet
+SWI #$24
+BCS error
+RTS
+
+@ Port closure
+
+LDA #219
+STA $2042
+SWI #924
+RTS
+
+@ Graphic copy Works on printer PR 99.949 and on all compatible printers. It is necessary to put $07 in $2077 (at ignition the value is taken by default).
+LDA #02
+STA $2942
+SWI #$24
+
+BCS error
+RTS
+
+
+===== Page 107 =====
+108
+
+12
+
+Sound and music
+
+BEEP KEYBOARD
+
+Several different calls make this sound beep. # First, it can be called via an SWI with index code of $68. So just run:
+
+SWI #$08 3F 98
+RTS 39
+ou SWI #$88 3F 88
+
+@ You can also make a direct call to beep's Bassic routine. To do this, simply execute:
+JMP $ E8FA
+
+= Finally, you can call the monitor directly in SFACB. At this address is a short routine making a PIA 6821 call loop. It is the length of this loop that will vary the length of the beep.
+
+Let's look at this routine:
+
+
+===== Page 108 =====
+SON ET MUSIQUE | 109
+FALE 4F CLEA
+FALL BP Ae Ci OTA HPLC 1
+FALF- 4th. LHUH
+PHU GE LRE
+Hide SL IHCE
+FAG SR FC BRL $F AD 1
+FAG4~ Hi 11 CAPA #611
+FHLE- de F4 HE $F AL
+RAL 34 Rls
+
+We see that it is the CMPA #$11 that determines the number of loops performed. So if you want to change the beep, just transfer this little routine to a free memory area and change the value #$11.
+
+Here is an example of a transfer with the ODIN program:
+
+SAGE f LL
+Si bY Hé LI ST SAV I
+BME THICA
+EAS SF CLRE
+SIE SL IHCE
+BBE SH FL EPFL SoHE bMS Ge TMFA
+BABE ce F4 BHE BIE À
+BAD 52 iT
+
+You get a beep that lasts four times the normal time.
+
+MUSICAL SYNTHETIZER
+
+Just like Basic, you can play music on an MOS. The call to routine music is made by an SWI having for. indexing value $1E.
+
+The note to be played must be placed in the B accumulator, while the tempo, duration, stamp and octave parameters must be stored in the reserved system variables.
+
+@ Note value Note Code Note Hexadecimal Hexadecimal Code
+Pause ......... 30 FA#........... 37
+DO ............ 31 SOL ........... 38
+DO# .......... 32 SOL# ......... 39
+RE ............ 33 LA ............ 3A
+REX .......... 34 LA ........... 3B
+MI............. 35 SI............. 3C
+
+
+===== Page 109 =====
+110 | PERIPHERIQUES DES MO5 ET TO7/70
+
+= Tempo $203A This setting sets the general tempo of the air you want to play.
+
+This tempo is between 9 and SFF; The lower the value, the faster the tempo. For more information, see Basic Manual, page 84.
+
+@ Duration $293C This parameter defines the relative duration of the note. The duration is between $1 and $60. For more information, see Basic Manual, page 83.
+
+= $203D stamp This parameter defines the note stamp. This stamp is between @ and SFF, @ making a continuous sound play and $FF a sound very quickly cushioned. For more information, see The Basic Manual, page 85.
+
+= Octave $203F This parameter defines the octave of the note. This octave is between 1 and #19, 1 being the most acute octave, $19 the most serious.
+
+@ Default
+
+At ignition, each of these parameters has a specific value:
+
+Tempo: $05 Duration: $18 Stamp: $0 Octave: $42
+
+If you do not want to change these parameters you are therefore not obliged to update them before executing a note.
+
+Example: Run a Do with the original settings:
+
+LDB #$31
+SWI #$9E
+
+Performance of a Do, octave 3, stamp $19, duration $19, tempo $19:
+
+8693 LDA #03
+B7203F STA $203F         ; octave
+8619 LDA #$19
+B7293D STA $293D         ; stamp
+B7293C STA $203C         ; duration
+B7293A STA $2463A        ; tempo
+C631 LDB #231
+3F9E SWI #$9E
+
+
+===== Page 110 =====
+111
+
+13
+
+System variables
+
+This short chapter is a summary of all the system variables we have discovered to date.
+
+It also allows you to find the page that will give you more details about a given system variable.
+
+Address Function Page
+
+2019 Status variable
+
+201B Slider line 76
+
+291C Slider Column 76
+
+201E First window line
+
+2920 Last line of the window
+
+2029 Colour variable for graphs 82
+
+292B Colors ink and bottom 76
+
+2036 Display variable 82 ASCII code for PLOT and DRAW
+
+2939
+
+263 ay Tempo for music 110
+
+203B .
+
+time for one note 110
+
+293D Stamp 110
+
+208E
+
+Octave 110
+
+2942 Ordering the printer line 106
+
+2943 Status of the printer line 106
+
+2048 Drive Control 103
+
+
+===== Page 111 =====
+112 | ASSEMBLEUR ET PERIPHERIQUES DES MO5 ET TO7/70
+
+Address
+
+2949 204A 204B 204C 24D 294E 294E2005E2069 2961
+
+2969
+
+Function
+
+Drive Number Runway Number
+
+Sector Number Interlacing Factor Controller's Status
+
+Drive input/output buffer pointer
+
+SWI pointer
+
+Interrupt Timer + Flag
+
+IRQ pointer + flag
+
+FIRQ pointer + flag
+
+Monitor input table + flag
+
+Keyboard decoding table + flag
+
+User character generator pointer + flag
+
+System character generator pointer + flag
+
+Keyboard repeat time Single or double density flag Driver presence flag
+
+Basic End BASIC Finish Variables
+
+Final table
+
+Page
+
+103 103
+
+103 102
+
+102
+
+90 90
+
+90 90
+
+103
+
+
+===== Page 112 =====
+113
+
+Appendix 1
+
+Conversion table
+
+— Conversions: decimal, hexadecimal, binary
+
+— ASCII codes
+
+— Supplements to one, to two
+
+Supplement to two
+
+Supplement to one
+
+Value of byte
+
+Biennial
+
+Hexa.
+
+Binaire Dec.
+
+Binaire Dec. Hexa.
+
+Hexa.
+
+ASC
+
+Dec.
+
+00000000 :
+
+0
+
+0
+
+11111111
+
+t FF
+
+259
+
+00000000
+
+wwe Omd
+
+Orn add
+OID 1 1 Ww
+
+YMA MOGONS WNT MG AOAD!
+
+aOon GW Bhoibiuuu
+
+HIS CITTTTT
+Ca CE CA CA Ca
+
+11110100
+111001 111001 111000 111000
+
+F4 3 1 0 F
+
+MMA © a TT TT M
+
+44
+
+Ci CAC CI CA CAC
+
+11110011
+111001 111000 111000
+
+DIN TTT TI
+
+Ca C4 Ca CA C4 CA CA Ci C4 Ci CA C4 CA CA Ci CA Ci Ce
+
+0000101
+0000101
+
+O =
+
+© 4 CIN TU SO IN Ga ae
+
+OOmm OO
+em ed et et OO
+mm mm A ODO
+© OO © = mi
+© © OO O©
+ecocoooooocoso
+
+© O EU unix
+
+CHM TU CR
+ei ed mi at et
+
+WAROM cae
+
+J Li ld tt td Lu Lu
+
+X © mM
+
+ud
+mM) mm MM
+CA CA CA CE CA CA CA
+aon OHO and eooenrxn coon an Oooo © ana nH st mi © oooooo$o AeA ed and rt
+M mt et ei et ed
+mmmmmm mm SX BON
+
+00010011
+00010100
+00010101
+
+Do Om: Am.
+
+YOU!
+
+Li i Li Lj
+
+SOUL 4
+
+Cite Ci
+
+We © and
+
+rr
+
+ao
+
+itt + 0001110
+1E : 0001111
+
+It
+
+ano
+
+4 CI
+
+wr
+
+00011111
+
+11011110
+11011101
+
+[IF OF
+
+23 On)
+
+20 22 295 Boe Bee Ae
+
+00100000
+00100001
+
+20 21
+
+on eee Ave
+
+11011110 :
+
+THE:
+
+ea
+
+21 : nl:
+
+cn as
+
+00100010 :
+
+
+===== Page 113 =====
+114 | ASSEMBLEUR ET PERIPHERIQUES DES MO5 ET TO7/70
+
+Supplement to two
+
+Supplement to one
+
+Value of byte
+
+Binaire Dec. Hexa. Biennial
+
+Hexa.
+
+Binaire Dec.
+
+ASC Héxa.
+
+Dec.
+
+1011101
+1011100
+11011011
+
+1 1
+
+221
+
+11011100
+
+San]
+
+11011910
+1101100
+
+cS
+
+11010111
+11010110
+11010101
+11010100
+
+216 21s
+
+11010111
+
+00100104
+
+00100100
+1 © i ©
+
+00100011
+
+23 24 25
+
+Rx
+
+SMM
+
+0100114
+00101000
+
+26 27
+
+NOT
+
+o © PG
+
+26: 29 2A
+
+( ) #
+
+© ri td TT
+
+11010001
+11910000
+
+11001111
+
+Four four? Î
+
+Oo
+
+L A t [ r
+
+cpr CA & erin nr OO
+CA Ci Ci CE Ca Ci
+gold Cn coe Cureton eoococcn oce cto «a tee es © SSSOCCS annie mi mi mi is m e
+
+LEARNING THAT MY COGN mm OOS
+Ci Ci Ci Ca Ca Ci
+1 CS © m1 AS
+O vi ed mi mi C
+sm © S SOoCSCO ecooo0o
+ETE OE MO
++ ei NN ©
+
+i: CF:
+
+207
+
+11001110
+
+EC.
+
+7a
+
+206
+
+00110001
+90110010
+00110011
+
+00110100
+00110101
+
+if
+
+Ti
+
+1001101
+
+mi
+
+Se
+
+11001100
+11001011
+
+1001100
+
+a
+
+20 20%
+
+33 34
+
+11001010
+11001001
+
+11001000
+
+11001901
+11000111
+
+00110111
+00111000
+
+00110110
+
+39 36 37
+
+5-6?
+
+= oe we
+
+AN
+
+i Ww is
+
+11001000
+11000111
+
+200 | CB :
+
+C7
+
+199¢{
+
+38:
+
+Lee)
+
+D ui
+
+11000110
+41000101
+
+C7 CEC C4 C3
+
+199 198 197 196 19%
+
+11000110
+11000101
+11000100
+
+11000011
+11000010
+
+11000001
+11000000
+10111111
+
+CEC C4 C3 C2
+
+00111100
+
+00111011
+00111101
+
+3 3 3k 3 SI
+
+D see om vy jf
+
+ROA C 4 iw ©
+
+11000010 :
+
+C2
+
+194
+
+00111110
+
+SE.
+
+1
+11000000 :
+
+1 CO à
+
+19 192
+
+co RF
+
+192 191
+
+00111111
+01000000
+01000001
+01000010
+
+3F 40 4 1
+
+C ©
+
+1 i 0 :
+
+1011111:
+1011111
+
+BF BE.
+
+191 190
+
+10111110
+10111101
+
+KE. AND
+
+190 189
+
+C
+
+Tax
+
+10110100
+
+md ed ed vd md st rt ct
+
+c EH A y 8 7 6
+
+H4
+
+NT CN DoTXL
+
+TITI ST
+
+YES
+
+GUN TH ONDO OMS UN
+VITO0VOICINRNRNRNNNRR
+
+oun ©
+
+SO © ©
+
+1 : O :
+
+011000 011000
+
+as
+
+10110000
+10101111
+
+1
+01010000
+
++ 0100111
+
+4F 50
+
+On
+
+& © N®
+
+monononoxn Ox
+AMG mm © O 14 MOD
+© © © O mt ri 1 es
+me mi mm OOCOOLO
+ocooococoococococse ratte nnd ena se A ocooooooococsg Anne adn ei
+
+UN TTITITTTTTTdaLd
+
+Cm mO mm OO mi O mi © mm
+AOC nF KH COON BF OO
+warm OCC Oa AH HO Andante eA COOOOD eooooooooscoso Bn nnn ei ea SS eoooooooooooceseed it ana sete
+
+WOMEN QT qqqcqcccccccCcce
+
+SRE 0 0 0 0 6
+
+01010001
+101001 101001 101010 101010 101011
+
+aAOMT URO Tao
+HHH GV KOVWN OWN
+
+Geonrarasxyenus
+
+st GNT UN ON D © MU
+DOODOmaOe a
+
+
+===== Page 114 =====
+TABLEAU DE CONVERSION | 115
+
+Supplement to two
+
+Supplement to one
+
+Value of byte
+
+Biennial
+
+Hexa.
+
+Binaire Dec.
+
+Hexa. Binaire Dec. Hexa.
+
+ASC
+
+Dec.
+
+MsMeAoCuW ARO TH
+TITI 0 0 E D D 0
+
+Um OR DNS
+G © 6 Ou LU LU US U3 UM 1
+
+Ci nm © à ii ES © À € 9 ©
+T TT OO O0 09 0 À Oo O D
+
+Ca rt © D ON OWT OC
+NSN MON Li LU BW
+Addn nA Meet
+
+Huw won TOR
+5 LU) L3 0 © © © © © © ©
+
+M < iy Co UT US a
+
+orm moTnmvwvnaaoccesc
+SO Q OO OO ri ri m4
+
+DR OU TS Cm © à ut
+Q OS © © 0 O OC À © CO
+
+HmORKRDN dun TU DITS ret
+A A A 7 4 ei di 4
+
+RNWPM Ci ei O LL ui a
+
+GS & oeo © G
+
+gl
+
+141 4 3 3
+
+10001100
+
+© © © © © © O © O0 D CO CO D DE
+
++ OQ  ŒOUN SO 0 TP Ci 4
+
+DT i a a a a a a
+mm et ed ed ee |
+OnmnOCOmOmOmO mm Omi © OO nm © O mm Oon Ceoc Ona HOOD med mt ed ed BT OOD
+DOCS OOOCS mm m4
+ed and Assttt mi and tds nm mie oocoooococoe
+
+£2 trA EcCOata
+
+TNOVUWUADAOAAIMS
+
+AOR CWT SG&A OL ui
+OS OO
+
+SL TO DR CU NTM HH C À Li
+
+GSOOGODTODOORRR
+OHDENCAIST AU OO à DIN GW
+TIMOMNMMMOMM CC CI TDi Ci
+Ci mi mi mi
+ACH OAR OA CHO ROOTS
+Hoon eH OCH HOC AR OO = © meet nt OO OO mt mi AB HOSS DOOOOmm mm ei ei SOTO
+ed ed ei ed AA KH © © ©
+Sd sess sw Ht OO © AMA et nt ster mm CG OC ecocoosco ooo mm rm MmMTMOwoR BCA CHO Ju Om ti
+NARARARRNRRN NRK GO G
+
+No. 3 >
+
+5 SON &-.
+
+SXANWw-- Don't? +
+
+SPonAAMT OOK GAS
+
+SOO 00 6 A et wt ei et et ed et et AGE Ca CA CA CI CEO OE OL
+
+start-ups wn nts sd stat and
+
+mt dl
+
+mt ed ed ee mi md
+
+01111101
+
+i ZI
+
+125
+
+01111100 |
+
+1 7C
+
+124
+
+10000011
+84 : 10000100 |
+BS: 1:
+
+111110
+111101:
+
+© © ©
+
+1000010
+
+Ci T GG
+
+The)
+
+10000110
+
+111100 111101] 111011 111010
+01110100
+01110011
+
+u} © = © à ©
+OBS Am and mi
+
+110111 110111
+01101101
+01101100
+
+This Cun On Oe HOO rn Con OCornnA ANS Coonan ee = ant OoOCooSo an te ms ooococosgo Lim ou LES QC À
+BN BK OG 0 © NG
+TOO DN Aare mi ri OOS mm
+Cm mm or ©
+Cran OOnrn C mann OCcoOHAart OCC SOO OO aA nwt cocococoeoce oococooc¢
+
+SeRTesges rerwwwsws es
+
+01101010
+01101001
+
+6A 69
+
+106 105
+
+10010101
+10010110
+
+oo 96
+
+
+===== Page 115 =====
+116 | ASSEMBLEUR ET PERIPHERIQUES DES MO5 ET TO7/70
+
+Supplement to two
+
+Supplement to one
+
+Value of
+
+Biennial
+
+Hexa.
+
+Binaire Dec.
+
+Binaire Dec. Hexa.
+
+Hexa.
+
+ASC
+
+Dec.
+
+ACC M OMOMOMOMOMOMOMmMOMMOMMOMMOMMOMMO MO m1 O mm O m1 © OCrmimOOmmOOmmOOOCmmOO mm © O mm OO mm © © OOrnmmmm mm OO OO tn met OO CO and and mi mt OO OO mm mi mi OO SO mi OOMOOOOOCOOCCOmm mem mm mm OO 000 OO Om A and mi mi mi LOLCO0000O0m mm mt mt mt OCO0VCOCO enrinnrinntintintint niente es OCooooooooooocooocoocooscooso oo eaten e Oe eeooooocococococococococococococococcdo
+CER LVHTNMNMBAOUWEAORMTIADA CUT M Ti nm © à ui ni Q LE TO LC
+CS © CG © © © 0 © 0 0 Lu LU) LU) LU) LU M) LM 1 DU DUMONT T
+wT Ms Die ©
+
+D SOCOOCOHNDR CU TM Ci mm ON DS DU TM Ci mt © O GI CUS TN si
+et et OÙ OS OS Où OS Où © Où © à © GG D D DOG D'OR RRRRR ER RN
+LOC mMOMMOMOMOMOMMOMMOMMOMOMO MO MO m1 OO — Sn COmmOO0OmmOOmmOOmmMmOO mm OOmmCO— SCreerAoooco Om Ft BHO OCCO Nn HB BMH OCC CH ae eB HT COS CC a ~TMm~OoccoceocoOxan tt tnt tt tA ABO OC OC OC On Kn At mi AAS CoO COCO COCO aA a ei et et ed mi mi ei mt HN HB mi OO OCOCCOOS Am dmtmmO O0 oo OC OCOC0O00O0OCCO OC ©
+de ol ot ed ot oo ot ot et ef ed oo do ee ot ed ot 0
+cocoecoecoooooococosooooocococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococococoooocococococococoooococococococococococooooooooooooooooooooooooooooononononononononononononononononononononononononononononononononononononononononononon
+
+CSCOSOSCCORB OA ANT MAOADAVDWHN TMU AOOAOBA CUT M CIM FAM HOAOKOAHHOOKHKoOABAAAARBAAABAAKKRARKRARKRAKREKA =—=CcnocwaW OHO HON OTH OHWO HON OA OCHOTOAHO HO ARC AS =s=Ooorn SON BRO O mH HO OAH AB OO mm OO mm © Om mi OO 1 mi © wa OCCOn HAN OOCSCCH A TAH OO COmmCOCC mr mi ri © Cned mem OO O0 O000 OO mm me oi rm mt OO DOOSSCOS mn
+mi te et ed ed et md Oo OO OC OOO COCO Oo OO COO M mt ed et ot ed ed A es
+SODOCOOOO0OO et et et ei et ed et et el ed ed ed et et ed et ed dd et ed 0 1
+ecoocecscooococecooocooooesocoooscs
+Ce i ee ee ed ee ee em St di mi 4
+N DD € Où du Om UN YU) JUN D à LL OQ ES WU EL © m1 CN Tu) OR D
+BHO LLILTILLITTITTT EL EL 0 0 0 0 1 M
+AGMTMOVORDBAROATNMTNOGRDACANMTMVOR OROANN ST
+OWN VG VNOWOWMMIVOVVOWOGVVNOVDARAARAARAROGBWOB
+onan or ed ed dd eee M M 4
+
+01000111 :
+0:
+01000101 :
+
+7i 1 47 3
+70 | 44 | 0100011
+5
+
+67
+
+4
+
+1000110 :
+
+1000101 :
+
+1900100
+01000011
+
+ooo
+
+and
+
+1011100
+
+9 3
+A } 1011101
+
+H H
+
+Our mission
+
+68
+
+10111101
+10111110
+
+lt E
+
+mG mG
+
+54
+
+10111111
+11000000
+11000001
+11000010
+11000011
+
+63
+
+00111110
+
+E 31
+
+3
+
+62
+
+wn Gato BON
+
+61
+
+00111101
+00111100
+
+3C
+
+e1 60
+
+3
+
+C2 C
+
+TU GT OG So Ande
+
+my Got GB
+
+NO UG TOG Oa
+D LU Wd ud Ww
+
+ot
+
+00110010 |
+
+Keres MPM Mrs
+
+el a
+
+D SM Ci mm
+13 Wd US Lu
+
+QO
+
+THE Wl
+
+11001101
+
+CL
+
+EC
+
+© m1 CN rw
+oooos¢
+C4 4 CA CA CA C4
+
+0
+
+0110001
+0110000
+00101111
+
+©
+
+11001110
+
+©
+
+oF
+
+47
+
+11010000 :;
+
+
+===== Page 116 =====
+TABLEAU DE CONVERSION | 117
+
+Supplement to two
+
+Supplement to one
+
+Value of byte
+
+Biennial
+
+Hexa.
+
+Binaire Dec.
+
+Hexa. Binaire Dec. Hexa.
+
+ASC
+
+Dec.
+
+© OO m1
+et nt ei él AA OS
+0000600000 C
+mi ed ed te oo ed ei
+SOSCOD OO COCONUT
+OD000C0000CCO
+L UOTE R Ss
+Ci CA CA CCE Ci CA Ci CA CA
+NOWTM mC ÈX
+TIE TTTTTTTTTS
+On Ono BA O mi OT
+
+CA CA CA Ci Cd
+
+oon rt O OS Om mi mam © © © eoocos
+CRC RCE
+© © OC © ©
+© © © © ©
+DR Q
+Ci Ca Ca CA CI
+mA COGN
+TTS MGM
+on Ss
+
+TU ON SO relellel
+CE CA CA Ci CI
+
+tOmMmOmO mm OO mi
+OO mm OC mi AO
+am OooccoesxaAsr
+OO OOCOC A mi mi
+eco ococonanare Stent er ae HH OC O ecocooocecso ooocooooco wmiwTnece Ouw a
+Ca CA CI CE OO em mi m4
+NO w TM tia So O
+PPG mM MS Ci
+orcn Ond Orn CORN Cs MODOO a eins ooo o Oar ri ri
+COCO et mi ri
+rine mm OCC © eooocosoccosgo eoooooodco
+TMC Cu de CG
+Ci CECI CI Cm mi rt et
+SSI CAG
+COD DD GG THIS
+OmMmOmC mm OO m1 MOOmmOOmm Onmne nA OOSCS ret wr st HOO O © dim Ht OCOD
+SODOC mm ra
+tee and mi di mi mi mi mi
+LOS LOMUN
+Mee Su Li ig Lu SOMUTTN CR
+m OO CA CA CA CA CA Ci
+C4 Ca Ca Ca CA CA CA CA CA
+
+00011100
+00011011
+
+1C
+
+27
+
+11100100
+11100101
+11100110
+11100111
+11101000
+11101001
+11101010
+
+E 4 as
+
+00011010
+
+0 1
+
+0001101
+0001100
+
+D 6% v4
+
+E.
+
+eo Cl 19 i Ci Ci
+
+00011001
+
+00011000
+
+E.
+
+4 Pat Cd
+
+8: 9 3 A
+
+E E
+
+CIM Ly BON Ci CA Ci
+
+21 1 15 : 00010101
+
+7 Poss
+
+00010100 |
+
+14
+
+u3
+
+Te
+
+Gold Gn © Onn CS
+oO © Oo ©
+OO SC S ©
+oooco°o Trot. ©
+ms ei mi md
+co years
+in mi ei 4
+Cr Orn ew OC mm SOCTC eocca eoccso cocscsg coo © ©
+RE Ci = ©
+
+mm D QUE me Om Om oO OC mm Ss arin mi O srr at © cocoons mn nm test aetna mi Ueuwu ©
+Li ae té Li LL
+OAR À Oo ©
+IMM MM LT
+Ca CA C4 Ci Ca
+
+On Swe CCH nA OC
+dm COD CCK
+sms ee me SC eooceocse cococe¢ccoos cocococososc cooocoosc bo OR TOo UN
+ui TM Ci mm ©
+
+mi me mm mi HTK
+CS nm Om SC rt O m1 GC
+MC cern COSC nm mi msm re COC Sn
+on i on is Be oe OD |
+occoceocse csocecocse oeocccccocce ecoccoce Waomdcdaegns TMC AS stant Bt HO HR © —~Ccn Own O07 orn OO mm © © ©
+Q CO nt 3S
+SOLCLOSOC im
+mi et ne wt st
+TR dt ed et dt 4
+Mrs el ei ed and 4 mm
+MU TNI ON BH
+Li OO LL LE di Le Le Li
+AMM TOA OH
+rw rwrwyges
+Ca CA CA Ca Ca D CA Ca Ci
+
+0000019
+
+00900100
+
+4 3
+
+4
+
+11111011
+11111100
+11111101
+11111110
+11111111
+
+ü Ca Ca
+
+1 90000011
+
+3
+
+00000011 :
+
+3
+
+1
+
+3 2 1
+
+00000010 :
+
+FI FE
+
+FF
+
+00000001 :
+
+00000010
+
+00000000 :
+
+00000001
+
+0
+
+0
+
+
+===== Page 117 =====
+118 Annex 2
+
+Colour code
+
+ÿ : Black 8: Grey
+
+1: Red 9: Light red 2: Green 19: Light green
+
+3: Yellow 11: Light yellow
+
+4: Blue 12: Light blue
+
+5: Magenta 13: Magenta clear 6: Cyan 14: Cyan light 7: White 15: Orange
+
+Appendix 3
+
+Control characteristics
+
+Meaning Code (touch) CNT
+
+ly NUL
+
+01 SOH A
+G2 STX. .(STOP) B
+03 ETX C
+04 EOT D
+05 ENQ E
+06 ACK F
+07 BEL G
+g8 BS. .(<) H
+g9 HT. .(—) |
+19 LF..()) J
+11 VT..(f) K
+12 FF..(Raz) L
+13 CR. . (Entry) M
+14 SO N
+15 SI O
+16 DLE P
+17 DC1 Q
+18 DC2 R
+19 DC3 S
+20 DC4 T
+
+
+===== Page 118 =====
+119
+
+Meaning
+
+Code (touch) CNT
+21 NAK U
+22 SYN (ACC) V
+23 ETB W
+24 CAN X
+25 EM Y
+26 SUB Z
+27 ESC
+28 FS (INS)
+
+29 GS (EFF)
+39 RS
+31 US
+
+Appendix 4
+
+Special features of T07/70
+
+The T07/70 is similar to the MO5 on many points: it has the same processor (6809) and only its memory organization and system variables change address: compared to the MOS.
+
+This chapter serves you (if you have a TO7/70) to adapt everything we wrote for MOS5 on your computer.
+
+The first thing that changes is the MAP that we give on page 31 and that we give back here for your TO7/70.
+
+CARTE-MEMOIRE — TO7/70
+
+Addresses Occupied by (in hexadecimal)
+
+0000 — 3FFF Place reserved for ROM cartridges (16K)
+4009 — 5F3F Ecran (8K)
+
+5F3F — 5FFF Free
+
+6000 — 6OFF Page @ of the monitor
+
+6199 — 61FF Page @ of BASIC
+
+6209 — DFFF Memory available to the user (programmes
+
++ variables) = 31.5K
+
+
+===== Page 119 =====
+120 | ASSEMBLEUR ET PERIPHERIQUES DES MOS ET TO7/70
+
+Addresses Occupied by (in hexadecimal)
+
+E009 — E7BF Reserved for floppy
+
+E7C9 — E7C7
+
+E7C8 — E7CB Systeme 6821 (PIA)
+
+E7CC — E7CF 6821: game extension
+
+E7D9 — E7DF Reserved for floppy controller E7E9 — E7E3 6821: parallel interface
+
+E7E4 — E7FF Free for extensions
+
+E869 — FFFF Monitor
+
+Everything about machine language on the MO5 remains valid for the TO7/70 since these two machines have the same processor, the 6899. The first part of this book is therefore directly applicable on a TO7/70 (except for the MAP we have just seen above).
+
+On the other hand, the rest of the book needs to be somewhat modified for adaptation to the
+TO7/70.
+
+The attributes we are talking about on page 77 exist on TO7/70, but their codes differ. Here we give you the code to type after CHR$(27). The result is due to ?CHR$(27); CHRS(XX) with XX given in the following table:
+
+
+===== Page 120 =====
+PARTICULARITES DU TO7/70 | 121
+
+SHAPE BOTTOM ROUND SHAPE ROUND
+Strong Quartet
+— 4 5 6 7 8
+Low quartet  + ÿ black black black grey grey 1 red red red pink pink 2 green green light green light green 3 yellow yellow yellow light yellow yellow light yellow 4 blue blue blue light blue 5 magenta magenta magenta light magenta 6 cyan cyan cyan light cyan light cyan 7 white white orange orange: background characters 8 masking without color grey characters 9 with color pink scroll; A fast light green fashion ; B page yellow light size inversion , C normal video blue light D double ta clai height magenta light double scroll E width slow cyan light F double demask size Orange
+
+For example, if you want to get a slow scroll with dots without colors, you
+
+Type:
+
+?CHRS(27) ; CHRS(&HGE) ; CHR$(27) ; CHRS(&H68)
+
+On the other hand, all the system variables that we give in the second part of this book exist on the TO7/70, but differ by their addresses. This is easily understandable since the monitor page is in 2009 for the MOS and in 6999 for the TO7/70. Sometimes even the coding system is not the same in MOS and TO7/70. In this case, we indicate how the variable is coded in TO7/70. If not, you only need to refer to the corresponding variable for the MO5 to obtain its coding principle.
+
+
+===== Page 121 =====
+122 | ASSEMBLEUR ET PERIPHERIQUES DES MO5 ET TO7/70
+
+# Variable systems
+
+MO5 T07/70 Meaning
+
+A7CQ (74) E7C3 Coding around
+
+The coding differs significantly between MO5 and TO7/70. For TO7/70, this is the case:
+
+E7C3 = IX
+
+uw i
+
+4 3 bits for the color of the around Flag color: dark/light Head/minuscle flag (1) @
+(9) (1)
+202B (75) 693B Coding color shape and background
+
+Again, coding differs:
+
+6938 = \Z
+Flag background: dark/light Flag shape: (1) (@) dark/light
+(1) (9)
+
+Ju
+
+Color of the form Color of the background
+
+For example, if light green ink is to be obtained on a red background, this should be done as follows:
+
+Form: green — 2 = 919 clear — @ = @
+‘ol 1 = 145
+Background: red > 1 = 091 where 1991999 dark — 1 =)1
+
+201B (76) 691B Slider line (identical encoding)
+
+291C (76) 6929 Slider column (identical encoding)
+
+2929 (81-82) 6938 Color of a dot to display 2036 (81-82) 6941 ASCII code of the letter to display 201E 691D First line of the window
+
+
+===== Page 122 =====
+2024 2019
+
+2939 (110)
+203A
+
+293B (110)
+203C
+
+203E (110)
+203F
+
+293D (110)
+2942 2043 205E 2960 2061 2062 2064 2065 2067 2068
+
+2979 2071
+
+Display functions
+
+691F 6919
+
+)6931 6932
+
+6033 6034
+
+6036 6037
+
+6935 602B 692C 692F 6939 6027 6028 621 6922 6023 6024 602D 602E
+
+Last line of the Status Register window
+
+Tempo (music)
+
+Duration (music)
+
+Octave (music)
+
+Stamp (music) Print line Status line printer SWI pointer
+
+Timer
+
+IRQ pointer
+
+FIRQ pointer
+
+User character generator pointer
+
+PARTICULARITES DU TO7/70
+
+123
+
+Viewing a character: as for MO5 except that the routine address is
+
+E893 (<> SWI 92).
+
+Display of a graphical point: identical to MO5. Routine address: E89F
+(<> SWI #$19).
+
+Viewing a character: identical to MOS. Routine address: E833 (<=> $WI
+
+#216).
+
+Traced a line: identical to MOS5. Routine address: E89C (<=> SWI #$0E).
+
+Full screen window repositioning: E890.
+
+Keyboard
+
+Two routines as on the MOS: a quick scan and a return of the ASCII code
+
+Pressed key:
+
+
+===== Page 123 =====
+124 | ASSEMBLEUR ET PERIPHERIQUES DES MOS5 ET TO7/70
+
+Quick search: routine address: E899. If the key is pressed C = 1 (carry) otherwise C = 6.
+
+Slow screening: Routine address: E896. The ASCII code of the pressed key is returned to the B accumulator. If no key is pressed, then B = @. A routine of screening can therefore be:
+
+APPEL JSR #$E806
+TSTB
+BEQ CALL
+RTS
+
+# The optical pencil
+
+Two routines concern this device: one is used to test whether or not the validation contact is open, the other returns the coordinates of the target point.
+
+Microcontact status: Routine address: E81B. If you press the microcontacter, then C = 1 (carry), otherwise C = 6.
+
+Contact details of the target point: routine address: E818. On return: if C = 1, the reading is invalid; ifC = 6, the reading is valid and then we have the abscisse in X (from 9 to 319) and the order in Y (from @ to 199).
+
+= The joystick
+
+Scrutiny address joystick: E827. Input parameter: the joystick number in A (@ or 1). On return: value of handle in B and state of button in C (carry):
+
+C = @ = button dropped, C = 1 +> button pressed.
+
+
+===== Page 124 =====
+Completed printing in January 1985 on the presses of Laballery and C' 58500 Clamecy Legal deposit: January 1985
+
+Print No.: 501017
+N° d'édition : 86595-206-1
+ISBN : 2-86595-206-1
+
+
