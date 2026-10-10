@@ -4,14 +4,18 @@
 --
 -- CONFIG fields:
 --   mode           "basic" | "asm"
---   boot_frames    frames to wait for the machine to reach the BASIC prompt
+--   boot_frames    frames to wait for the machine to reach the boot menu
+--   menu_key       key typed at the boot menu ("1" = BASIC 128, "2" = BASIC 1.0)
+--   menu_frames    frames to wait after menu_key for the BASIC prompt
 --   line_gap_frames  pause between typed BASIC lines
 --   run_frames     max frames to let the program run before stopping
 --   done_addr      optional RAM address; program stores non-zero there to finish early
+--   done_page      RAM page (0-7) holding done_addr at $6000-$9FFF, nil = CPU view
+--   dumps          { {addr=, len=, page=, label=}, ... } memory ranges to report
+--   data_banks     MAME bank tags behind $6000-$7FFF and $8000-$9FFF
 --   basic_lines    (basic) lines to type, already including NEW / RUN
 --   segments       (asm) { {addr=..., hex="..."}, ... }
 --   entry          (asm) address to jump to
---   dumps          { {addr=..., len=...}, ... } memory ranges to report
 --   result_path    file the results are written to
 
 local CFG = CONFIG
@@ -40,6 +44,31 @@ local status     = "timeout"
 local notes      = {}
 
 local function note(s) notes[#notes + 1] = s end
+
+-- Access RAM page `page` (0-7) at $6000-$9FFF by switching the MAME bank around the access.
+local function with_page(addr, page, fn)
+    if not page then return fn() end
+    local tag = CFG.data_banks[addr < 0x8000 and 1 or 2]
+    local bank = machine.memory.banks[tag]
+    if not bank then
+        note("bank " .. tostring(tag) .. " not found; reading CPU view")
+        return fn()
+    end
+    local old = bank.entry
+    bank.entry = page
+    local ok, v = pcall(fn)
+    bank.entry = old
+    if not ok then error(v) end
+    return v
+end
+
+local function read_u8(addr, page)
+    return with_page(addr, page, function() return mem:read_u8(addr) end)
+end
+
+local function write_u8(addr, value, page)
+    with_page(addr, page, function() mem:write_u8(addr, value) end)
+end
 
 local function nk_busy()
     local ok, v = pcall(function() return nk.is_posting end)
@@ -78,10 +107,10 @@ local function write_result()
     for _, d in ipairs(CFG.dumps or {}) do
         local bytes = {}
         for i = 0, d.len - 1 do
-            local ok, v = pcall(function() return mem:read_u8(d.addr + i) end)
+            local ok, v = pcall(read_u8, d.addr + i, d.page)
             bytes[#bytes + 1] = string.format("%02X", ok and v or 0)
         end
-        f:write(string.format("mem %X %d %s\n", d.addr, d.len, table.concat(bytes)))
+        f:write(string.format("mem %s %s\n", d.label, table.concat(bytes)))
     end
     for _, n in ipairs(notes) do f:write("note ", n, "\n") end
     f:close()
@@ -106,14 +135,26 @@ local function on_frame()
 
     if phase == "boot" then
         if frame >= CFG.boot_frames then
-            if CFG.done_addr then mem:write_u8(CFG.done_addr, 0) end
-            if CFG.mode == "asm" then
-                load_segments()
-                set_reg("PC", CFG.entry)
-                phase, run_start = "run", frame
+            -- PC128 boots into a menu: 1 = BASIC 128, 2 = BASIC 1.0
+            if CFG.menu_key and CFG.menu_key ~= "" then
+                nk:post(CFG.menu_key)
+                phase, gap = "menu", CFG.menu_frames
             else
-                phase = "type"
+                phase = "ready"
             end
+        end
+
+    elseif phase == "menu" then
+        if gap > 0 then gap = gap - 1 else phase = "ready" end
+
+    elseif phase == "ready" then
+        if CFG.done_addr then write_u8(CFG.done_addr, 0, CFG.done_page) end
+        if CFG.mode == "asm" then
+            load_segments()
+            set_reg("PC", CFG.entry)
+            phase, run_start = "run", frame
+        else
+            phase = "type"
         end
 
     elseif phase == "type" then
@@ -129,7 +170,7 @@ local function on_frame()
         end
 
     elseif phase == "run" then
-        if CFG.done_addr and mem:read_u8(CFG.done_addr) ~= 0 then
+        if CFG.done_addr and read_u8(CFG.done_addr, CFG.done_page) ~= 0 then
             status = "done"
             begin_finish()
         elseif frame - run_start >= CFG.run_frames then

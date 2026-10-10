@@ -32,6 +32,7 @@ def main():
     ap.add_argument("bas")
     ap.add_argument("--clear", default="0x8FFF")
     ap.add_argument("--start", type=int, default=10)
+    ap.add_argument("--no-exec", action="store_true", help="only POKE the code (e.g. USR routines)")
     a = ap.parse_args()
 
     segs, exec_addr = segments(open(a.bin, "rb").read())
@@ -44,7 +45,7 @@ def main():
         ln += 10
 
     line(f"CLEAR ,{int(a.clear, 0)}")
-    line("READ A:IF A<0 THEN READ E:EXEC E:END")
+    line("READ A:IF A<0 THEN END" if a.no_exec else "READ A:IF A<0 THEN READ E:EXEC E:END")
     line("READ H$,C:S=0")
     line('FOR I=1 TO LEN(H$) STEP 2:V=VAL("&H"+MID$(H$,I,2)):POKE A,V:A=A+1:S=S+V:NEXT')
     line('IF S<>C THEN PRINT "CHECKSUM ERROR AT";A:END')

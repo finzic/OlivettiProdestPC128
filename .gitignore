@@ -25,3 +25,7 @@ output/*/English/translation.txt
 pc128-basic-ext/.tools/
 pc128-basic-ext/build/
 *.log
+pc128-basic-ext/investigate/out/
+pc128-basic-ext/investigate/*.bin
+pc128-basic-ext/examples/*/*.bin
+pc128-basic-ext/examples/*/*.lst

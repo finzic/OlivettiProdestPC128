@@ -25,7 +25,7 @@ def _result(report: dict):
 @mcp.tool()
 def run_basic(code: str, dump: list[str] | None = None, done_addr: str | None = None,
               run_frames: int | None = None) -> list:
-    """Run Thomson BASIC 128 source on an emulated Olivetti Prodest PC128 (MO6).
+    """Run PC128 BASIC 128 source (menu_key in config.json) on an emulated Olivetti Prodest PC128 (MO6).
 
     The program is typed into a freshly booted machine (NEW, your lines, RUN).
     Use numbered lines. Text is uppercased outside string literals.
@@ -36,8 +36,9 @@ def run_basic(code: str, dump: list[str] | None = None, done_addr: str | None = 
 
     Args:
         code: BASIC source, one numbered line per row.
-        dump: memory ranges to read back, "HEXADDR:LENGTH", e.g. ["9F00:16"].
-        done_addr: hex address; the program writes a non-zero byte there when finished.
+        dump: memory ranges to read back, "HEXADDR:LENGTH", e.g. ["9F00:16"]. In $6000-$9FFF
+            BASIC 128 banks apply: add "@n" for BANK n (default 6, the power-on bank) or "@cpu".
+        done_addr: hex address; the program writes a non-zero byte there when finished ("@n" allowed).
         run_frames: max frames (50 per emulated second) to run after RUN. Default from config.
     """
     return _result(run_job("basic", code, dump, run_frames, None, done_addr))

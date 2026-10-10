@@ -20,14 +20,20 @@ FPS = 50  # Thomson MO6 / PC128 video frame rate
 
 DEFAULT_CONFIG = {
     "mame": "mame",            # path to the MAME executable
-    "machine": "pc128",        # check: mame -listxml | grep -i -E "pc128|mo6"
+    "machine": "pro128",        # check: mame -listxml | grep -i -E "pc128|mo6"
     "rompath": "",             # folder with the Thomson ROM sets (MAME needs them)
     "lwasm": "lwasm",          # LWTOOLS assembler
-    "boot_frames": 250,        # ~5 s of emulated time to reach the BASIC prompt
+    "boot_frames": 250,        # ~5 s of emulated time to reach the boot menu
+    "menu_key": "1",           # boot menu: "1" BASIC 128, "2" BASIC 1.0
+    "menu_frames": 150,        # wait after menu_key for the BASIC prompt
+    "default_bank": 6,         # BASIC 128 bank read at $6000-$9FFF when no @n is given (power-on bank)
+    "data_banks": [":bank7", ":bank8"],  # MAME banks behind $6000-$7FFF and $8000-$9FFF (pro128, MAME 0.264)
     "line_gap_frames": 6,      # pause between typed BASIC lines
     "run_frames": 300,         # ~6 s of emulated run time
     "timeout_s": 120,          # real-time limit for the whole MAME process
     "headless": False,         # True adds -video none (screenshot may not work)
+    "floppy": "",              # .fd image for drive 0 (empty = no floppy controller)
+    "floppy_controller": "cd90_640",  # MAME extension slot device; needs its ROM (cd90-640.rom) in rompath
     "extra_args": [],
 }
 
@@ -52,11 +58,29 @@ def parse_int(value):
 
 
 def parse_dump(spec):
-    """'9F00:16' -> {'addr': 0x9F00, 'len': 16}. Address is hex, length decimal."""
+    """'9F00:16' or '9F00:16@3' (BASIC 128 bank 3) -> {'addr', 'len', 'bank'}. Address hex, length decimal."""
     if isinstance(spec, dict):
-        return {"addr": parse_int(spec["addr"]), "len": int(spec["len"])}
-    addr, _, length = str(spec).partition(":")
-    return {"addr": parse_int(addr), "len": int(length or 16)}
+        return {"addr": parse_int(spec["addr"]), "len": int(spec["len"]), "bank": spec.get("bank")}
+    spec, _, bank = str(spec).partition("@")
+    addr, _, length = spec.partition(":")
+    return {"addr": parse_int(addr), "len": int(length or 16), "bank": bank.strip() or None}
+
+
+def resolve_page(addr, bank, cfg, mode):
+    """RAM page (0-7) to read at addr, or None for the CPU's current view.
+
+    BASIC 128 maps 'BANK n' (n=1..6) to page n+1 at $6000-$9FFF; '@cpu' forces the CPU view.
+    """
+    if not 0x6000 <= addr <= 0x9FFF or str(bank).lower() == "cpu":
+        return None
+    if bank is None:
+        if mode != "basic" or cfg["menu_key"] != "1":
+            return None
+        bank = cfg["default_bank"]
+    n = int(bank)
+    if not 1 <= n <= 6:
+        raise ValueError("BASIC 128 bank must be 1-6 (got %s)" % bank)
+    return n + 1
 
 
 def lua_literal(obj):
@@ -158,8 +182,8 @@ def parse_result(path):
             name, _, val = rest.partition("=")
             res["regs"][name] = val
         elif key == "mem":
-            addr, length, hexbytes = rest.split(" ")
-            res["mem"]["%s:%s" % (addr, length)] = hexbytes
+            label, hexbytes = rest.split(" ")
+            res["mem"][label] = hexbytes
         elif key == "note":
             res["notes"].append(rest)
     return res
@@ -182,13 +206,24 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
 
     run_frames = int(run_frames or cfg["run_frames"])
     boot_frames = int(boot_frames or cfg["boot_frames"])
+    dump_list = []
+    for spec in dumps or []:
+        d = parse_dump(spec)
+        page = resolve_page(d["addr"], d["bank"], cfg, mode)
+        label = "%04X:%d" % (d["addr"], d["len"]) + ("@%d" % (page - 1) if page else "")
+        dump_list.append({"addr": d["addr"], "len": d["len"], "page": page, "label": label})
+    done = parse_dump(str(done_addr)) if done_addr not in (None, "") else None
     job = {
         "mode": mode,
         "boot_frames": boot_frames,
+        "menu_key": cfg["menu_key"],
+        "menu_frames": int(cfg["menu_frames"]),
         "line_gap_frames": int(cfg["line_gap_frames"]),
         "run_frames": run_frames,
-        "done_addr": parse_int(done_addr) if done_addr not in (None, "") else None,
-        "dumps": [parse_dump(d) for d in (dumps or [])],
+        "done_addr": done["addr"] if done else None,
+        "done_page": resolve_page(done["addr"], done["bank"], cfg, mode) if done else None,
+        "dumps": dump_list,
+        "data_banks": list(cfg["data_banks"]),
         "result_path": str(result_path),
     }
     reply = {"ok": True, "mode": mode}
@@ -210,7 +245,7 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
             reply["assembler_output"] = asm["warnings"]
         typing_frames = 0
 
-    total_frames = boot_frames + typing_frames + run_frames + 20
+    total_frames = boot_frames + int(cfg["menu_frames"]) + typing_frames + run_frames + 20
     job_lua = build / "job.lua"
     job_lua.write_text("CONFIG = %s\n%s" % (lua_literal(job), (ROOT / "harness.lua").read_text()))
 
@@ -223,6 +258,8 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
     cmd += ["-video", "none"] if cfg["headless"] else ["-window"]
     if cfg["rompath"]:
         cmd += ["-rompath", cfg["rompath"]]
+    if cfg["floppy"]:
+        cmd += ["-extension", cfg["floppy_controller"], "-flop1", str(Path(cfg["floppy"]).resolve())]
     cmd += list(cfg["extra_args"])
 
     try:
@@ -272,10 +309,12 @@ def main():
     ap.add_argument("--boot-frames", type=int)
     ap.add_argument("--no-upcase", action="store_true", help="BASIC: do not uppercase typed text")
     ap.add_argument("--json", action="store_true", help="print raw JSON")
+    ap.add_argument("--fd", help=".fd floppy image to mount in drive 0")
     a = ap.parse_args()
 
     code = Path(a.file).read_text()
-    r = run_job(a.mode, code, a.dump, a.run_frames, a.boot_frames, a.done_addr, not a.no_upcase)
+    r = run_job(a.mode, code, a.dump, a.run_frames, a.boot_frames, a.done_addr, not a.no_upcase,
+                cfg_overrides={"floppy": a.fd})
     print(json.dumps(r, indent=2) if a.json else format_report(r))
     sys.exit(0 if r.get("ok") else 1)
 
