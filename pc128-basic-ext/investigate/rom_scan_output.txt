@@ -1,0 +1,150 @@
+ROM scan report for PC128 BASIC 128
+==================================
+
+Command:
+python3 /home/finzic/olivetti/pc128-basic-ext/tools/rom_scan.py --rom /home/finzic/.mame/roms/pro128/basico-2.rom@0xB000 --rom /home/finzic/.mame/roms/pro128/basico-3.rom@0xB000
+
+Output:
+######## /home/finzic/.mame/roms/pro128/basico-2.rom  $B000-$EFFF
+
+== Keyword tables
+
+-- $D808-$D942  format=hibit_last  words=82
+   80:END  81:FOR  82:NEXT  83:DATA  84:DIM  85:READ  86:LET  87:GO
+   88:RUN  89:IF  8A:RESTORE  8B:RETURN  8C:REM  8D:'  8E:STOP  8F:ELSE
+   90:TRON  91:TROFF  92:DEFSTR  93:DEFINT  94:DEFSNG  95:DEFDBL  96:ON  97:WAIT
+   98:ERROR  99:RESUME  9A:AUTO  9B:DELETE  9C:LOCATE  9D:CLS  9E:CONSOLE  9F:PS
+ET
+   A0:MOTOR  A1:SKIPF  A2:EXEC  A3:BEEP  A4:COLOR  A5:LINE  A6:BOX  A7:UNMASK
+   A8:ATTRB  A9:DEF  AA:POKE  AB:PRINT  AC:CONT  AD:LIST  AE:CLEAR  AF:INTERVAL
+   B0:KEY  B1:NEW  B2:SAVE  B3:LOAD  B4:MERGE  B5:OPEN  B6:CLOSE  B7:INPEN
+   B8:PEN  B9:PLAY  BA:TAB(  BB:TO  BC:SUB  BD:FN  BE:SPC(  BF:USING
+   C0:USR  C1:ERL  C2:ERR  C3:OFF  C4:THEN  C5:NOT  C6:STEP  C7:+
+   C8:-  C9:*  CA:/  CB:^  CC:AND  CD:OR  CE:XOR  CF:EQV
+   D0:IMP  D1:MOD
+   referenced at $B1CA (data)
+   referenced at $DC1A (LDY #)
+
+-- $D944-$DAF7  format=hibit_last  words=103
+   80:>  81:=  82:<  83:DSKINI  84:DSKO$  85:KILL  86:NAME  87:FIELD
+   88:LSET  89:RSET  8A:PUT  8B:GET  8C:VERIFY  8D:DEVICE  8E:DIR  8F:FILES
+   90:WRITE  91:UNLOAD  92:BACKUP  93:COPY  94:CIRCLE  95:PAINT  96:RESET  97:RE
+NUM
+   98:SWAP  99:*  9A:WINDOW  9B:PATTERN  9C:DO  9D:LOOP  9E:EXIT  9F:INMOUSE
+   A0:MOUSE  A1:CHAIN  A2:COMMON  A3:SEARCH  A4:FWD  A5:TURTLE  A6:SGN  A7:INT
+   A8:ABS  A9:FRE  AA:SQR  AB:LOG  AC:EXP  AD:COS  AE:SIN  AF:TAN
+   B0:PEEK  B1:LEN  B2:STR$  B3:VAL  B4:ASC  B5:CHR$  B6:EOF  B7:CINT
+   B8:CSNG  B9:CDBL  BA:FIX  BB:HEX$  BC:OCT$  BD:STICK  BE:STRIG  BF:GR$
+   C0:LEFT$  C1:RIGHT$  C2:MID$  C3:INSTR  C4:VARPTR  C5:RND  C6:INKEY$  C7:INPU
+T
+   C8:CSRLIN  C9:POINT  CA:SCREEN  CB:POS  CC:PTRIG  CD:DSKF  CE:CVI  CF:CVS
+   D0:CVD  D1:MKI$  D2:MKS$  D3:MKD$  D4:LOC  D5:LOF  D6:SPACE$  D7:STRING$
+   D8:DSKI$  D9:FKEY$  DA:MIN(  DB:MAX(  DC:ATN  DD:CRUNCH$  DE:MTRIG  DF:EVAL
+   E0:PALETTE  E1:BANK  E2:HEAD  E3:ROT  E4:SHOW  E5:ZOOM  E6:TRACE
+   referenced at $D972 (data)
+
+== Pointer runs into this ROM (dispatch table candidates)
+   $B0A2: 75 entries   refs: $B02A(LDU #)
+   $E019: 17 entries   refs: -
+   $E23E: 24 entries   refs: $E23A(LDX #)
+   $E8E1: 16 entries   refs: -
+
+== JSR/JMP into RAM $2000-$9FFF (hooks)
+   $2185  x1   JMP[]@$B07B
+   $219B  x1   JMP[]@$BC80
+   $227F  x1   JSR[]@$E3FD
+   $2281  x1   JSR[]@$ECCB
+   $2284  x2   JMP[]@$E147, JSR[]@$E6C5
+   $2286  x3   JSR[]@$E4B7, JSR[]@$E4D3, JSR[]@$E6BF
+   $22F9  x1   JMP@$CD54
+   $313C  x1   JSR@$E735
+   $3404  x1   JSR@$EC70
+   $3D01  x1   JMP@$D0F8
+   $5A39  x1   JSR@$ECD5
+   $7873  x1   JMP@$EB4C
+   $7EC2  x1   JSR@$BB53
+   $8D0C  x1   JSR@$B47D
+   $8D30  x1   JSR@$B9C3
+   $8D34  x1   JSR@$B950
+   $8D48  x1   JSR@$B317
+   $8DBD  x1   JSR@$BB7A
+   $8DD7  x1   JSR@$B5FD
+   $8DE0  x1   JSR@$B5A9
+   $8DED  x1   JSR@$B7FB
+   $8DF7  x1   JSR@$B4C3
+   $8EC2  x1   JSR@$CCB2
+   $9656  x1   JSR@$C9DF
+
+== Most used JSR <direct targets (CHRGET/CHRGOT candidates; add DP*256)
+   $27:4  $39:2  $10:1  $8D:1  $96:1  $CC:1  $5A:1  $BD:1  $CE:1  $8E:1  $AC:1
+$2E:1
+
+== Most called ROM routines (SN error, evaluator, ...)
+   $B35C:13  $BE04:11  $BF66:9  $C20D:9  $C281:7  $CB80:7  $DF83:6  $B07F:6  $C1
+B7:6  $C1B2:6  $B38B:5  $B45E:5  $BE01:5  $C1AD:5  $C0B5:5  $B3AB:4  $B321:4  $B
+464:4  $C044:4  $CB48:4  $CB8B:4  $C3A3:4  $C395:4  $C0A5:4  $C7FF:4  $C6A8:4  $
+C2FD:4  $BDF8:4  $C1A8:4  $DB97:4
+
+######## /home/finzic/.mame/roms/pro128/basico-3.rom  $B000-$EFFF
+
+== Keyword tables
+
+== Pointer runs into this ROM (dispatch table candidates)
+   $B0E1: 123 entries   refs: -
+
+== JSR/JMP into RAM $2000-$9FFF (hooks)
+   $247E  x1   JMP@$B0BB
+   $2609  x1   JSR@$D1F6
+   $273C  x1   JSR@$DA00
+   $277D  x1   JMP[]@$D068
+   $2782  x1   JMP[]@$B8AB
+   $27C7  x1   JSR@$D04B
+   $27CA  x1   JMP@$D08D
+   $27CD  x1   JSR@$B20A
+   $27D0  x1   JSR@$B20D
+   $27D3  x1   JSR@$B808
+   $27D6  x1   JSR@$B7FB
+   $27D9  x1   JSR@$B28D
+   $27DC  x1   JSR@$B7F3
+   $27E2  x1   JSR@$B43F
+   $27EB  x1   JSR@$D41F
+   $27EE  x1   JSR@$D357
+   $27F1  x1   JSR@$D6A4
+   $27F4  x1   JSR@$D683
+   $27F7  x1   JSR@$D6C6
+   $27FA  x1   JSR@$D71E
+   $27FD  x2   JSR@$D90A, JSR@$D92F
+   $2800  x1   JSR@$BB12
+   $2803  x1   JSR@$BFCF
+   $2806  x1   JSR@$B035
+   $2809  x1   JSR@$B6CC
+   $280C  x1   JSR@$D0BF
+   $280F  x1   JSR@$DB49
+   $2812  x1   JSR@$D6FE
+   $2B7E  x1   JMP@$B0B9
+   $30E4  x1   JSR@$C735
+   $3402  x1   JSR@$B76E
+   $3412  x1   JSR@$ED0B
+   $3502  x1   JMP@$C2B5
+   $3582  x1   JMP@$DEC0
+   $3679  x1   JMP@$B0BD
+   $5A58  x1   JSR@$BC3D
+   $5A8E  x1   JSR@$BB85
+   $5AE1  x2   JSR@$BBA6, JSR@$E469
+   $80BB  x1   JSR@$C9F7
+   $8640  x1   JSR@$ED2E
+   $8C9D  x1   JSR@$DB0D
+   $8CEB  x1   JSR@$B1BB
+   $8D1C  x1   JSR@$E426
+   $8D28  x1   JSR@$ECE1
+   $8D4F  x1   JSR@$C4F0
+   $9605  x1   JSR@$B7BF
+   $9DBD  x1   JSR@$ED2C
+   $9E73  x1   JSR@$EDDF
+   $9FDA  x1   JSR@$CA67
+
+== Most used JSR <direct targets (CHRGET/CHRGOT candidates; add DP*256)
+   $C6:75  $C0:70  $BD:29  $BA:29  $CD:2  $26:2  $29:1  $4E:1  $EC:1  $81:1  $BE:1  $2A:1
+
+== Most called ROM routines (SN error, evaluator, ...)
+   $B002:35  $B8E7:28  $DC19:21  $DC23:18  $DC27:16  $B906:13  $B945:12  $C353:11  $C14E:11  $BB96:11  $B8DA:11  $C1E9:10  $D6A2:10  $C155:9  $BF4A:8  $BE75:8  $C160:8  $C52B:8  $D6C4:8  $D34F:7  $B78E:7  $B3E6:7  $D399:7  $C166:7  $B022:7  $B8D7:7  $DC01:7  $BF30:7  $BAA2:7  $CA7C:7

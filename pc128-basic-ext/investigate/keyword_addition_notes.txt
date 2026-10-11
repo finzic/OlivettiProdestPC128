@@ -1,0 +1,291 @@
+PC128 BASIC keyword extension notes
+==================================
+
+This note explains the two practical ways to add new BASIC keywords on the PC128, how to tell whether a keyword is a statement/instruction or a function, and how expression arguments are parsed. It is based on the verified PC128 behavior from the MAME debugger and the ROM scan.
+
+1. The two extension mechanisms
+--------------------------------
+
+The interpreter keeps two descriptor chains in RAM:
+
+- statement chain starts at $2770
+- function chain starts at $2775
+
+Each descriptor is 5 bytes:
+
+- word count
+- keyword table address
+- dispatch address
+
+The key fact is that in the live machine the descriptor at $277A is empty, and its dispatch word at $277D is used for tokens $F9-$FE. That gives a very small built-in extension slot with six tokens.
+
+The two common approaches are:
+
+A) First six extension words: use the empty slot at $277A
+B) More than six words: use the normal RAM-copy + hook method, or extend the second chain / custom $FF hook dispatch
+
+These are not two different languages; they are two different ways to populate the same keyword table machinery.
+
+
+2. Method 1: first 6 keywords (the empty slot)
+--------------------------------------------------
+
+This is the simplest method and matches the actual experiments already verified on the PC128.
+
+What is happening:
+
+- At boot, the BASIC interpreter leaves $277A as an empty descriptor.
+- The tokenizer uses the descriptor chain and sees count = 0 there.
+- The dispatcher at $277D is the jump target for custom tokens $F9-$FE.
+- When the interpreter reaches a custom token, it enters the custom handler with:
+  - A = token value (for example $F9, $FA, ...)
+  - TXTPTR still pointing at the token or at the next character as appropriate
+- The custom handler can decide whether the token is its own token or an old one.
+
+Example from the experiment:
+
+- descriptor at $277A is filled with:
+  - count = NWORDS
+  - keyword table pointer = address of new keyword strings
+  - dispatch pointer = address of handler
+- new words become tokens $F9, $FA, ...
+- the handler code checks A against the token values and jumps to the right command
+- after processing, it calls CHRGET to advance past the token and continue parsing
+
+Example code pattern:
+
+        ldx #KEYWORDS
+        stx $277B
+        ldx #HANDLER
+        stx $277D
+        lda #NWORDS
+        sta $277A
+
+Then the handler pattern is:
+
+        cmpa #$F9
+        beq do_hello
+        cmpa #$FA
+        beq do_bye
+        jmp SNERR
+
+In the verified experiment, the handler ends with:
+
+        jmp CHRGET
+
+This is important because CHRGET will advance to the next input character and its RTS returns to the interpreter. That is exactly how a statement command can skip over its own token and leave the parser ready for the next argument.
+
+This method is best for statement/instruction words, not for generic expression functions.
+
+Characteristics of this method:
+
+- limited to six tokens: $F9-$FE
+- convenient for custom commands like HELLO, BYE, FILL, DOKE, etc.
+- works without changing the main ROM logic
+- good for statement-style commands that do their own parsing
+
+
+3. Method 2: subsequent keywords and the RAM-copy / HOOK approach
+-------------------------------------------------------------------
+
+If you need more than six custom keywords, or want the keyword table to behave more like the normal BASIC vocabulary, you use the same mechanism as the book describes:
+
+- copy the keyword table into RAM
+- append your new words at the end of that RAM copy
+- point the interpreter's keyword table pointer at the RAM copy
+- patch the unknown statement hook or the function/table dispatch path
+- install your own dispatch routine
+
+This is the standard extension method used in the project.
+
+The project code does this in basext.asm:
+
+- KWPTR points at the keyword table used by the tokenizer
+- NEWWORDS are appended to the RAM buffer
+- HOOK is a 3-byte RAM hook reached for unknown $FF-prefixed statements
+- DISPATCH is installed at HOOK to route custom commands
+
+That pattern allows a custom command to be installed without touching ROM, while falling through to the old behavior for non-custom commands.
+
+What differs between statement and function words:
+
+- statement words live in the statement chain and are dispatched from the statement parser
+- function words are typically in the $FF-prefixed keyword chain and are consumed by the expression parser, not the statement parser
+
+The key practical difference is how control enters the handler and what state is expected when it does.
+
+
+4. Distinguishing instructions vs functions
+-------------------------------------------
+
+Instruction / statement tokens
+-----------------------------
+
+An instruction is a statement that is parsed in the main BASIC statement loop. It usually:
+
+- is entered after a keyword token (for example PRINT, INPUT, BORDER, DOKE)
+- expects the parser to be positioned after the token
+- may parse arguments directly from the line
+- may call CHRGET or CHRGOT to advance or look at the next character
+- usually exits by returning to the interpreter's NEWSTT loop
+
+In the project, the statement hook pattern is:
+
+- A = second token byte
+- TXTPTR points to the second byte of the keyword token or to the next text position
+- custom handler decides whether the token is ours
+- if not ours, it jumps to the old hook
+
+This is the model used for statement-like commands added through the empty slot or the installed HOOK dispatch.
+
+Function tokens
+--------------
+
+A function is part of an expression. It is not a statement. Examples are:
+
+- SGN, INT, ABS, SQR, LOG, EXP, COS, SIN, TAN
+- PEEK, LEN, STR$, VAL, ASC, CHR$
+- also user functions that want an expression as their argument
+
+Functions are parsed while the expression evaluator is active. They expect that the interpreter's expression machinery will parse the arguments and produce a value in the FAC or in registers. In other words, they are not entered as stand-alone statements - they are evaluated as part of an expression tree.
+
+The distinction matters because a statement handler and a function handler do not parse arguments the same way.
+
+
+5. How expressions are parsed for parameters
+--------------------------------------------
+
+The BASIC evaluator is the real engine. The custom command should delegate expression parsing to B_GETEXPR (or the equivalent expression parser) instead of manually reading bytes in a crude way.
+
+This is the pattern in basext.asm:
+
+        GETWORD     jsr     B_GETEXPR
+                    jmp     B_FAC2U16
+
+This means:
+
+- the current text pointer points to the start of an expression
+- the evaluator reads numbers, variables, functions, unary operators, parentheses, arithmetic, etc.
+- the result is placed into FAC
+- B_FAC2U16 converts the FAC value into a 16-bit unsigned integer if the command wants a numeric address or length
+
+This is exactly how DOKE or FILL should work:
+
+- DOKE addr, value
+- parse addr as an expression
+- parse value as an expression
+- convert each value to integer as required
+
+The code in basext.asm does this:
+
+        CMD_DOKE
+            bsr     GETWORD      ; parse address
+            pshs    d
+            bsr     COMMA
+            bsr     GETWORD      ; parse value
+            puls    x
+            std     ,x
+
+This is the right pattern when a keyword takes expression arguments. It allows the value to come from:
+
+- literal integer
+- variable
+- arithmetic expression
+- function call
+- any expression the BASIC evaluator already understands
+
+The same approach works for a custom command like DOKE loc, val in the example below.
+
+
+6. Example: DOKE loc, val with expression support
+-------------------------------------------------
+
+Suppose you want to add a keyword:
+
+    DOKE loc, val
+
+Then `loc` and `val` should both be general expressions, not just bare constants.
+
+A natural implementation is:
+
+1. parse `loc` with GETWORD
+   - calls B_GETEXPR
+   - evaluates the expression starting at the current text pointer
+   - converts it to a 16-bit unsigned integer
+
+2. require a comma with COMMA
+   - this calls B_CHRGOT and checks for ','
+   - then calls B_CHRGET to advance beyond the comma
+
+3. parse `val` with GETWORD again
+   - same expression engine is used
+   - handles arithmetic such as 2*4096 + 5 or A + B
+
+4. store the value at the computed address
+
+That is exactly what the project's CMD_DOKE does.
+
+A more general design rule is:
+
+- if your keyword expects a number, use GETWORD / B_GETEXPR / B_FAC2U16
+- if your keyword expects a byte or an 8-bit value, use GETBYTE after GETWORD and reject overflow
+- if your keyword expects a string, use the string parser or call the same text utilities the interpreter uses
+- if your keyword is a statement, it may parse its own arguments one by one, but it should still rely on B_GETEXPR for general expressions
+
+
+7. How to add a keyword in practice
+------------------------------------
+
+First 6 keywords (the easy method)
+-----------------------------------
+
+Use the empty slot at $277A.
+
+- store the count at $277A
+- store the keyword table pointer at $277B
+- store the dispatch pointer at $277D
+- make the words tokens $F9-$FE (continuing after the built-ins)
+- write the handler and return with CHRGET for statements
+- use this method for small statement-like extensions
+
+This method is ideal for:
+
+- HELLO
+- BYE
+- DOKE
+- FILL
+- BORDER
+
+It is limited to six custom tokens.
+
+Subsequent keywords
+-------------------
+
+Use the normal RAM keyword-table extension pattern:
+
+- copy the ROM keyword table to RAM
+- append new names to the RAM buffer
+- install a custom dispatch routine through HOOK or the function/statement chain
+- make the tokens part of the $FF-prefixed table or the statement chain as appropriate
+- keep the old hook as a fallback for non-custom tokens
+
+This method is ideal when you need many commands or want the tokens to behave more like built-ins.
+
+
+8. Important design choices
+---------------------------
+
+- For a normal instruction / statement, the handler usually ends with CHRGET or a direct return to the interpreter.
+- For an expression function, the handler must leave its result in the normal BASIC expression result locations; it is not a statement loop.
+- If a keyword takes typed arguments (address, length, byte, expression), use the normal expression parser rather than trying to parse the text manually.
+- For a command like DOKE loc, val, the safest implementation is exactly what basext.asm does: parse both values with GETWORD, which itself calls B_GETEXPR.
+
+In short:
+
+- first 6: use $277A / $277D extension slot
+- more: install a custom table and hook
+- statements: parse after the keyword and jump back through CHRGET / NEWSTT
+- functions: integrate with B_GETEXPR and leave a value in the arithmetic result path
+- expression arguments: always use B_GETEXPR, not ad hoc parsing
+
+This is the reason DOKE loc, val can use a full expression for val: the parser treats `val` as a regular BASIC expression because it calls B_GETEXPR, the same machinery the built-in BASIC functions already use.

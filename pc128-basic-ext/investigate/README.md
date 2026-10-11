@@ -22,6 +22,8 @@ python3 investigate.py run --fd disk.fd --line 'LOADM "SLOT",,R' --line '@WAIT 2
 
 ## Findings (verified in MAME, BASIC 128 on `pro128`)
 
+The ROM scan output was saved to [rom_scan_output.txt](rom_scan_output.txt) and matches the live BASIC 128 state observed in MAME. The highest-confidence findings are:
+
 | Item | PC128 BASIC 128 | TO7-70/TO9 (book) |
 |---|---|---|
 | Direct page | `$21` | `$61` |
@@ -34,6 +36,14 @@ python3 investigate.py run --fd disk.fd --line 'LOADM "SLOT",,R' --line '@WAIT 2
 | Keyword descriptors (tokenizer) | `$2770` / `$2775`, 10 bytes apart | `$6287` |
 | Hook row (all RTS after boot) | `$27C4-$2812`, 3 bytes each | `$62xx` |
 | Free RAM after boot | `$2D20-$5FBF` (stack top ≈ `$5FE0`) | |
+
+### ROM scan highlights
+
+- The BASIC interpreter ROMs are `basico-2.rom` and `basico-3.rom`, each mapped at `$B000`.
+- The scan found the keyword tables in `basico-2.rom` at `$D808-$D942` and `$D944-$DAF7`.
+- The scan found a RAM hook target at `$2185` (`JMP[]@$B07B`), which matches the live-system BASIC 128 error trap vector at `$2185`.
+- The scan also shows a direct-page hot spot around `$C0` and `$C6`, consistent with `CHRGET` living at `$21C0` and the tokenized-line fetch path around `$21C6-$21C8`.
+- The most relevant hook row in the interpreter ROM is at `$27C7-$27FF`, with the `$27CA` address clearly identified as the unknown `$FF xx` dispatcher hook.
 
 **Keyword descriptors:** each one is 5 bytes: word count, keyword table address, dispatch address. The
 tokenizer at `$CF77` walks two chains, starting at `$2770` (statements) and `$2775` (`$FF`-prefixed
