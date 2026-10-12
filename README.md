@@ -1,11 +1,6 @@
 # OlivettiProdestPC128
 A Repo containing wiki and code for our beloved 8-bit machine
 
-## Documentation
-
-- [PC128 system calls and ROM calling reference](docs/pc128-system-calls.md)
-- [Configuration of local environment](docs/mame-pc128.md)
-
 # PC128 harness: run BASIC and 6809 code from VS Code
 
 Lets you (or a coding assistant) run code on an emulated **Olivetti Prodest PC128** (a Thomson MO6)
@@ -15,34 +10,52 @@ Each run boots a fresh machine, runs your code, then returns:
 CPU registers, memory dumps you asked for, and a screenshot. A run takes a few seconds.
 
 ## Setup
+Complete these steps before running the environment checker.
 
-Run `./tools/check-environment.sh` to check the workspace prerequisites and build local LWTOOLS if needed. It reports missing system packages, MCP, MAME, or the configured MAME ROM set.
-Run `./tools/check-environment.sh` to check workspace prerequisites, build local LWTOOLS if needed,
-and prepare the ignored MAME ROM directory from `src-rom/pc128.rom` and
-`src-rom/cd90-640.rom`. It reports missing system packages, MCP, MAME, source ROMs, or the
-configured MAME ROM set.
-
-On Debian or Ubuntu, install the system packages with:
+1. Install the system tools. On Debian or Ubuntu:
 
 ```bash
 sudo apt update
 sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame
 ```
 
-`mame-tools` is optional; the workspace only requires the `mame` executable.
+Other Linux distributions need equivalent packages. The workspace requires the `mame`
+executable; `mame-tools` is optional.
 
-Install the MCP Python package in the workspace virtual environment used by both MCP launch
-configurations, then run the checker again:
+2. Obtain the original DCMOTO ROM downloads and put both files in `src-rom/` at the repository
+root. Create the directory if needed:
 
 ```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install mcp
+mkdir -p src-rom
+```
+
+The required paths and filenames are:
+
+```text
+src-rom/pc128.rom
+src-rom/cd90-640.rom
+```
+
+These are the original source images, not the split ROM files. They are copyrighted and are not
+included in the repository. If the prepared ROM set is missing, the checker validates these source
+images and creates the MAME ROM files under the ignored `roms/` directory. It also creates `.venv/`
+and installs MCP if needed, and builds local LWTOOLS if needed. It does not install system packages.
+
+3. From the repository root, run:
+
+```bash
 ./tools/check-environment.sh
 ```
 
-See [tools/README.md](tools/README.md) for the checks, ROM setup, and non-Debian notes. Local LWTOOLS output and `.venv/` are ignored by Git.
+The checker reports any remaining issue and prints commands that require manual action at the end.
+See [tools/README.md](tools/README.md) for details and [docs/mame-pc128.md](docs/mame-pc128.md)
+for ROM format and MAME configuration notes. Local LWTOOLS output, `.venv/`, and ROM files are
+ignored by Git.
+
+## Documentation
+
+- [PC128 system calls and ROM calling reference](docs/pc128-system-calls.md)
+- [Configuration of local environment](docs/mame-pc128.md)
 
 ## Use it
 
