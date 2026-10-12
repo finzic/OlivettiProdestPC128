@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Build and test the KEYJOY disk using only BASIC 128 inside MAME.
+"""Build and test the KEYJOY disk.
 
-  build: blank .fd -> DSKINI -> type a DATA/POKE loader, RUN it -> SAVEM "KEYJOY"
-         -> type demo.bas -> SAVE "DEMO". No disk structure is written by our tools.
-  test:  LOADM from that disk, hold each key combination, read USR0(0) back.
+  build: assemble keyjoy.asm and keyjoy2.asm, create one reusable disk image keyjoy.fd with
+         tools/fdtool.py and copy the routines (KEYJOY.BIN, KEYJOY2.BIN), the demos (DEMO.BAS,
+         DEMO2.BAS) and the test programs in tests/*.bas onto it. MAME is not needed to build it.
+  test:  boot MAME with that disk and RUN one of the test programs (KJTEST, KJTESTR, KJ2TEST,
+         KJ2TESTR; the R ones load the routine at $5000) while holding each key combination.
+         Only RUN "name" is typed; each program loads the routine and POKEs the results to $5F00.
 
-  python3 keyjoy.py build|test [keyjoy|keyjoy2]
+  python3 keyjoy.py build
+  python3 keyjoy.py test [keyjoy|keyjoy2]
 """
 import subprocess
 import sys
@@ -16,15 +20,12 @@ HERE = Path(__file__).resolve().parent
 TOOLS = HERE.parents[2] / "tools"
 INVESTIGATE = HERE.parents[1] / "investigate" / "investigate.py"
 DISK = HERE / "keyjoy.fd"
-BIN = HERE / "keyjoy.bin"
 NAME = "keyjoy"
 
 
 def select(name):
-    global DISK, BIN, NAME
+    global NAME
     NAME = name
-    DISK = HERE / (name + ".fd")
-    BIN = HERE / (name + ".bin")
 
 
 def investigate(lines, *extra):
@@ -35,24 +36,21 @@ def investigate(lines, *extra):
     return p.stdout + p.stderr
 
 
+def fdtool(*args):
+    return subprocess.run([sys.executable, str(TOOLS / "fdtool.py"), *args], check=True,
+                          capture_output=True, text=True).stdout
+
+
 def build():
-    subprocess.run(["make", "-C", str(HERE), BIN.name], check=True)
-    with tempfile.TemporaryDirectory() as t:
-        loader = Path(t) / "loader.bas"
-        subprocess.run([sys.executable, str(TOOLS / "bin2bas.py"), str(BIN), str(loader),
-                        "--clear", "0x9EFF", "--no-exec"], check=True)
-        loader_lines = [l for l in loader.read_text().splitlines() if l.strip()]
-    size = BIN.stat().st_size - 10            # DECB: 5-byte header + 5-byte trailer
-    end = 0x9F00 + size - 1
-    demo_name = "demo2.bas" if NAME == "keyjoy2" else "demo.bas"
-    demo = [l for l in (HERE / demo_name).read_text().splitlines() if l.strip()]
-    DISK.write_bytes(b"\xE5" * 163840)         # unformatted; BASIC formats it
-    lines = (["DSKINI 0", "@WAIT 3000", "NEW"] + loader_lines + ["RUN", "@WAIT 600",
-             'SAVEM "%s",&H9F00,&H%04X,&H9F00' % (NAME.upper(), end), "@WAIT 400", "NEW"] + demo
-             + ['SAVE "%s"' % ("DEMO2" if NAME == "keyjoy2" else "DEMO"), "@WAIT 400", "NEW", "DIR", "@WAIT 100"])
-    investigate(lines, "--frames", "20")
-    print(subprocess.run([sys.executable, str(TOOLS / "fdtool.py"), "ls", str(DISK)],
-                         capture_output=True, text=True).stdout)
+    subprocess.run(["make", "-C", str(HERE), "keyjoy.bin", "keyjoy2.bin"], check=True)
+    DISK.unlink(missing_ok=True)
+    fdtool("new", str(DISK), "--name", "KEYJOY")
+    for src, name in (("keyjoy.bin", "KEYJOY.BIN"), ("keyjoy2.bin", "KEYJOY2.BIN"),
+                      ("demo.bas", "DEMO.BAS"), ("demo2.bas", "DEMO2.BAS"),
+                      *((str(t.relative_to(HERE)), t.stem.upper() + ".BAS")
+                        for t in sorted((HERE / "tests").glob("*.bas")))):
+        fdtool("put", str(DISK), str(HERE / src), "--as", name)
+    print(fdtool("ls", str(DISK)))
 
 
 CASES = [((), 0), (("UP",), 1), (("UP", "RIGHT"), 2), (("RIGHT",), 3), (("DOWN", "RIGHT"), 4),
@@ -60,14 +58,11 @@ CASES = [((), 0), (("UP",), 1), (("UP", "RIGHT"), 2), (("RIGHT",), 3), (("DOWN",
          (("SPACE",), 128), (("UP", "SPACE"), 129), (("UP", "DOWN", "LEFT"), 0)]
 
 
-def run_cases(setup, base, cases, label):
-    prog = setup + ["DEFUSR0=&H%04X" % base, "10 FOR I=1 TO 600:NEXT", "20 K=USR0(0)",
-            "30 POKE &H5F00,K", "31 A=PEEK(&H%04X):POKE &H5F02,A" % (base + 4),
-            "32 A=PEEK(&H%04X):POKE &H5F03,A" % (base + 5), "40 POKE &H5F01,1"]
+def run_cases(program, cases, label):
     ok = True
     for keys, want in cases:
         hold = [a for k in keys for a in ("--hold", k)]
-        out = investigate(prog, *hold, "--hold-after", "40", "--frames", "300", "--peek", "5F00:4")
+        out = investigate(['RUN "%s"' % program], *hold, "--hold-after", "40", "--frames", "500", "--peek", "5F00:4")
         got = next((l.split()[1:] for l in out.splitlines() if l.startswith("5F00:")), ["??"] * 4)
         exp = ["%02X" % want, "01", "%02X" % (want & 15), "%02X" % (1 if want & 128 else 0)]
         good = got == exp
@@ -79,9 +74,9 @@ def run_cases(setup, base, cases, label):
 
 def test():
     # default location $9F00, then the same code loaded at $5000 (LOADM offset $5000-$9F00 = &HB100)
-    ok = run_cases(["CLEAR ,&H9EFF", 'LOADM "KEYJOY"', "@WAIT 300"], 0x9F00, CASES, "$9F00")
+    ok = run_cases("KJTEST", CASES, "$9F00")
     relocated = [CASES[0], CASES[3], CASES[6], CASES[9], CASES[10]]
-    ok &= run_cases(["CLEAR ,&H4FFF", 'LOADM "KEYJOY",&HB100', "@WAIT 300"], 0x5000, relocated, "$5000")
+    ok &= run_cases("KJTESTR", relocated, "$5000")
     sys.exit(0 if ok else 1)
 
 
@@ -94,15 +89,11 @@ CASES2 = [((), 0, 0, 0, 0, 0), (("UP",), 1, 0, 0, 0, 1), (("DOWN", "LEFT"), 6, 0
           (("UP", "Enter", "W", "D", "Space"), 1, 1, 2, 1, 129)]
 
 
-def run_cases2(setup, base, cases, label):
-    prog = setup + ["DEFUSR0=&H%04X" % base, "10 FOR I=1 TO 600:NEXT", "20 K=USR0(0)",
-            "30 A=PEEK(&H%04X):POKE &H5F00,A" % (base + 4), "31 A=PEEK(&H%04X):POKE &H5F01,A" % (base + 5),
-            "32 A=PEEK(&H%04X):POKE &H5F02,A" % (base + 6), "33 A=PEEK(&H%04X):POKE &H5F03,A" % (base + 7),
-            "34 POKE &H5F04,K", "40 POKE &H5F05,1"]
+def run_cases2(program, cases, label):
     ok = True
     for keys, *want in cases:
         hold = [a for k in keys for a in ("--hold", k)]
-        out = investigate(prog, *hold, "--hold-after", "40", "--frames", "300", "--peek", "5F00:6")
+        out = investigate(['RUN "%s"' % program], *hold, "--hold-after", "40", "--frames", "500", "--peek", "5F00:6")
         got = next((l.split()[1:] for l in out.splitlines() if l.startswith("5F00:")), ["??"] * 6)
         exp = ["%02X" % v for v in want] + ["01"]
         good = got == exp
@@ -114,9 +105,9 @@ def run_cases2(setup, base, cases, label):
 
 def test2():
     # default location $9F00, then the same code loaded at $5000 (LOADM offset $5000-$9F00 = &HB100)
-    ok = run_cases2(["CLEAR ,&H9EFF", 'LOADM "KEYJOY2"', "@WAIT 300"], 0x9F00, CASES2, "$9F00")
+    ok = run_cases2("KJ2TEST", CASES2, "$9F00")
     relocated = [CASES2[0], CASES2[3], CASES2[9], CASES2[-1]]
-    ok &= run_cases2(["CLEAR ,&H4FFF", 'LOADM "KEYJOY2",&HB100', "@WAIT 300"], 0x5000, relocated, "$5000")
+    ok &= run_cases2("KJ2TESTR", relocated, "$5000")
     sys.exit(0 if ok else 1)
 
 

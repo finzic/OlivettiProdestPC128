@@ -1,25 +1,22 @@
 LWASM ?= ../../../tools/.local/lwtools-4.24/lwasm/lwasm
 PYTHON ?= python3
 
-all: keyjoy.fd keyjoy2.fd
+all: keyjoy.fd
 
 %.bin: %.asm
 	$(LWASM) --format=decb --list=$*.lst -o $@ $<
 
-# The disks are formatted and written by BASIC 128 itself, in MAME
-keyjoy.fd: keyjoy.bin demo.bas keyjoy.py
-	$(PYTHON) keyjoy.py build keyjoy
-
-keyjoy2.fd: keyjoy2.bin demo2.bas keyjoy.py
-	$(PYTHON) keyjoy.py build keyjoy2
+# One reusable disk with both routines and demos, written by tools/fdtool.py (no emulator needed)
+keyjoy.fd: keyjoy.bin keyjoy2.bin demo.bas demo2.bas $(wildcard tests/*.bas) keyjoy.py
+	$(PYTHON) keyjoy.py build
 
 test: keyjoy.fd
 	$(PYTHON) keyjoy.py test keyjoy
 
-test2: keyjoy2.fd
+test2: keyjoy.fd
 	$(PYTHON) keyjoy.py test keyjoy2
 
 clean:
-	rm -f keyjoy.bin keyjoy.lst keyjoy.fd keyjoy2.bin keyjoy2.lst keyjoy2.fd
+	rm -f keyjoy.bin keyjoy.lst keyjoy2.bin keyjoy2.lst keyjoy.fd keyjoy2.fd
 
 .PHONY: all test test2 clean
