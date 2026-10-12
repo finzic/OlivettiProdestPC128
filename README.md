@@ -16,10 +16,33 @@ CPU registers, memory dumps you asked for, and a screenshot. A run takes a few s
 
 ## Setup
 
-1. Install **MAME** and put the Thomson ROM sets where MAME can find them (`rompath` in `config.json`).
-2. Check the machine name: `mame -listxml | grep -i -E "pc128|mo6"`. Set `machine` in `config.json` if it differs.
-3. For assembly: install **LWTOOLS** (`lwasm`) and make sure it is on PATH (or set `lwasm` in `config.json`).
-4. For the MCP server: `pip install mcp` (works with mcp 1.x and 2.x).
+Run `./tools/check-environment.sh` to check the workspace prerequisites and build local LWTOOLS if needed. It reports missing system packages, MCP, MAME, or the configured MAME ROM set.
+Run `./tools/check-environment.sh` to check workspace prerequisites, build local LWTOOLS if needed,
+and prepare the ignored MAME ROM directory from `src-rom/pc128.rom` and
+`src-rom/cd90-640.rom`. It reports missing system packages, MCP, MAME, source ROMs, or the
+configured MAME ROM set.
+
+On Debian or Ubuntu, install the system packages with:
+
+```bash
+sudo apt update
+sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame
+```
+
+`mame-tools` is optional; the workspace only requires the `mame` executable.
+
+Install the MCP Python package in the workspace virtual environment used by both MCP launch
+configurations, then run the checker again:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install mcp
+./tools/check-environment.sh
+```
+
+See [tools/README.md](tools/README.md) for the checks, ROM setup, and non-Debian notes. Local LWTOOLS output and `.venv/` are ignored by Git.
 
 ## Use it
 
@@ -40,7 +63,7 @@ assistant how to use them.
 
 ## How it works
 
-- `pc128.py` prepares the job (assembles with `lwasm --format=decb`, or prepares the BASIC lines),
+- `pc128.py` prepares the job (assembles with the local `tools/.local/.../lwasm`, or prepares the BASIC lines),
   writes `build/job.lua` (a config table + `harness.lua`), and starts MAME with `-autoboot_script`.
 - **BASIC**: after boot, lines are typed through MAME's natural keyboard: `NEW`, your lines, `RUN`.
 - **Assembly**: after boot, the machine code is written straight into RAM, the CPU `PC` is set to the

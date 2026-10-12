@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TOOLS = HERE.parents[1] / "tools"
+TOOLS = HERE.parents[2] / "tools"
 INVESTIGATE = HERE.parents[1] / "investigate" / "investigate.py"
 DISK = HERE / "keyjoy.fd"
 BIN = HERE / "keyjoy.bin"

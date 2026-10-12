@@ -7,7 +7,7 @@ Olivetti Prodest PC128. It is used for testing the BASIC extension project in `p
 
 ```bash
 sudo apt update
-sudo apt install mame mame-tools
+sudo apt install mame
 mame -version
 ```
 
@@ -37,21 +37,29 @@ six, one after another. Each piece was checked against MAME's CRC values and all
 | `0x8000`              | 16384 | `basico-2.rom` | `135438ab` |
 | `0xC000`              | 16384 | `basico-3.rom` | `2c2befa6` |
 
-The ROMs are kept in `~/mame`. To split the image into a `pro128` folder there:
+Put the two DCMOTO downloads in the repository's `src-rom/` directory:
 
 ```bash
-mkdir -p ~/mame/pro128 && cd ~/mame/pro128
-R=~/olivetti/ROM/pc128.rom
-dd if=$R of=basico-0.rom bs=4096 skip=0  count=3 status=none
-dd if=$R of=pro128-0.rom bs=4096 skip=3  count=1 status=none
-dd if=$R of=basico-1.rom bs=4096 skip=4  count=3 status=none
-dd if=$R of=pro128-1.rom bs=4096 skip=7  count=1 status=none
-dd if=$R of=basico-2.rom bs=4096 skip=8  count=4 status=none
-dd if=$R of=basico-3.rom bs=4096 skip=12 count=4 status=none
-mame -rompath ~/mame -verifyroms pro128      # should report "romset pro128 is good"
+src-rom/pc128.rom
+src-rom/cd90-640.rom
 ```
 
-The ROMs are copyrighted. Keep them out of the git repository (`ROM/` is listed in `.gitignore`).
+Run the environment checker to validate and prepare them:
+
+```bash
+./tools/check-environment.sh
+```
+
+It splits `pc128.rom` into the six CRC-checked files listed above under `roms/pro128/` and copies
+`cd90-640.rom` unchanged to `roms/`. The local `roms/` search path is configured in `config.json`;
+both `src-rom/` and generated `roms/` are ignored by Git. To verify the machine ROM set directly,
+run this from the repository root:
+
+```bash
+mame -rompath ./roms -verifyroms pro128      # should report "romset pro128 is good"
+```
+
+The ROMs are copyrighted. Keep the source and generated files out of the repository's tracked files.
 
 ## 4. Configuration (`~/.mame/mame.ini`)
 
@@ -65,13 +73,14 @@ mame -createconfig
 Then edit these lines in `~/.mame/mame.ini`:
 
 ```ini
-rompath          $HOME/mame
+rompath          ./roms
 window           1
 confirm_quit     0
 ui_active        1
 ```
 
-- `rompath`: the ROMs live in `~/mame` instead of MAME's default `roms` folder.
+- `rompath`: when launching MAME manually from the repository root, use the local `roms/` folder.
+   The harness resolves the relative path in `config.json` to an absolute repository path.
 - `confirm_quit 0`: without it, clicking the window's X opens a quit prompt inside the emulated screen,
   and the captured keyboard can't answer it. MAME seemed not to close.
 - `ui_active 1`: see the next section.
@@ -79,7 +88,7 @@ ui_active        1
 The same settings work as command-line options:
 
 ```bash
-mame pro128 -rompath ~/mame -window -noconfirm_quit -ui_active
+mame pro128 -rompath ./roms -window -noconfirm_quit -ui_active
 ```
 
 ## 5. Keyboard: no Scroll Lock key
@@ -132,8 +141,8 @@ ROM scan, starting from the split files:
 
 ```bash
 cd ~/olivetti/pc128-basic-ext
-python3 tools/rom_scan.py --rom ~/mame/pro128/basico-2.rom@0xB000 \
-                          --rom ~/mame/pro128/basico-3.rom@0xB000
+python3 tools/rom_scan.py --rom roms/pro128/basico-2.rom@0xB000 \
+                          --rom roms/pro128/basico-3.rom@0xB000
 ```
 
 Which file is BASIC 128 and which is BASIC 1, and the exact base address of each bank, were not confirmed
@@ -148,11 +157,10 @@ BASIC prompt. MAME's paste function is in the UI menu, bound by default to Scrol
 
 ```bash
 # normal session
-mame pro128 -rompath ~/mame -window -noconfirm_quit -ui_active
-
+mame pro128 -rompath ./roms -window -noconfirm_quit -ui_active
 # without mouse capture
-mame pro128 -rompath ~/mame -window -noconfirm_quit -ui_active -nomouse
+mame pro128 -rompath ./roms -window -noconfirm_quit -ui_active -nomouse
 
 # debugging session
-mame pro128 -rompath ~/mame -window -noconfirm_quit -ui_active -debug
+mame pro128 -rompath ./roms -window -noconfirm_quit -ui_active -debug
 ```

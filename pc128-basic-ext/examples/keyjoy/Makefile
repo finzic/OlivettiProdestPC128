@@ -1,4 +1,4 @@
-LWASM ?= $(firstword $(wildcard ../../.tools/lwtools-4.24/lwasm/lwasm) lwasm)
+LWASM ?= ../../../tools/.local/lwtools-4.24/lwasm/lwasm
 PYTHON ?= python3
 
 all: keyjoy.fd

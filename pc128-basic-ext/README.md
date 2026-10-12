@@ -29,7 +29,7 @@ the extension until you have confirmed all of them.** Addresses tagged `[DOC]` c
 1. **Get a ROM dump** of your PC128 BASIC 128 banks (for example, the ROM files your
    emulator uses: DCMOTO or MAME `pc128`).
 2. **Scan it**:
-   `python3 tools/rom_scan.py --rom bank0.rom@0xB000 --rom bank1.rom@0xB000`.
+   `python3 ../tools/rom_scan.py --rom bank0.rom@0xB000 --rom bank1.rom@0xB000`.
    The scan lists:
    - keyword tables and their token numbers
    - references to each table (`LDX #table` points to the init code that sets `KWPTR`)
@@ -45,8 +45,9 @@ the extension until you have confirmed all of them.** Addresses tagged `[DOC]` c
    DATA lines and then EXECs it.
 5. **Test in the emulator:** `HELLO`, `BORDER 4`, `DOKE &H9F00,&H1234`, `FILL &H9F00,16,0`.
 
-`lwasm` is built locally in `.tools/`. You can also install lwtools system-wide and run
-`make LWASM=lwasm`.
+From the repository root, run `./tools/setup-lwasm.sh` before building. Both this extension
+and the keyjoy example use the repository-local assembler at `tools/.local/`; neither falls
+back to a system-wide `lwasm`.
 
 ## Adding a command
 

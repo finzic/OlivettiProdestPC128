@@ -70,7 +70,7 @@ Tested: `LOADM "SLOT",,R` from a `.fd` disk, then `10 HELLO:BYE`, `LIST` and `RU
   `cd90-640.rom` in the ROM path.
 - Disk geometry is 40 tracks × 16 sectors × 256 bytes. A 163840-byte image has one side; a
   327680-byte image has two sides, interleaved per track.
-- [../tools/fdtool.py](../tools/fdtool.py) has `new`, `put`, `ls` and `get`. Its output matches
+- [../../tools/fdtool.py](../../tools/fdtool.py) has `new`, `put`, `ls` and `get`. Its output matches
   disks formatted by BASIC 128 (`DSKINI`).
 
 ## Still to investigate

@@ -23,7 +23,7 @@ DEFAULT_CONFIG = {
     "mame": "mame",            # path to the MAME executable
     "machine": "pro128",        # check: mame -listxml | grep -i -E "pc128|mo6"
     "rompath": "",             # folder with the Thomson ROM sets (MAME needs them)
-    "lwasm": "lwasm",          # LWTOOLS assembler
+    "lwasm": str(ROOT / "tools" / ".local" / "lwtools-4.24" / "lwasm" / "lwasm"),
     "boot_frames": 250,        # ~5 s of emulated time to reach the boot menu
     "menu_key": "1",           # boot menu: "1" BASIC 128, "2" BASIC 1.0
     "menu_frames": 150,        # wait after menu_key for the BASIC prompt
@@ -46,7 +46,15 @@ def load_config(overrides=None):
     if path.exists():
         cfg.update(json.loads(path.read_text()))
     cfg.update({k: v for k, v in (overrides or {}).items() if v is not None})
+    lwasm_path = Path(cfg["lwasm"])
+    cfg["lwasm"] = str(lwasm_path if lwasm_path.is_absolute() else ROOT / lwasm_path)
     cfg["rompath"] = os.path.expandvars(os.path.expanduser(cfg["rompath"]))
+    rompath = os.path.expandvars(os.path.expanduser(cfg["rompath"]))
+    if rompath:
+        rompath_path = Path(rompath)
+        if not rompath_path.is_absolute():
+            rompath_path = ROOT / rompath_path
+        cfg["rompath"] = str(rompath_path)
     return cfg
 
 
@@ -159,7 +167,7 @@ def assemble(code, cfg):
             [cfg["lwasm"], "--format=decb", "--output=%s" % binf, "--list=%s" % lst, str(src)],
             capture_output=True, text=True, timeout=60)
     except FileNotFoundError:
-        return {"ok": False, "error": "lwasm not found (%r). Install LWTOOLS or set 'lwasm' in config.json." % cfg["lwasm"]}
+        return {"ok": False, "error": "lwasm not found (%r). Run tools/setup-lwasm.sh first." % cfg["lwasm"]}
     if p.returncode != 0 or not binf.exists():
         return {"ok": False, "error": (p.stdout + p.stderr).strip() or "assembler failed"}
     try:

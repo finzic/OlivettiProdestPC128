@@ -11,6 +11,9 @@ pyvenv.cfg
 __pycache__/
 
 # copyrighted sources: keep local only
+# Copyrighted ROMs: keep source and generated copies local only
+/src-rom/
+/roms/
 src/*.pdf
 src/*.pdf_
 ROM/
@@ -22,7 +25,8 @@ output/*/_debug_pages/
 output/*/French_OCR/
 output/*/Italian/
 output/*/English/translation.txt
-pc128-basic-ext/.tools/
+/tools/.local/
+/.venv/
 pc128-basic-ext/build/
 *.log
 pc128-basic-ext/investigate/out/

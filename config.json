@@ -1,8 +1,8 @@
 {
   "mame": "mame",
   "machine": "pro128",
-  "rompath": "$HOME/.mame/roms",
-  "lwasm": "lwasm",
+  "rompath": "roms",
+  "lwasm": "tools/.local/lwtools-4.24/lwasm/lwasm",
   "boot_frames": 250,
   "menu_key": "1",
   "menu_frames": 150,

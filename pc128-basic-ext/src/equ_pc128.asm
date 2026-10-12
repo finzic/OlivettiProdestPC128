@@ -3,7 +3,7 @@
 ;
 ; Status tags:
 ;   [DOC]   verified in the scanned manuals (reference given)
-;   [SCAN]  MUST be filled from tools/rom_scan.py + disassembly of YOUR
+;   [SCAN]  MUST be filled from ../tools/rom_scan.py + disassembly of YOUR
 ;           PC128 BASIC 128 ROM. The value shown is only a placeholder;
 ;           the TO7-70/TO9 value from "02-interpreteur-basic-to9" is given
 ;           for comparison. Do not run the extension until all [SCAN]

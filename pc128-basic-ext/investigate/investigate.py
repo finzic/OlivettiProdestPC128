@@ -17,7 +17,9 @@ Boots BASIC 128 (boot menu key "1"), optionally types a program, then runs one r
 Results go to investigate/out/. Reads mame/rompath/machine from ../../config.json.
 """
 import argparse
+import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -186,6 +188,11 @@ def main():
     a = ap.parse_args()
 
     cfg = json.loads(CONFIG.read_text())
+    if cfg.get("rompath"):
+        rompath = Path(os.path.expandvars(os.path.expanduser(cfg["rompath"])))
+        if not rompath.is_absolute():
+            rompath = CONFIG.parent / rompath
+        cfg["rompath"] = str(rompath)
     OUT.mkdir(exist_ok=True)
     for old in OUT.glob("*"):
         old.unlink()

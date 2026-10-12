@@ -2,7 +2,7 @@
   "servers": {
     "pc128": {
       "type": "stdio",
-      "command": "python3",
+      "command": "${workspaceFolder}/.venv/bin/python",
       "args": ["${workspaceFolder}/mcp_server.py"]
     }
   }
