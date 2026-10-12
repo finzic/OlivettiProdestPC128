@@ -50,6 +50,8 @@ def main():
 
     shutil.copyfile(cd90_path, ROM_DIR / "cd90-640.rom")
     print("Copied src-rom/cd90-640.rom to roms/cd90-640.rom")
+    shutil.copyfile(cd90_path, pro128_dir / "cd90-640.rom")  # MAME looks for the extension ROM here
+    print("Copied src-rom/cd90-640.rom to roms/pro128/cd90-640.rom")
     return 0
 
 

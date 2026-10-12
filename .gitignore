@@ -33,3 +33,4 @@ pc128-basic-ext/investigate/out/
 pc128-basic-ext/investigate/*.bin
 pc128-basic-ext/examples/*/*.bin
 pc128-basic-ext/examples/*/*.lst
+tools/mame-cfg/pro128.cfg

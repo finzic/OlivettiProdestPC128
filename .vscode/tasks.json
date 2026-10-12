@@ -28,9 +28,51 @@
       "group": "test",
       "presentation": { "reveal": "always", "panel": "shared", "clear": true },
       "problemMatcher": []
+    },
+    {
+      "label": "PC128: start MAME session (floppy/cassette/cartridge)",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/tools/run-mame.sh", "${input:mediaKind}", "${input:mediaFile}"],
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PC128: create new floppy/cassette/cartridge",
+      "type": "shell",
+      "command": "python3",
+      "args": ["${workspaceFolder}/tools/new-media.py", "${input:newMediaKind}", "${input:newMediaPath}"],
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true },
+      "problemMatcher": []
     }
   ],
   "inputs": [
+    {
+      "id": "newMediaKind",
+      "type": "pickString",
+      "description": "Kind of blank medium to create",
+      "options": ["floppy", "cassette", "cartridge"],
+      "default": "floppy"
+    },
+    {
+      "id": "newMediaPath",
+      "type": "promptString",
+      "description": "New image path (.fd / .wav / .rom)",
+      "default": "${workspaceFolder}/build/new.fd"
+    },
+    {
+      "id": "mediaKind",
+      "type": "pickString",
+      "description": "Storage medium to insert",
+      "options": ["floppy", "cassette", "cartridge", "none"],
+      "default": "floppy"
+    },
+    {
+      "id": "mediaFile",
+      "type": "promptString",
+      "description": "Image path (.fd / .k7 .wav / .rom .m5); ignored for 'none'",
+      "default": "${file}"
+    },
     {
       "id": "dumpSpec",
       "type": "promptString",

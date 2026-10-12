@@ -63,6 +63,8 @@ ignored by Git.
 - `PC128: run BASIC (current file)`
 - `PC128: run ASM (current file)`
 - `PC128: run ASM (choose memory dump)`
+- `PC128: start MAME session (floppy/cassette/cartridge)`: interactive MAME window with storage inserted
+- `PC128: create new floppy/cassette/cartridge`: create a blank image
 
 **Command line**
 ```
@@ -73,6 +75,47 @@ python3 pc128.py basic examples/hello.bas  --done-addr 9F01 --dump 9F00:16
 **Coding assistant (MCP)**: `.vscode/mcp.json` (VS Code / Copilot) and `.mcp.json` (Claude Code)
 register the server `pc128` with two tools, `run_basic` and `run_asm`. `AGENTS.md` tells the
 assistant how to use them.
+
+## Interactive sessions with storage
+
+Besides the scripted runs, you can use the emulator by hand and keep programs and data on a medium.
+
+1. **Create an image** (task `PC128: create new floppy/cassette/cartridge`, or from a terminal):
+
+   ```bash
+   python3 tools/new-media.py floppy    media/disk.fd [--name LABEL] [--sides 1|2]
+   python3 tools/new-media.py cassette  media/tape.wav
+   python3 tools/new-media.py cartridge media/cart.rom
+   ```
+
+   | Kind | Result |
+   |---|---|
+   | floppy | Blank formatted `.fd` (160 KB per side), made with `tools/fdtool.py new` |
+   | cassette | 5 minutes of silent `.wav`; record onto it from MAME's tape controls |
+   | cartridge | 16 KB `0xFF` image; read-only in MAME |
+
+   Existing files are never overwritten.
+
+2. **Start a session** (task `PC128: start MAME session (floppy/cassette/cartridge)`, or):
+
+   ```bash
+   bash tools/run-mame.sh floppy    media/disk.fd   # adds -extension cd90_640 -flop1
+   bash tools/run-mame.sh cassette  media/tape.wav  # -cassette
+   bash tools/run-mame.sh cartridge media/cart.rom  # -cart
+   bash tools/run-mame.sh none                      # bare machine
+   ```
+
+   The image must already exist. The window runs with `-ui_active` and the key map in
+   `tools/mame-cfg/default.cfg`: **F11** opens the MAME menu, **F12** exits (Esc no longer quits).
+   On the emulated keyboard, **Delete** is backspace, Tab is *Stop*, Home is *Home/Clear*, and the
+   PC Backspace key is the `+ *` key.
+
+3. **Use it**: on a floppy, `SAVE`/`LOAD`/`DIR` in BASIC read and write the `.fd` file directly.
+   To swap media while running, use Tab > File Manager (unmount, change or regenerate the file
+   with `tools/fdtool.py`, mount again). Do not edit an image externally while it is mounted.
+
+The floppy controller needs `cd90-640.rom`; `tools/prepare-roms.py` places it in `roms/` and
+`roms/pro128/` (MAME looks in the latter).
 
 ## How it works
 
