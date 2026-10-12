@@ -3,6 +3,8 @@ set -u
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 FAILURES=0
+USER_COMMANDS=""
+SYSTEM_PACKAGES_NEEDED=0
 
 ok() {
     printf 'OK: %s\n' "$1"
@@ -11,6 +13,15 @@ ok() {
 fail() {
     printf 'MISSING: %s\n' "$1" >&2
     FAILURES=$((FAILURES + 1))
+}
+
+add_user_command() {
+    if [ -n "$USER_COMMANDS" ]; then
+        USER_COMMANDS="$USER_COMMANDS
+$1"
+    else
+        USER_COMMANDS=$1
+    fi
 }
 
 check_command() {
@@ -32,47 +43,46 @@ for file in config.json pc128.py mcp_server.py harness.lua .vscode/mcp.json .mcp
     fi
 done
 
-if ! check_command python3; then
-    printf '\nInstall Python 3 and rerun this checker.\n' >&2
-    exit 1
-fi
-
-if python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)'; then
-    ok "Python 3.10 or newer"
+PYTHON_AVAILABLE=0
+PYTHON_READY=0
+if check_command python3; then
+    PYTHON_AVAILABLE=1
+    if python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)'; then
+        ok "Python 3.10 or newer"
+        PYTHON_READY=1
+    else
+        fail "Python 3.10 or newer (mcp_server.py requires it)"
+        SYSTEM_PACKAGES_NEEDED=1
+    fi
 else
-    fail "Python 3.10 or newer (mcp_server.py requires it)"
-fi
-
-if python3 -m pip --version >/dev/null 2>&1; then
-    ok "pip for $(python3 --version)"
-else
-    fail "pip for python3 (install python3-pip)"
-fi
-
-if python3 - <<'PY' >/dev/null 2>&1
-import os, subprocess, tempfile, venv
-with tempfile.TemporaryDirectory() as directory:
-    venv.create(directory, with_pip=True)
-    subprocess.run([os.path.join(directory, "bin", "python"), "-m", "pip", "--version"],
-                   check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-PY
-then
-    ok "Python venv support with pip"
-else
-    fail "Python venv support (install python3-venv, or use another supported environment)"
+    SYSTEM_PACKAGES_NEEDED=1
 fi
 
 MCP_PYTHON="$ROOT/.venv/bin/python"
-if [ -x "$MCP_PYTHON" ] && PYTHONPATH="$ROOT${PYTHONPATH:+:$PYTHONPATH}" "$MCP_PYTHON" -c 'import mcp_server' >/dev/null 2>&1; then
-    ok "MCP server imports in the workspace virtual environment"
+if [ "$PYTHON_READY" -eq 1 ]; then
+    if [ -x "$MCP_PYTHON" ] && PYTHONPATH="$ROOT${PYTHONPATH:+:$PYTHONPATH}" "$MCP_PYTHON" -c 'import mcp_server' >/dev/null 2>&1; then
+        ok "MCP server imports in the workspace virtual environment"
+    else
+        printf 'Setting up the workspace Python environment.\n'
+        if python3 -m venv "$ROOT/.venv" && \
+            "$MCP_PYTHON" -m pip install mcp && \
+            PYTHONPATH="$ROOT${PYTHONPATH:+:$PYTHONPATH}" "$MCP_PYTHON" -c 'import mcp_server' >/dev/null 2>&1; then
+            ok "MCP server environment created and verified"
+        else
+            fail "could not create a working MCP environment in .venv"
+            SYSTEM_PACKAGES_NEEDED=1
+            add_user_command "\"$MCP_PYTHON\" -m pip install mcp"
+        fi
+    fi
 else
-    fail "MCP server unavailable in .venv; run: python3 -m venv .venv && .venv/bin/python -m pip install mcp"
+    fail "MCP server environment requires Python 3.10 or newer"
 fi
 
 BUILD_PREREQUISITES=1
 for command in curl tar make; do
     if ! check_command "$command"; then
         BUILD_PREREQUISITES=0
+        SYSTEM_PACKAGES_NEEDED=1
     fi
 done
 
@@ -82,11 +92,14 @@ if command -v "$CC_COMMAND" >/dev/null 2>&1; then
 else
     fail "C compiler (install build-essential, or set CC)"
     BUILD_PREREQUISITES=0
+    SYSTEM_PACKAGES_NEEDED=1
 fi
 
 CONFIG_VALID=1
-if ! python3 -m json.tool "$ROOT/config.json" >/dev/null 2>&1; then
+if [ "$PYTHON_AVAILABLE" -eq 1 ] && ! python3 -m json.tool "$ROOT/config.json" >/dev/null 2>&1; then
     fail "valid JSON in config.json"
+    CONFIG_VALID=0
+elif [ "$PYTHON_AVAILABLE" -eq 0 ]; then
     CONFIG_VALID=0
 fi
 
@@ -112,12 +125,27 @@ PY
         *) ROMPATH="$ROOT/$ROMPATH" ;;
     esac
 
-    if python3 "$ROOT/tools/prepare-roms.py"; then
+    ROM_FILES_READY=1
+    for file in \
+        roms/pro128/basico-0.rom roms/pro128/pro128-0.rom \
+        roms/pro128/basico-1.rom roms/pro128/pro128-1.rom \
+        roms/pro128/basico-2.rom roms/pro128/basico-3.rom \
+        roms/cd90-640.rom; do
+        if [ ! -s "$ROOT/$file" ]; then
+            ROM_FILES_READY=0
+        fi
+    done
+
+    if [ "$ROM_FILES_READY" -eq 1 ]; then
+        ok "prepared ROM files already exist; skipping ROM preparation"
+        ROMS_READY=1
+    elif [ "$PYTHON_AVAILABLE" -eq 1 ] && python3 "$ROOT/tools/prepare-roms.py"; then
         ok "PC128 and CD90 ROM files prepared in roms/"
         ROMS_READY=1
     else
         fail "prepare ROM files from src-rom/"
         ROMS_READY=0
+        add_user_command "python3 \"$ROOT/tools/prepare-roms.py\""
     fi
 
     ROMPATH_VALID=1
@@ -141,6 +169,7 @@ PY
         fi
     else
         fail "MAME executable '$MAME' (install MAME and/or set mame in config.json)"
+        SYSTEM_PACKAGES_NEEDED=1
     fi
 else
     printf 'Skipping MAME and ROM checks because config.json is invalid.\n' >&2
@@ -160,11 +189,25 @@ else
     fail "local lwasm is absent and its build prerequisites are missing"
 fi
 
+if [ "$SYSTEM_PACKAGES_NEEDED" -eq 1 ]; then
+    if [ -n "$USER_COMMANDS" ]; then
+        USER_COMMANDS="sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame
+$USER_COMMANDS"
+    else
+        USER_COMMANDS="sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame"
+    fi
+fi
+
 if [ "$FAILURES" -eq 0 ]; then
     printf '\nEnvironment check passed.\n'
+    if [ -n "$USER_COMMANDS" ]; then
+        printf '\nCommands to run:\n%s\n' "$USER_COMMANDS"
+    fi
     exit 0
 fi
 
 printf '\nEnvironment check found %s issue(s).\n' "$FAILURES" >&2
-printf 'Debian/Ubuntu system packages: sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame\n' >&2
+if [ -n "$USER_COMMANDS" ]; then
+    printf '\nCommands to run:\n%s\n' "$USER_COMMANDS"
+fi
 exit 1
