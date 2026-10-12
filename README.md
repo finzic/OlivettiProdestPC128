@@ -36,6 +36,9 @@ src-rom/pc128.rom
 src-rom/cd90-640.rom
 ```
 
+Optionally add `src-rom/cd90-351.rom` (the 3.5" controller ROM, 8192 bytes, from the same DCMOTO downloads) to
+use the CD90-351; see the floppy section below.
+
 These are the original source images, not the split ROM files. They are copyrighted and are not
 included in the repository. If the prepared ROM set is missing, the checker validates these source
 images and creates the MAME ROM files under the ignored `roms/` directory. It also creates `.venv/`
@@ -83,23 +86,25 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
 1. **Create an image** (task `PC128: create new floppy/cassette/cartridge`, or from a terminal):
 
    ```bash
-   python3 tools/new-media.py floppy    media/disk.fd [--name LABEL] [--sides 1|2]
+   python3 tools/new-media.py floppy    media/disk.fd [--name LABEL] [--sides 1|2] [--tracks 40|80]
    python3 tools/new-media.py cassette  media/tape.wav
    python3 tools/new-media.py cartridge media/cart.rom
    ```
 
    | Kind | Result |
    |---|---|
-   | floppy | Blank formatted `.fd` (160 KB per side), made with `tools/fdtool.py new` |
+   | floppy | Blank formatted `.fd`, made with `tools/fdtool.py new`: 160 KB per side with 40 tracks (5.25", CD90-640, default) or 320 KB per side with 80 tracks (3.5", CD90-351) |
    | cassette | 5 minutes of silent `.wav`; record onto it from MAME's tape controls |
    | cartridge | 16 KB `0xFF` image; read-only in MAME |
 
-   Existing files are never overwritten.
+   Existing files are never overwritten. `new-media.py` only creates blank media (for a floppy it calls
+   `fdtool.py new`); use `tools/fdtool.py` to add, list, read or copy files on a floppy image.
 
 2. **Start a session** (task `PC128: start MAME session (floppy/cassette/cartridge)`, or):
 
    ```bash
    bash tools/run-mame.sh floppy    media/disk.fd   # adds -extension cd90_640 -flop1
+   bash tools/run-mame.sh floppy351 media/disk80.fd [media/disk2.fd]   # CD90-351, 80-track images, optional 2nd drive
    bash tools/run-mame.sh cassette  media/tape.wav  # -cassette
    bash tools/run-mame.sh cartridge media/cart.rom  # -cart
    bash tools/run-mame.sh none                      # bare machine
@@ -110,12 +115,60 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
    On the emulated keyboard, **Delete** is backspace, Tab is *Stop*, Home is *Home/Clear*, and the
    PC Backspace key is the `+ *` key.
 
-3. **Use it**: on a floppy, `SAVE`/`LOAD`/`DIR` in BASIC read and write the `.fd` file directly.
+3. **Use it**: on a floppy, `SAVE`/`LOAD`/`DIR` in BASIC read and write the `.fd` file directly (with the
+   CD90-351 only reading works, see below).
    To swap media while running, use Tab > File Manager (unmount, change or regenerate the file
    with `tools/fdtool.py`, mount again). Do not edit an image externally while it is mounted.
 
 The floppy controller needs `cd90-640.rom`; `tools/prepare-roms.py` places it in `roms/` and
-`roms/pro128/` (MAME looks in the latter).
+`roms/pro128/` (MAME looks in the latter). If `src-rom/cd90-351.rom` (8192 bytes, four 2 KB pages) is
+present, the script also splits it into `cd-351-0..3.rom` in `roms/cd90_351/` and `roms/pro128/`.
+
+## Floppy images and `tools/fdtool.py`
+
+`tools/fdtool.py` creates and edits `.fd` images in the Microsoft BASIC DOS format (track 20: sector 1
+label, sector 2 FAT, sectors 3-16 directory). Pass `--tracks 80` to every command for 3.5" images.
+
+```bash
+python3 tools/fdtool.py new  media/d80.fd --sides 2 --tracks 80 --name LABEL
+python3 tools/fdtool.py put  media/d80.fd examples/hello.bas --tracks 80 [--side 0|1]
+python3 tools/fdtool.py ls   media/d80.fd --tracks 80
+python3 tools/fdtool.py get  media/d80.fd HELLO.BAS out.bas --tracks 80
+python3 tools/fdtool.py cp   media/disk.fd media/d80.fd --name LABEL   # 40-track to 80-track, all files
+python3 tools/fdtool.py cp   media/d80.fd media/disk.fd --src-tracks 80 --dst-tracks 40
+python3 tools/fdtool.py ls   media/d80.fd --tracks 80 --layout interleaved   # override the two-sided track order
+```
+
+`ls` lists every side of a two-sided image (`--side 0|1` limits it to one); `put` and `get` default to side 0.
+`cp` creates the destination if it does not exist; use `--src-side`/`--dst-side` for two-sided images.
+The label sector is written the way `DSKINI` and DCMOTO do: the 8-byte name, the constant bytes
+`8D 5E 25` (meaning unknown), then zeros. A 327680-byte image is two sides of 40 tracks for the CD90-640
+but one side of 80 tracks for the CD90-351, so the same file is read differently by each controller.
+
+Two-sided track order (`--layout`): 40-track images are interleaved per track, as MAME 0.264 expects for the
+CD90-640; 80-track images are sequential (all of side 0, then all of side 1), which is what DCMOTO loads
+(tested with a 655360-byte image holding `SAVEM` dumps of RAM banks on both sides). Both are the defaults,
+so `cp` from a 40-track to an 80-track image converts the order as well.
+
+### CD90-640 and CD90-351 in MAME (0.264)
+
+| | CD90-640 | CD90-351 |
+|---|---|---|
+| Drive | 5.25" 40 tracks, WD1770 | 3.5" 80 tracks, custom THMFC1 |
+| ROM | `DKD(`, 1 page | `MTD:`, 4 pages selected by `$A7D8` bits 0-1 |
+| Read | both sides as `0:` and `1:` | side 0 of each drive works (`0:`, `2:` for a second drive); side 1 fails in 0.264 with either track order |
+| Write / `DSKINI` | works | not possible |
+
+- The default stays `cd90_640`. Use `floppy351` in `run-mame.sh`, or set `floppy_controller` to `cd90_351`
+  (and `floppy2` for the second drive) in `config.json`; the 351 boots slower, so raise `menu_frames` to about 600.
+- Writing fails because MAME's `THMFC1` exits on the write and format commands, and because it reports the
+  write-protect bit inverted (set for a writable image), so the ROM answers `ERR 72` first. An upstream
+  commit from Oct 2024 ("thmfc1: Use CMD2 rather than CMD1 to verify side in track header") looks like the
+  fix for the side-1 failure, so a newer MAME may read side 1 (not verified); writing is still missing there.
+- To tell the controllers apart on a real machine, read `$A000`: `DKD(` is the CD90-640, `MTD:` the CD90-351.
+- The disassembly of the four 351 ROM pages is in [docs/cd90-351-disasm/](docs/cd90-351-disasm/).
+- Workflow: develop and write on the 640 with 40-track images, then convert with `fdtool.py cp` to an
+  80-track image for DCMOTO or a real 3.5" disk.
 
 ## How it works
 
@@ -139,8 +192,8 @@ finish with `BRA *`.
 
 ## Known caveats (not verified on a real MAME install)
 
-- MAME was not available where this was built. The Lua script, runner and MCP tools were tested against
-  a mocked MAME and a mocked `lwasm`. First run on your machine may need small adjustments.
+- The harness has been run against MAME 0.264 (`pro128`); the Lua script, runner and MCP tools were first
+  written against a mocked MAME and `lwasm`, so other MAME versions may need small adjustments.
 - If typed BASIC does not appear on screen, the machine may not map natural keyboard characters; try
   raising `boot_frames` first (the BASIC prompt must be up before typing starts).
 - `headless: true` adds `-video none`; screenshots may not be produced in that mode.

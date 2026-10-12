@@ -34,7 +34,8 @@ DEFAULT_CONFIG = {
     "timeout_s": 120,          # real-time limit for the whole MAME process
     "headless": False,         # True adds -video none (screenshot may not work)
     "floppy": "",              # .fd image for drive 0 (empty = no floppy controller)
-    "floppy_controller": "cd90_640",  # MAME extension slot device; needs its ROM (cd90-640.rom) in rompath
+    "floppy2": "",             # cd90_351 only: .fd image for the second drive (BASIC 2:/3:)
+    "floppy_controller": "cd90_640",  # or cd90_351 (80-track images, read-only in MAME, slower boot: raise menu_frames to ~600)
     "extra_args": [],
 }
 
@@ -265,11 +266,13 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
            "-cfg_directory", str(build / "cfg"), "-nvram_directory", str(build / "nvram"),
            "-autoboot_script", str(job_lua),
            "-seconds_to_run", str(total_frames // FPS + 10)]
-    cmd += ["-video", "none"] if cfg["headless"] else ["-window"]
+    cmd += ["-video", "none"] if cfg["headless"] else ["-window", "-resolution", "960x720", "-nomaximize"]
     if cfg["rompath"]:
         cmd += ["-rompath", cfg["rompath"]]
     if cfg["floppy"]:
         cmd += ["-extension", cfg["floppy_controller"], "-flop1", str(Path(cfg["floppy"]).resolve())]
+        if cfg["floppy2"] and cfg["floppy_controller"] == "cd90_351":
+            cmd += ["-extension:cd90_351:1", "dd90_352", "-flop2", str(Path(cfg["floppy2"]).resolve())]
     cmd += list(cfg["extra_args"])
 
     try:

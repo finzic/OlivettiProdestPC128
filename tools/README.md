@@ -29,7 +29,8 @@ sudo apt update
 sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame
 ```
 
-`mame-tools` is optional; the workspace only requires the `mame` executable.
+`mame-tools` is optional; the workspace only requires the `mame` executable. Its `floptool` converts
+between `.fd` and MAME's `.mfi` flux images if you need that.
 
 Install MCP into the workspace virtual environment. Both the VS Code and Claude Code MCP
 configurations launch the server with this interpreter, so installing MCP into a different
@@ -42,10 +43,12 @@ python -m pip install --upgrade pip
 python -m pip install mcp
 ```
 
-The `mame` executable and the ROM set configured by `machine` and `rompath` in `config.json`
 Place the DCMOTO ROM downloads `pc128.rom` and `cd90-640.rom` in `src-rom/`. The environment
 checker validates and prepares them in the ignored, repository-local `roms/` directory: the PC128
 image is split into `roms/pro128/`, and the CD90 image is copied unchanged to `roms/cd90-640.rom`.
+An optional `src-rom/cd90-351.rom` (8192 bytes, four 2 KB pages) is split by `tools/prepare-roms.py`
+into `cd-351-0..3.rom` under `roms/cd90_351/` and `roms/pro128/`; it is only needed for the 3.5" CD90-351
+(`tools/run-mame.sh floppy351`), and the CD90-640 stays the default.
 The `mame` executable and the ROM set configured by `machine` and `rompath` in `config.json`
 are both required to run the emulator. See [../docs/mame-pc128.md](../docs/mame-pc128.md)
 for the ROM file details. When using the floppy controller, its `cd90-640.rom` is already copied

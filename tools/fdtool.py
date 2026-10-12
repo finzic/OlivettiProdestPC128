@@ -8,13 +8,20 @@ bytes used per sector), blocks of
 byte n+1 = block n: $FF free, $FE reserved/absent, 0-$BF next block, $C1-$C8 last block +
 sectors used), sectors 3-16 directory (32-byte entries; $FF = end, $00 = deleted).
 
-Image sizes: 163840 = one side; 327680 = two sides interleaved per track (MAME .fd layout
-for the 40-track CD 90-640); use --side 1 for the second face (drive 1 in BASIC).
+Image sizes: 163840 = one side; 327680 = two sides. Two-sided track order (--layout): 40-track images
+are interleaved per track (what MAME 0.264 uses for the CD 90-640); 80-track images are sequential,
+all of side 0 then all of side 1 (verified in DCMOTO). Use --side 1 for the second face.
 
-  fdtool.py new  DISK.fd [--name NAME] [--sides 1|2]
+Use --tracks 80 on every command for 3.5in CD 90-351 images (655360 bytes for two sides).
+
+  fdtool.py new  DISK.fd [--name NAME] [--sides 1|2] [--tracks 40|80]
   fdtool.py put  DISK.fd FILE [--as NAME.EXT] [--type 0-3] [--ascii] [--side 0|1]
-  fdtool.py ls   DISK.fd [--side 0|1]
+  fdtool.py ls   DISK.fd [--side 0|1]     (default: every side of a two-sided image)
   fdtool.py get  DISK.fd NAME.EXT OUTFILE [--side 0|1]
+  fdtool.py cp   SRC.fd DST.fd [--src-tracks 40|80] [--dst-tracks 40|80] [--src-side N] [--dst-side N]
+                 [--dst-sides 1|2] [--src-layout L] [--dst-layout L] [--name LABEL]
+
+--layout interleaved|sequential overrides the default two-sided track order of any command.
 
 `put` guesses the type from the extension: .BIN -> 2 (machine code, binary),
 .BAS -> 0 BASIC (sent as ASCII text with CR LF line ends, flag $FF), else 1 data.
@@ -23,35 +30,41 @@ import argparse
 import sys
 from pathlib import Path
 
-SECTOR, SPT, TRACKS = 256, 16, 40
+SECTOR, SPT = 256, 16
 # BASIC 128 DOS stores 255 data bytes per sector; the 256th is $00 (verified with SAVE/SAVEM)
 DATA_PER_SECTOR = 255
 DIR_TRACK = 20
 BLOCK_SECTORS = 8
-NBLOCKS = TRACKS * 2
-SIDE_SIZE = SECTOR * SPT * TRACKS
 FAT_ENTRIES = 160
 
 
 class Disk:
-    def __init__(self, data, side=0):
-        if len(data) not in (SIDE_SIZE, 2 * SIDE_SIZE):
-            raise SystemExit("unsupported image size %d (expected %d or %d)" % (len(data), SIDE_SIZE, 2 * SIDE_SIZE))
-        if side and len(data) == SIDE_SIZE:
+    def __init__(self, data, side=0, tracks=40, layout=None):
+        side_size = SECTOR * SPT * tracks
+        if len(data) not in (side_size, 2 * side_size):
+            raise SystemExit("unsupported image size %d (expected %d or %d for %d tracks)"
+                             % (len(data), side_size, 2 * side_size, tracks))
+        if side and len(data) == side_size:
             raise SystemExit("single-sided image has no side 1")
         self.d = bytearray(data)
-        self.sides = len(data) // SIDE_SIZE
+        self.tracks = tracks
+        self.nblocks = tracks * 2
+        self.sides = len(data) // side_size
         self.side = side
+        # 80-track two-sided images: side 0 then side 1 (verified in DCMOTO); 40-track: MAME 0.264 interleaves
+        self.layout = layout or ("sequential" if tracks == 80 else "interleaved")
 
     def off(self, track, sector):
+        if self.layout == "sequential":
+            return ((self.side * self.tracks + track) * SPT + sector - 1) * SECTOR
         return ((track * self.sides + self.side) * SPT + sector - 1) * SECTOR
 
     def block_off(self, b):
         return self.off(b // 2, (b % 2) * BLOCK_SECTORS + 1)
 
     @classmethod
-    def blank(cls, name="", sides=1):
-        disk = cls(bytearray(b"\xE5" * SIDE_SIZE * sides))
+    def blank(cls, name="", sides=1, tracks=40, layout=None):
+        disk = cls(bytearray(b"\xE5" * SECTOR * SPT * tracks * sides), 0, tracks, layout)
         for side in range(sides):
             disk.side = side
             disk.format_side(name)
@@ -60,11 +73,11 @@ class Disk:
 
     def format_side(self, name):
         o = self.off(DIR_TRACK, 1)
-        self.d[o:o + SECTOR] = b"\xFF" * SECTOR
-        self.d[o:o + 8] = name.upper().encode("ascii")[:8].ljust(8)
+        # Label as written by DSKINI on a real/DCMOTO disk: name, 3 constant bytes (meaning unknown), zeros
+        self.d[o:o + SECTOR] = name.upper().encode("ascii")[:8].ljust(8) + b"\x8D\x5E\x25" + b"\x00" * (SECTOR - 11)
         fat = bytearray(SECTOR)
         for b in range(FAT_ENTRIES):
-            fat[b + 1] = 0xFF if b < NBLOCKS and b // 2 != DIR_TRACK else 0xFE
+            fat[b + 1] = 0xFF if b < self.nblocks and b // 2 != DIR_TRACK else 0xFE
         o = self.off(DIR_TRACK, 2)
         self.d[o:o + SECTOR] = fat
         for s in range(3, 17):
@@ -117,7 +130,7 @@ class Disk:
 
     def free_blocks(self):
         # Allocate outwards from the directory track, as Thomson DOS does
-        order = sorted(range(NBLOCKS), key=lambda b: (abs(b // 2 - DIR_TRACK), b))
+        order = sorted(range(self.nblocks), key=lambda b: (abs(b // 2 - DIR_TRACK), b))
         return [b for b in order if self.fat[b + 1] == 0xFF]
 
     def put(self, name, ext, data, ftype, ascii_flag):
@@ -175,22 +188,58 @@ def main():
     p.add_argument("--ascii", action="store_true")
     l = sub.add_parser("ls"); l.add_argument("disk")
     g = sub.add_parser("get"); g.add_argument("disk"); g.add_argument("name"); g.add_argument("out")
-    for sp in (p, l, g):
+    c = sub.add_parser("cp", help="copy all files between images, e.g. 40-track to 80-track")
+    c.add_argument("src"); c.add_argument("dst")
+    c.add_argument("--src-tracks", type=int, choices=(40, 80), default=40)
+    c.add_argument("--dst-tracks", type=int, choices=(40, 80), default=80)
+    c.add_argument("--src-side", type=int, choices=(0, 1), default=0)
+    c.add_argument("--dst-side", type=int, choices=(0, 1), default=0)
+    c.add_argument("--dst-sides", type=int, choices=(1, 2), default=1, help="sides when DST is created")
+    c.add_argument("--src-layout", choices=("interleaved", "sequential"))
+    c.add_argument("--dst-layout", choices=("interleaved", "sequential"))
+    c.add_argument("--name", default="", help="label when DST is created")
+    for sp in (p, g):
         sp.add_argument("--side", type=int, choices=(0, 1), default=0)
+    l.add_argument("--side", type=int, choices=(0, 1), help="default: all sides")
+    for sp in (n, p, l, g):
+        sp.add_argument("--tracks", type=int, choices=(40, 80), default=40,
+                        help="40 = 5.25in (CD 90-640), 80 = 3.5in (CD 90-351)")
+        sp.add_argument("--layout", choices=("interleaved", "sequential"),
+                        help="two-sided track order; default sequential for 80 tracks, interleaved for 40")
     a = ap.parse_args()
 
+    if a.cmd == "cp":
+        src = Disk(Path(a.src).read_bytes(), a.src_side, a.src_tracks, a.src_layout)
+        dpath = Path(a.dst)
+        if dpath.exists():
+            dst = Disk(dpath.read_bytes(), a.dst_side, a.dst_tracks, a.dst_layout)
+        else:
+            dst = Disk.blank(a.name, a.dst_sides, a.dst_tracks, a.dst_layout)
+            dst.side = a.dst_side
+        for _, name, ext, t, flag, first, lb in list(src.files()):
+            dst.put(name, ext, src.read(first, lb), t, bool(flag))
+            print("copied %s.%s" % (name, ext))
+        dpath.write_bytes(dst.d)
+        return
+
     if a.cmd == "new":
-        Path(a.disk).write_bytes(Disk.blank(a.name, a.sides).d)
+        Path(a.disk).write_bytes(Disk.blank(a.name, a.sides, a.tracks, a.layout).d)
         print("created", a.disk)
         return
-    disk = Disk(Path(a.disk).read_bytes(), a.side)
+    disk = Disk(Path(a.disk).read_bytes(), a.side or 0, a.tracks, a.layout)
     if a.cmd == "ls":
         types = {0: "BASIC", 1: "DATA", 2: "BIN", 3: "ASM"}
-        free = len(disk.free_blocks())
-        for _, name, ext, t, flag, first, lb in disk.files():
-            size = len(disk.read(first, lb))
-            print("%-8s.%-3s %-5s %s %6d bytes" % (name, ext, types.get(t, t), "A" if flag else "B", size))
-        print("%d free blocks (%d KB)" % (free, free * 2))
+        sides = range(disk.sides) if a.side is None else [a.side]
+        for side in sides:
+            disk.side = side
+            if len(sides) > 1:
+                label = disk.d[disk.off(DIR_TRACK, 1):][:8].decode("latin-1").rstrip()
+                print("side %d: %s" % (side, label))
+            free = len(disk.free_blocks())
+            for _, name, ext, t, flag, first, lb in disk.files():
+                size = len(disk.read(first, lb))
+                print("%-8s.%-3s %-5s %s %6d bytes" % (name, ext, types.get(t, t), "A" if flag else "B", size))
+            print("%d free blocks (%d KB)" % (free, free * 2))
     elif a.cmd == "put":
         name, ext = split_name(a.as_name or a.file)
         data = Path(a.file).read_bytes()

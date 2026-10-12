@@ -22,10 +22,9 @@ SEGMENTS = (
 def main():
     pc128_path = SOURCE_DIR / "pc128.rom"
     cd90_path = SOURCE_DIR / "cd90-640.rom"
-    missing = [str(path.relative_to(ROOT)) for path in (pc128_path, cd90_path) if not path.is_file()]
-    if missing:
-        print("Missing source ROM file(s): " + ", ".join(missing), file=sys.stderr)
-        print("Place pc128.rom and cd90-640.rom in src-rom/.", file=sys.stderr)
+    cd351_path = SOURCE_DIR / "cd90-351.rom"
+    if not pc128_path.is_file() or not (cd351_path.is_file() or cd90_path.is_file()):
+        print("Place pc128.rom and cd90-351.rom (or cd90-640.rom) in src-rom/.", file=sys.stderr)
         return 1
 
     image = pc128_path.read_bytes()
@@ -48,10 +47,21 @@ def main():
         (pro128_dir / name).write_bytes(data)
         print(f"Prepared roms/pro128/{name}")
 
-    shutil.copyfile(cd90_path, ROM_DIR / "cd90-640.rom")
-    print("Copied src-rom/cd90-640.rom to roms/cd90-640.rom")
-    shutil.copyfile(cd90_path, pro128_dir / "cd90-640.rom")  # MAME looks for the extension ROM here
-    print("Copied src-rom/cd90-640.rom to roms/pro128/cd90-640.rom")
+    if cd351_path.is_file():
+        data = cd351_path.read_bytes()
+        if len(data) != 8192:
+            print(f"{cd351_path.relative_to(ROOT)} must be 8192 bytes; got {len(data)}.", file=sys.stderr)
+            return 1
+        for i in range(4):  # 4 pages of 2 KB, MAME uses the first 1984 bytes of each
+            for d in (ROM_DIR / "cd90_351", pro128_dir):
+                d.mkdir(parents=True, exist_ok=True)
+                (d / f"cd-351-{i}.rom").write_bytes(data[i * 2048:i * 2048 + 1984])
+        print("Prepared cd-351-0..3.rom in roms/cd90_351/ and roms/pro128/")
+    if cd90_path.is_file():
+        shutil.copyfile(cd90_path, ROM_DIR / "cd90-640.rom")
+        print("Copied src-rom/cd90-640.rom to roms/cd90-640.rom")
+        shutil.copyfile(cd90_path, pro128_dir / "cd90-640.rom")  # MAME looks for the extension ROM here
+        print("Copied src-rom/cd90-640.rom to roms/pro128/cd90-640.rom")
     return 0
 
 

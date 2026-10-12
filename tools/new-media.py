@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Create a blank floppy (.fd), cassette (.wav) or cartridge (.rom) image.
 
-Usage: new-media.py <floppy|cassette|cartridge> <path> [--name LABEL] [--sides 1|2]
+Usage: new-media.py <floppy|cassette|cartridge> <path> [--name LABEL] [--sides 1|2] [--tracks 40|80]
 """
 import argparse
 import subprocess
@@ -18,6 +18,7 @@ def main():
     ap.add_argument("path")
     ap.add_argument("--name", default="")
     ap.add_argument("--sides", default="1")
+    ap.add_argument("--tracks", default="40", help="floppy: 40 (CD 90-640) or 80 (CD 90-351)")
     a = ap.parse_args()
 
     p = Path(a.path)
@@ -26,7 +27,7 @@ def main():
     p.parent.mkdir(parents=True, exist_ok=True)
 
     if a.kind == "floppy":
-        cmd = [sys.executable, str(HERE / "fdtool.py"), "new", str(p), "--sides", a.sides]
+        cmd = [sys.executable, str(HERE / "fdtool.py"), "new", str(p), "--sides", a.sides, "--tracks", a.tracks]
         if a.name:
             cmd += ["--name", a.name]
         subprocess.run(cmd, check=True)

@@ -51,7 +51,9 @@ Run the environment checker to validate and prepare them:
 ```
 
 It splits `pc128.rom` into the six CRC-checked files listed above under `roms/pro128/` and copies
-`cd90-640.rom` unchanged to `roms/`. The local `roms/` search path is configured in `config.json`;
+`cd90-640.rom` unchanged to `roms/`. If `src-rom/cd90-351.rom` (8192 bytes: four 2 KB pages, the first 1984
+bytes of each used) exists, `tools/prepare-roms.py` also writes `cd-351-0..3.rom` to `roms/cd90_351/` and
+`roms/pro128/`; the CD90-351 is optional (see the floppy section of the README). The local `roms/` search path is configured in `config.json`;
 both `src-rom/` and generated `roms/` are ignored by Git. To verify the machine ROM set directly,
 run this from the repository root:
 
