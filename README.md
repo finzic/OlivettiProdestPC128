@@ -4,6 +4,7 @@ A Repo containing wiki and code for our beloved 8-bit machine
 ## Documentation
 
 - [PC128 system calls and ROM calling reference](docs/pc128-system-calls.md)
+- [Configuration of local environment][docs/mame-pc128.md]
 
 # PC128 harness: run BASIC and 6809 code from VS Code
 
@@ -68,3 +69,6 @@ finish with `BRA *`.
   register names (`PC`, `S`, `U`, `X`, `Y`, `A`, `B`, `DP`, `CC`) are assumed for the 6809 core.
 - Each call starts from a cold boot. There is no persistent session.
 
+
+
+[localEnvReference]: docs/mame-pc128.md
