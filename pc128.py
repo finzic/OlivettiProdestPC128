@@ -13,6 +13,7 @@ import json
 import re
 import subprocess
 import sys
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -45,6 +46,7 @@ def load_config(overrides=None):
     if path.exists():
         cfg.update(json.loads(path.read_text()))
     cfg.update({k: v for k, v in (overrides or {}).items() if v is not None})
+    cfg["rompath"] = os.path.expandvars(os.path.expanduser(cfg["rompath"]))
     return cfg
 
 

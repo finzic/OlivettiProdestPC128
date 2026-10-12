@@ -1,7 +1,7 @@
 {
   "mame": "mame",
   "machine": "pro128",
-  "rompath": "/home/finzic/.mame/roms",
+  "rompath": "$HOME/.mame/roms",
   "lwasm": "lwasm",
   "boot_frames": 250,
   "menu_key": "1",
