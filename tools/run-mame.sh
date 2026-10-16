@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 kind="${1:-none}"
 img="${2:-}"
 # tools/mame-cfg remaps UI keys: F11 = MAME menu, F12 = exit (Esc no longer quits)
-args=(pro128 -rompath ./roms -window -resolution 960x720 -nomaximize -noconfirm_quit -ui_active -cfg_directory tools/mame-cfg)
+args=(pro128 -rompath ./roms -window -resolution 960x720 -nomaximize -noconfirm_quit -ui_active -throttle -speed 1.0 -cfg_directory tools/mame-cfg)
 
 if [[ "$kind" != none ]]; then
   [[ -n "$img" && -f "$img" ]] || { echo "Image not found: '$img'" >&2; exit 1; }
@@ -26,5 +26,5 @@ case "$kind" in
 esac
 
 MAME=mame
-[[ -x tools/.local/mame/thomson ]] && MAME=tools/.local/mame/thomson
+[[ -x tools/.local/mame/mame_thomson/thomson ]] && MAME=tools/.local/mame/mame_thomson/thomson
 exec "$MAME" "${args[@]}"

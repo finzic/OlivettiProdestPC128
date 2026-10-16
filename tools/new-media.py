@@ -18,7 +18,7 @@ def main():
     ap.add_argument("path")
     ap.add_argument("--name", default="")
     ap.add_argument("--sides", default="1")
-    ap.add_argument("--tracks", default="40", help="floppy: 40 (CD 90-640) or 80 (CD 90-351)")
+    ap.add_argument("--tracks", default="80", help="floppy: 80 (CD 90-351, default) or 40 (CD 90-640)")
     a = ap.parse_args()
 
     p = Path(a.path)

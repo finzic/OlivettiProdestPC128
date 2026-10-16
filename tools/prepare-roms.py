@@ -23,8 +23,8 @@ def main():
     pc128_path = SOURCE_DIR / "pc128.rom"
     cd90_path = SOURCE_DIR / "cd90-640.rom"
     cd351_path = SOURCE_DIR / "cd90-351.rom"
-    if not pc128_path.is_file() or not (cd351_path.is_file() or cd90_path.is_file()):
-        print("Place pc128.rom and cd90-351.rom (or cd90-640.rom) in src-rom/.", file=sys.stderr)
+    if not pc128_path.is_file() or not cd351_path.is_file():
+        print("Place pc128.rom and cd90-351.rom in src-rom/; cd90-640.rom is optional.", file=sys.stderr)
         return 1
 
     image = pc128_path.read_bytes()
@@ -43,6 +43,9 @@ def main():
 
     pro128_dir = ROM_DIR / "pro128"
     pro128_dir.mkdir(parents=True, exist_ok=True)
+    (pro128_dir / "pro128.iw01").write_bytes(image[:0x8000])
+    (pro128_dir / "basico.iw02").write_bytes(image[0x8000:0x10000])
+    print("Prepared roms/pro128/pro128.iw01 and basico.iw02")
     for name, data in prepared:
         (pro128_dir / name).write_bytes(data)
         print(f"Prepared roms/pro128/{name}")

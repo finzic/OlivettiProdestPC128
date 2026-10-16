@@ -18,7 +18,8 @@ executable. Install it before assembling; they do not silently fall back to a sy
 Run `./tools/check-environment.sh` from any directory in the repository. It checks for
 Python 3.10 or newer, pip and the MCP package, the native tools needed to build LWTOOLS
 (`curl`, `tar`, `make`, and a C compiler), MAME, the configured MAME machine and ROM set,
-and the expected workspace configuration files. If the local `lwasm` is missing and its
+and the expected workspace configuration files. It prefers the prepared local MAME build and falls
+back to the configured system MAME executable. If the local `lwasm` is missing and its
 build prerequisites are available, the checker runs `setup-lwasm.sh` automatically.
 
 The checker reports missing prerequisites and exits non-zero; it does not install system
@@ -26,10 +27,12 @@ packages or Python packages. On Debian or Ubuntu, install the system packages wi
 
 ```bash
 sudo apt update
-sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame
+sudo apt install curl tar make build-essential python3 python3-pip python3-venv
 ```
 
-`mame-tools` is optional; the workspace only requires the `mame` executable. Its `floptool` converts
+For the standard workflow, build the pinned, patched MAME locally with `./tools/prepare-mame.sh`;
+install the distro `mame` package only if you want the system-MAME fallback. `mame-tools` is optional;
+its `floptool` converts
 between `.fd` and MAME's `.mfi` flux images if you need that.
 
 Install MCP into the workspace virtual environment. Both the VS Code and Claude Code MCP
@@ -43,16 +46,18 @@ python -m pip install --upgrade pip
 python -m pip install mcp
 ```
 
-Place the DCMOTO ROM downloads `pc128.rom` and `cd90-640.rom` in `src-rom/`. The environment
+Place the DCMOTO ROM downloads `pc128.rom` and `cd90-351.rom` in `src-rom/`. The CD90-351 is the
+PC128's original 3.5-inch drive and the repository's primary floppy target. The `cd90-640.rom` for the
+5.25-inch fallback is optional. The environment
 checker validates and prepares them in the ignored, repository-local `roms/` directory: the PC128
-image is split into `roms/pro128/`, and the CD90 image is copied unchanged to `roms/cd90-640.rom`.
-An optional `src-rom/cd90-351.rom` (8192 bytes, four 2 KB pages) is split by `tools/prepare-roms.py`
-into `cd-351-0..3.rom` under `roms/cd90_351/` and `roms/pro128/`; it is only needed for the 3.5" CD90-351
-(`tools/run-mame.sh floppy351`), and the CD90-640 stays the default.
-The `mame` executable and the ROM set configured by `machine` and `rompath` in `config.json`
-are both required to run the emulator. See [../docs/mame-pc128.md](../docs/mame-pc128.md)
-for the ROM file details. When using the floppy controller, its `cd90-640.rom` is already copied
-into the configured ROM path by the checker.
+image is split for older MAME and staged as `pro128.iw01`/`basico.iw02` for current MAME, and the CD90
+351 image is split by `tools/prepare-roms.py` into `cd-351-0..3.rom` under `roms/cd90_351/` and
+`roms/pro128/`. If present, `cd90-640.rom` is copied unchanged to `roms/cd90-640.rom` and
+`roms/pro128/`.
+The prepared local MAME executable (or configured system-MAME fallback) and the ROM set configured by
+`machine` and `rompath` in `config.json` are required to run the emulator. See
+[../docs/mame-pc128.md](../docs/mame-pc128.md) for the ROM file details. The checker prepares the
+required CD90-351 pages; if supplied, it also copies the optional `cd90-640.rom` fallback into the ROM path.
 
 LWTOOLS is downloaded as source and compiled locally. Its executable is placed under
 `tools/.local/`; both that directory and the suggested `.venv/` are excluded by

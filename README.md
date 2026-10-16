@@ -16,11 +16,11 @@ Complete these steps before running the environment checker.
 
 ```bash
 sudo apt update
-sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame
+sudo apt install curl tar make build-essential python3 python3-pip python3-venv
 ```
 
-Other Linux distributions need equivalent packages. The workspace requires the `mame`
-executable; `mame-tools` is optional.
+Other Linux distributions need equivalent packages. MAME is cloned and built locally in step 3;
+you do not need to install the distro MAME package for the standard workflow.
 
 2. Obtain the original DCMOTO ROM downloads and put both files in `src-rom/` at the repository
 root. Create the directory if needed:
@@ -33,18 +33,30 @@ The required paths and filenames are:
 
 ```text
 src-rom/pc128.rom
-src-rom/cd90-640.rom
+src-rom/cd90-351.rom
 ```
 
-Optionally add `src-rom/cd90-351.rom` (the 3.5" controller ROM, 8192 bytes, from the same DCMOTO downloads) to
-use the CD90-351; see the floppy section below.
+This repository's primary floppy target is the CD90-351, PC128's original 3.5" drive. Optionally add
+`src-rom/cd90-640.rom` (the 5.25" controller ROM) if you want the CD90-640 fallback described below.
 
-These are the original source images, not the split ROM files. They are copyrighted and are not
-included in the repository. If the prepared ROM set is missing, the checker validates these source
-images and creates the MAME ROM files under the ignored `roms/` directory. It also creates `.venv/`
-and installs MCP if needed, and builds local LWTOOLS if needed. It does not install system packages.
+These are the original source images, not the prepared MAME ROM files. They are copyrighted and are
+not included in the repository. `tools/prepare-roms.py` validates them and creates the ignored
+`roms/` files, including the 32 KB `pro128.iw01` and `basico.iw02` files required by current MAME,
+the split PC128 ROM files, and the required CD90-351 ROM files. If `cd90-640.rom` is present, it also
+stages the CD90-640 ROM. The environment checker creates
+`.venv/` and installs MCP if needed, and builds local LWTOOLS if needed. It does not install system packages.
 
-3. From the repository root, run:
+3. Build the patched MAME used by the standard workflow:
+
+```bash
+./tools/prepare-mame.sh
+```
+
+This clones the MAME commit pinned in `mame-patch/BASE_COMMIT`, applies the THMFC1 patch, and builds
+the Thomson target under `tools/.local/mame/`. The default build uses at most 6 jobs; `--jobs N` sets
+an explicit limit.
+
+4. From the repository root, run:
 
 ```bash
 ./tools/check-environment.sh
@@ -87,14 +99,14 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
 1. **Create an image** (task `PC128: create new floppy/cassette/cartridge`, or from a terminal):
 
    ```bash
-   python3 tools/new-media.py floppy    media/disk.fd [--name LABEL] [--sides 1|2] [--tracks 40|80]
+    python3 tools/new-media.py floppy    media/disk.fd [--name LABEL] [--sides 1|2] [--tracks 80|40]
    python3 tools/new-media.py cassette  media/tape.wav
    python3 tools/new-media.py cartridge media/cart.rom
    ```
 
    | Kind | Result |
    |---|---|
-   | floppy | Blank formatted `.fd`, made with `tools/fdtool.py new`: 160 KB per side with 40 tracks (5.25", CD90-640, default) or 320 KB per side with 80 tracks (3.5", CD90-351) |
+    | floppy | Blank formatted `.fd`, made with `tools/fdtool.py new`: 320 KB per side with 80 tracks (3.5", CD90-351, default) or 160 KB per side with 40 tracks (5.25", CD90-640 fallback) |
    | cassette | 5 minutes of silent `.wav`; record onto it from MAME's tape controls |
    | cartridge | 16 KB `0xFF` image; read-only in MAME |
 
@@ -104,8 +116,8 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
 2. **Start a session** (task `PC128: start MAME session (floppy/cassette/cartridge)`, or):
 
    ```bash
-   bash tools/run-mame.sh floppy    media/disk.fd   # adds -extension cd90_640 -flop1
-   bash tools/run-mame.sh floppy351 media/disk80.fd [media/disk2.fd]   # CD90-351, 80-track images, optional 2nd drive
+    bash tools/run-mame.sh floppy351 media/disk80.fd [media/disk2.fd]   # primary: CD90-351, 80-track images
+    bash tools/run-mame.sh floppy    media/disk40.fd                    # fallback: CD90-640, 40-track image
    bash tools/run-mame.sh cassette  media/tape.wav  # -cassette
    bash tools/run-mame.sh cartridge media/cart.rom  # -cart
    bash tools/run-mame.sh none                      # bare machine
@@ -116,14 +128,11 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
    On the emulated keyboard, **Delete** is backspace, Tab is *Stop*, Home is *Home/Clear*, and the
    PC Backspace key is the `+ *` key.
 
-3. **Use it**: on a floppy, `SAVE`/`LOAD`/`DIR` in BASIC read and write the `.fd` file directly (with the
-   CD90-351 this needs the patched MAME, see below).
+3. **Use it**: on a floppy, `SAVE`/`LOAD`/`DIR` in BASIC read and write the `.fd` file directly. The
+    CD90-351 uses the patched MAME built in step 3 above. If it gives you trouble, use the optional
+    CD90-640 ROM, a 40-track image, and `bash tools/run-mame.sh floppy media/disk40.fd` instead.
    To swap media while running, use Tab > File Manager (unmount, change or regenerate the file
    with `tools/fdtool.py`, mount again). Do not edit an image externally while it is mounted.
-
-The floppy controller needs `cd90-640.rom`; `tools/prepare-roms.py` places it in `roms/` and
-`roms/pro128/` (MAME looks in the latter). If `src-rom/cd90-351.rom` (8192 bytes, four 2 KB pages) is
-present, the script also splits it into `cd-351-0..3.rom` in `roms/cd90_351/` and `roms/pro128/`.
 
 ## Floppy images and `tools/fdtool.py`
 
@@ -151,17 +160,17 @@ CD90-640; 80-track images are sequential (all of side 0, then all of side 1), wh
 (tested with a 655360-byte image holding `SAVEM` dumps of RAM banks on both sides). Both are the defaults,
 so `cp` from a 40-track to an 80-track image converts the order as well.
 
-### CD90-640 and CD90-351 in MAME
+### PC128 floppy controllers in MAME
 
-| | CD90-640 | CD90-351 |
+| | CD90-351 (primary) | CD90-640 (fallback) |
 |---|---|---|
-| Drive | 5.25" 40 tracks, WD1770 | 3.5" 80 tracks, custom THMFC1 |
-| ROM | `DKD(`, 1 page | `MTD:`, 4 pages selected by `$A7D8` bits 0-1 |
-| Read | both sides as `0:` and `1:` | side 0 of each drive works (`0:`, `2:` for a second drive); side 1 fails in 0.264 with either track order |
-| Write / `DSKINI` | works | works with the patched MAME (`tools/prepare-mame.sh`); read-only in stock MAME |
+| Drive | Original 3.5" drive, 80 tracks, custom THMFC1 | 5.25" drive, 40 tracks, WD1770 |
+| ROM | `MTD:`, 4 pages selected by `$A7D8` bits 0-1 | `DKD(`, 1 page |
+| Read | side 0 of each drive verified (`0:`, `2:` for a second drive); side 1 failed on stock MAME 0.264 and has not been retested on the patched build | both sides as `0:` and `1:` |
+| Write / `DSKINI` | works with the patched MAME (`tools/prepare-mame.sh`); read-only in stock MAME | works |
 
-- The default stays `cd90_640`. Use `floppy351` in `run-mame.sh`, or set `floppy_controller` to `cd90_351`
-  (and `floppy2` for the second drive) in `config.json`; the 351 boots slower, so raise `menu_frames` to about 600.
+- Harness runs default to `cd90_351` and allow 600 menu frames for its slower boot. Set `floppy_controller` to
+  `cd90_640` in `config.json` to use the fallback; it requires the optional `src-rom/cd90-640.rom`.
 - **Patched MAME.** Stock MAME's `THMFC1` exits on the write and format commands and reports the write-protect
   bit inverted. `tools/prepare-mame.sh` clones MAME at the commit in `mame-patch/BASE_COMMIT`, applies
   `mame-patch/0001-*.patch` (write sector, raw write/format, read header, idle byte-ready, write-protect fix;
@@ -173,8 +182,8 @@ so `cp` from a 40-track to an 80-track image converts the order as well.
   sequential files, write protect, disk change. Not verified: side 1, a real second drive, random-access files.
 - To tell the controllers apart on a real machine, read `$A000`: `DKD(` is the CD90-640, `MTD:` the CD90-351.
 - The disassembly of the four 351 ROM pages is in [docs/cd90-351-disasm/](docs/cd90-351-disasm/).
-- Workflow: develop and write on the 640 with 40-track images, then convert with `fdtool.py cp` to an
-  80-track image for DCMOTO or a real 3.5" disk.
+- Workflow: use 80-track images with the primary CD90-351. For the 5.25" CD90-640 fallback, use 40-track
+  images; convert between layouts with `fdtool.py cp` when moving files between the drives or DCMOTO.
 
 ## How it works
 
@@ -196,10 +205,10 @@ The screen of this machine is graphical, so text can't be read back directly. In
 Machine-code programs: use `ORG $9000` (user RAM is roughly `$2000-$9FFF`), `END label`, and
 finish with `BRA *`.
 
-## Known caveats (not verified on a real MAME install)
+## Known caveats
 
-- The harness has been run against MAME 0.264 (`pro128`); the Lua script, runner and MCP tools were first
-  written against a mocked MAME and `lwasm`, so other MAME versions may need small adjustments.
+- The standard workflow uses the repo-built MAME version pinned in `mame-patch/BASE_COMMIT` (0.289).
+  The system-MAME fallback and other versions have not been fully verified.
 - If typed BASIC does not appear on screen, the machine may not map natural keyboard characters; try
   raising `boot_frames` first (the BASIC prompt must be up before typing starts).
 - `headless: true` adds `-video none`; screenshots may not be produced in that mode.

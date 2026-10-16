@@ -1,7 +1,10 @@
 # Running the Olivetti Prodest PC128 in MAME
 
-This note describes how MAME was set up on Linux (MAME 0.264, Ubuntu/Debian package) to emulate the
-Olivetti Prodest PC128. It is used for testing the BASIC extension project in `pc128-basic-ext/`.
+Historical setup note: this describes the original Linux setup with distro MAME 0.264 and the CD90-640.
+For the current PC128 workspace workflow, use `tools/prepare-mame.sh` to build the pinned, patched MAME
+for the original 3.5-inch CD90-351. The 5.25-inch CD90-640 remains an optional fallback; its package-install
+and `~/.mame` configuration notes below may help with that older setup. The debugger and ROM-format notes
+may also be useful for the BASIC extension project.
 
 ## 1. Install MAME
 

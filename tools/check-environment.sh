@@ -109,6 +109,10 @@ import json, sys
 print(json.load(open(sys.argv[1])).get(sys.argv[2], "mame"))
 PY
 )
+    LOCAL_MAME="$ROOT/tools/.local/mame/mame_thomson/thomson"
+    if [ "$MAME" = "mame" ] && [ -x "$LOCAL_MAME" ]; then
+        MAME=$LOCAL_MAME
+    fi
     MACHINE=$(python3 - "$ROOT/config.json" machine <<'PY'
 import json, sys
 print(json.load(open(sys.argv[1])).get(sys.argv[2], "pro128"))
@@ -127,10 +131,12 @@ PY
 
     ROM_FILES_READY=1
     for file in \
+        roms/pro128/pro128.iw01 roms/pro128/basico.iw02 \
         roms/pro128/basico-0.rom roms/pro128/pro128-0.rom \
         roms/pro128/basico-1.rom roms/pro128/pro128-1.rom \
         roms/pro128/basico-2.rom roms/pro128/basico-3.rom \
-        roms/cd90-640.rom; do
+        roms/cd90_351/cd-351-0.rom roms/cd90_351/cd-351-1.rom \
+        roms/cd90_351/cd-351-2.rom roms/cd90_351/cd-351-3.rom; do
         if [ ! -s "$ROOT/$file" ]; then
             ROM_FILES_READY=0
         fi
@@ -168,7 +174,7 @@ PY
             fi
         fi
     else
-        fail "MAME executable '$MAME' (install MAME and/or set mame in config.json)"
+        fail "MAME executable '$MAME' (run tools/prepare-mame.sh, install system MAME, or set mame in config.json)"
         SYSTEM_PACKAGES_NEEDED=1
     fi
 else

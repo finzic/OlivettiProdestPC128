@@ -26,7 +26,7 @@ DEFAULT_CONFIG = {
     "lwasm": str(ROOT / "tools" / ".local" / "lwtools-4.24" / "lwasm" / "lwasm"),
     "boot_frames": 250,        # ~5 s of emulated time to reach the boot menu
     "menu_key": "1",           # boot menu: "1" BASIC 128, "2" BASIC 1.0
-    "menu_frames": 150,        # wait after menu_key for the BASIC prompt
+    "menu_frames": 600,        # wait after menu_key for the BASIC prompt (CD90-351 boot)
     "default_bank": 6,         # BASIC 128 bank read at $6000-$9FFF when no @n is given (power-on bank)
     "data_banks": [":bank7", ":bank8"],  # MAME banks behind $6000-$7FFF and $8000-$9FFF (pro128, MAME 0.264)
     "line_gap_frames": 6,      # pause between typed BASIC lines
@@ -35,7 +35,7 @@ DEFAULT_CONFIG = {
     "headless": False,         # True adds -video none (screenshot may not work)
     "floppy": "",              # .fd image for drive 0 (empty = no floppy controller)
     "floppy2": "",             # cd90_351 only: .fd image for the second drive (BASIC 2:/3:)
-    "floppy_controller": "cd90_640",  # or cd90_351 (80-track images, read-only in MAME, slower boot: raise menu_frames to ~600)
+    "floppy_controller": "cd90_351",  # original 3.5" drive; cd90_640 is the optional fallback
     "extra_args": [],
 }
 
@@ -47,7 +47,7 @@ def load_config(overrides=None):
     if path.exists():
         cfg.update(json.loads(path.read_text()))
     cfg.update({k: v for k, v in (overrides or {}).items() if v is not None})
-    local_mame = ROOT / "tools" / ".local" / "mame" / "thomson"
+    local_mame = ROOT / "tools" / ".local" / "mame" / "mame_thomson" / "thomson"
     if cfg["mame"] == "mame" and local_mame.exists():
         cfg["mame"] = str(local_mame)  # built by tools/prepare-mame.sh (CD 90-351 write support)
     lwasm_path = Path(cfg["lwasm"])

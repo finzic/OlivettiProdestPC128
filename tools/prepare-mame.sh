@@ -6,7 +6,7 @@
 #
 # Clones MAME at the commit the patch was made against (mame-patch/BASE_COMMIT),
 # applies mame-patch/*.patch and builds the "thomson" subtarget. The result is
-# TARGET_DIR/thomson, which pc128.py and tools/run-mame.sh pick up automatically.
+# TARGET_DIR/mame_thomson/thomson, which pc128.py and tools/run-mame.sh pick up automatically.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -14,6 +14,7 @@ PATCH_DIR="$ROOT/mame-patch"
 TARGET="$ROOT/tools/.local/mame"
 BUILD=1
 JOBS="$(nproc 2>/dev/null || echo 4)"
+(( JOBS > 6 )) && JOBS=6
 MAME_URL="${MAME_URL:-https://github.com/mamedev/mame.git}"
 
 while [[ $# -gt 0 ]]; do
@@ -68,6 +69,7 @@ if [[ $BUILD -eq 0 ]]; then
 fi
 
 echo "== Building (SUBTARGET=thomson, -j$JOBS); this takes a while"
-make -C "$TARGET" SUBTARGET=thomson SOURCEFILTER="$PATCH_DIR/thomson.flt" USE_QTDEBUG=0 -j"$JOBS"
+cp "$PATCH_DIR/thomson.flt" "$TARGET/src/mame/thomson/thomson.flt"
+make -C "$TARGET" SUBTARGET=thomson SOURCEFILTER=src/mame/thomson/thomson.flt USE_QTDEBUG=0 -j"$JOBS"
 echo
-echo "Done: $TARGET/thomson"
+echo "Done: $TARGET/mame_thomson/thomson"

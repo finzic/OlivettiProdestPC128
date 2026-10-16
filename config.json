@@ -5,12 +5,13 @@
   "lwasm": "tools/.local/lwtools-4.24/lwasm/lwasm",
   "boot_frames": 250,
   "menu_key": "1",
-  "menu_frames": 150,
+  "menu_frames": 600,
   "default_bank": 6,
   "data_banks": [":bank7", ":bank8"],
   "line_gap_frames": 6,
   "run_frames": 300,
   "timeout_s": 120,
   "headless": false,
-  "extra_args": []
+  "extra_args": [],
+  "floppy_controller": "cd90_351"
 }
