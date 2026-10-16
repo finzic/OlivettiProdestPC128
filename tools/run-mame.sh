@@ -17,7 +17,7 @@ case "$kind" in
   floppy351)
     # 3.5" CD90-351: needs 80-track images; optional 3rd arg = image for the second drive (2:/3:)
     args+=(-extension cd90_351 -flop1 "$img")
-    [[ -n "${3:-}" ]] && args+=(-extension:cd90_351:1 dd90_352 -flop2 "$(realpath "$3")")
+    [[ -n "${3:-}" ]] && args+=(-extension:cd90_351:thmfc1:1 dd90_352 -flop2 "$(realpath "$3")")
     ;;
   cassette) args+=(-cassette "$img") ;;
   cartridge) args+=(-cart "$img") ;;
@@ -25,4 +25,6 @@ case "$kind" in
   *) echo "Unknown media: $kind" >&2; exit 1 ;;
 esac
 
-exec mame "${args[@]}"
+MAME=mame
+[[ -x tools/.local/mame/thomson ]] && MAME=tools/.local/mame/thomson
+exec "$MAME" "${args[@]}"

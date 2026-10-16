@@ -59,6 +59,7 @@ ignored by Git.
 
 - [PC128 system calls and ROM calling reference](docs/pc128-system-calls.md)
 - [Configuration of local environment](docs/mame-pc128.md)
+- [Testing approach, harness quirks, relocation and key codes](docs/pc128-testing-notes.md)
 
 ## Use it
 
@@ -116,7 +117,7 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
    PC Backspace key is the `+ *` key.
 
 3. **Use it**: on a floppy, `SAVE`/`LOAD`/`DIR` in BASIC read and write the `.fd` file directly (with the
-   CD90-351 only reading works, see below).
+   CD90-351 this needs the patched MAME, see below).
    To swap media while running, use Tab > File Manager (unmount, change or regenerate the file
    with `tools/fdtool.py`, mount again). Do not edit an image externally while it is mounted.
 
@@ -150,21 +151,26 @@ CD90-640; 80-track images are sequential (all of side 0, then all of side 1), wh
 (tested with a 655360-byte image holding `SAVEM` dumps of RAM banks on both sides). Both are the defaults,
 so `cp` from a 40-track to an 80-track image converts the order as well.
 
-### CD90-640 and CD90-351 in MAME (0.264)
+### CD90-640 and CD90-351 in MAME
 
 | | CD90-640 | CD90-351 |
 |---|---|---|
 | Drive | 5.25" 40 tracks, WD1770 | 3.5" 80 tracks, custom THMFC1 |
 | ROM | `DKD(`, 1 page | `MTD:`, 4 pages selected by `$A7D8` bits 0-1 |
 | Read | both sides as `0:` and `1:` | side 0 of each drive works (`0:`, `2:` for a second drive); side 1 fails in 0.264 with either track order |
-| Write / `DSKINI` | works | not possible |
+| Write / `DSKINI` | works | works with the patched MAME (`tools/prepare-mame.sh`); read-only in stock MAME |
 
 - The default stays `cd90_640`. Use `floppy351` in `run-mame.sh`, or set `floppy_controller` to `cd90_351`
   (and `floppy2` for the second drive) in `config.json`; the 351 boots slower, so raise `menu_frames` to about 600.
-- Writing fails because MAME's `THMFC1` exits on the write and format commands, and because it reports the
-  write-protect bit inverted (set for a writable image), so the ROM answers `ERR 72` first. An upstream
-  commit from Oct 2024 ("thmfc1: Use CMD2 rather than CMD1 to verify side in track header") looks like the
-  fix for the side-1 failure, so a newer MAME may read side 1 (not verified); writing is still missing there.
+- **Patched MAME.** Stock MAME's `THMFC1` exits on the write and format commands and reports the write-protect
+  bit inverted. `tools/prepare-mame.sh` clones MAME at the commit in `mame-patch/BASE_COMMIT`, applies
+  `mame-patch/0001-*.patch` (write sector, raw write/format, read header, idle byte-ready, write-protect fix;
+  the patched files are also in `mame-patch/src/`) and builds the `thomson` subtarget into `tools/.local/mame/`.
+  `pc128.py` and `run-mame.sh` use that binary automatically when `mame` in `config.json` is left at `mame`.
+  Needs git, python3, make, a C++17 compiler and SDL2 development files.
+- Verified with it on 80-track `.fd` images (`tests/floppy351/run_all.sh`): `DSKINI`, `SAVE`/`LOAD`/`SAVEM`/`LOADM`,
+  `KILL`, a whole disk of files byte-exact, `BACKUP 0 TO 0` with disk swaps, `DSKI$`/`DSKO$` on track 79, `COPY`,
+  sequential files, write protect, disk change. Not verified: side 1, a real second drive, random-access files.
 - To tell the controllers apart on a real machine, read `$A000`: `DKD(` is the CD90-640, `MTD:` the CD90-351.
 - The disassembly of the four 351 ROM pages is in [docs/cd90-351-disasm/](docs/cd90-351-disasm/).
 - Workflow: develop and write on the 640 with 40-track images, then convert with `fdtool.py cp` to an

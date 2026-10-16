@@ -38,10 +38,13 @@ local frame      = 0
 local phase      = "boot"
 local queue_i    = 1
 local gap        = 0
+local char_i     = 0
 local run_start  = 0
 local finish_at  = nil
 local status     = "timeout"
 local notes      = {}
+local pcs        = {}
+local idle       = 0
 
 local function note(s) notes[#notes + 1] = s end
 
@@ -113,6 +116,10 @@ local function write_result()
         f:write(string.format("mem %s %s\n", d.label, table.concat(bytes)))
     end
     for _, n in ipairs(notes) do f:write("note ", n, "\n") end
+    local t = {}
+    for _, p in ipairs(pcs) do t[#t + 1] = string.format("%04X", p) end
+    f:write("note recent PCs ", table.concat(t, " "), "\n")
+    if CFG.run_keys then f:write("note run_keys fired ", tostring(CFG.run_keys.n or 0), "\n") end
     f:close()
 end
 
@@ -161,7 +168,18 @@ local function on_frame()
         if gap > 0 then gap = gap - 1; return end
         if nk_busy() then return end
         local line = CFG.basic_lines[queue_i]
-        if line then
+        if line and (CFG.char_gap_frames or 0) > 0 then
+            char_i = char_i + 1
+            if char_i <= #line then
+                nk:post(line:sub(char_i, char_i))
+                gap = CFG.char_gap_frames
+            else
+                nk:post("\r")
+                char_i = 0
+                queue_i = queue_i + 1
+                gap = CFG.line_gap_frames
+            end
+        elseif line then
             nk:post(line .. "\r")
             queue_i = queue_i + 1
             gap = CFG.line_gap_frames
@@ -170,6 +188,38 @@ local function on_frame()
         end
 
     elseif phase == "run" then
+        local ps = CFG.poke_swap
+        if ps and read_u8(ps.addr, ps.page) == 0x5A then
+            write_u8(ps.addr, 0, ps.page)
+            for tag, img in pairs(machine.images) do
+                if tag:find(":0:dd90_352$") then
+                    img:unload(); img:load(ps.image)
+                    note("poke_swap -> " .. ps.image .. " at frame " .. frame)
+                end
+            end
+        end
+        local rk = CFG.run_keys
+        local pc = cpu.state["PC"].value
+        pcs[#pcs + 1] = pc
+        if #pcs > 12 then table.remove(pcs, 1) end
+        if rk then
+            if pc >= rk.pc_lo and pc <= rk.pc_hi then idle = idle + 1 else idle = 0 end
+            if idle >= rk.idle_frames then
+                idle = 0
+                rk.n = (rk.n or 0) + 1
+                if rk.images then
+                    for tag, img in pairs(machine.images) do
+                        if rk.n == 1 then note("image " .. tag .. " inst=" .. tostring(img.instance_name)) end
+                        if tag:find(":0:dd90_352$") then
+                            img:unload()
+                            local res = img:load(rk.images[(rk.n - 1) % #rk.images + 1])
+                            note(string.format("swap %d load=%s file=%s ro=%s", rk.n, tostring(res), tostring(img.filename), tostring(img.is_readonly)))
+                        end
+                    end
+                end
+                nk:post(rk.key or "\r")
+            end
+        end
         if CFG.done_addr and read_u8(CFG.done_addr, CFG.done_page) ~= 0 then
             status = "done"
             begin_finish()

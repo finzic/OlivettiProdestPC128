@@ -47,6 +47,9 @@ def load_config(overrides=None):
     if path.exists():
         cfg.update(json.loads(path.read_text()))
     cfg.update({k: v for k, v in (overrides or {}).items() if v is not None})
+    local_mame = ROOT / "tools" / ".local" / "mame" / "thomson"
+    if cfg["mame"] == "mame" and local_mame.exists():
+        cfg["mame"] = str(local_mame)  # built by tools/prepare-mame.sh (CD 90-351 write support)
     lwasm_path = Path(cfg["lwasm"])
     cfg["lwasm"] = str(lwasm_path if lwasm_path.is_absolute() else ROOT / lwasm_path)
     cfg["rompath"] = os.path.expandvars(os.path.expanduser(cfg["rompath"]))
@@ -230,6 +233,9 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
         "menu_key": cfg["menu_key"],
         "menu_frames": int(cfg["menu_frames"]),
         "line_gap_frames": int(cfg["line_gap_frames"]),
+        "char_gap_frames": int(cfg.get("char_gap_frames", 0)),
+        "run_keys": cfg.get("run_keys"),
+        "poke_swap": cfg.get("poke_swap"),
         "run_frames": run_frames,
         "done_addr": done["addr"] if done else None,
         "done_page": resolve_page(done["addr"], done["bank"], cfg, mode) if done else None,
@@ -243,7 +249,8 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
         job["basic_lines"] = prepare_basic(code, upcase)
         n_lines = len(job["basic_lines"])
         # typing takes boot + lines * (gap + a few frames to be typed)
-        typing_frames = n_lines * (job["line_gap_frames"] + 12)
+        typing_frames = n_lines * (job["line_gap_frames"] + 12) + \
+            (job["char_gap_frames"] + 4 if job["char_gap_frames"] else 0) * sum(len(l) + 1 for l in job["basic_lines"])
     else:
         asm = assemble(code, cfg)
         if not asm["ok"]:
@@ -272,7 +279,7 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
     if cfg["floppy"]:
         cmd += ["-extension", cfg["floppy_controller"], "-flop1", str(Path(cfg["floppy"]).resolve())]
         if cfg["floppy2"] and cfg["floppy_controller"] == "cd90_351":
-            cmd += ["-extension:cd90_351:1", "dd90_352", "-flop2", str(Path(cfg["floppy2"]).resolve())]
+            cmd += ["-extension:cd90_351:thmfc1:1", "dd90_352", "-flop2", str(Path(cfg["floppy2"]).resolve())]
     cmd += list(cfg["extra_args"])
 
     try:
