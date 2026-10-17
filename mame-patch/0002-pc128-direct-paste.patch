@@ -1,0 +1,215 @@
+diff --git a/src/emu/natkeyboard.cpp b/src/emu/natkeyboard.cpp
+index fe0b462d..4d1ed013 100644
+--- a/src/emu/natkeyboard.cpp
++++ b/src/emu/natkeyboard.cpp
+@@ -582,6 +582,10 @@ void natural_keyboard::paste()
+ 	// retrieve the clipboard text
+ 	std::string text = osd_get_clipboard_text();
+ 
++	// let the driver take it directly if it can
++	if (m_paste_handler && m_paste_handler(text))
++		return;
++
+ 	// post the text
+ 	post_utf8(text);
+ }
+diff --git a/src/emu/natkeyboard.h b/src/emu/natkeyboard.h
+index 57b58ffd..24e702bc 100644
+--- a/src/emu/natkeyboard.h
++++ b/src/emu/natkeyboard.h
+@@ -65,6 +65,7 @@ public:
+ 	void post_utf8(std::string_view text, const attotime &rate = attotime::zero);
+ 	void post_coded(std::string_view text, const attotime &rate = attotime::zero);
+ 	void paste();
++	void set_paste_handler(std::function<bool (std::string_view)> handler) { m_paste_handler = std::move(handler); }
+ 
+ 	// debugging
+ 	void dump(std::ostream &str) const;
+@@ -128,6 +129,7 @@ private:
+ 	ioport_queue_chars_delegate     m_queue_chars;      // queue characters callback
+ 	ioport_accept_char_delegate     m_accept_char;      // accept character callback
+ 	ioport_charqueue_empty_delegate m_charqueue_empty;  // character queue empty callback
++	std::function<bool (std::string_view)> m_paste_handler; // driver-level paste (returns true if handled)
+ };
+ 
+ 
+diff --git a/src/mame/thomson/thomson.h b/src/mame/thomson/thomson.h
+index 52cd8484..5197d6fc 100644
+--- a/src/mame/thomson/thomson.h
++++ b/src/mame/thomson/thomson.h
+@@ -423,6 +423,19 @@ protected:
+ 	void mo6_update_cart_bank();
+ 	void mo6_game_init();
+ 	void mo6_game_reset();
++
++	// clipboard paste fed to the monitor's GETC routine
++	std::string m_paste_text;
++	size_t m_paste_pos = 0;
++	bool m_paste_lbra = false;
++	bool m_paste_unthrottled = false;
++	memory_passthrough_handler m_paste_tap;
++	bool mo6_paste(std::string_view text);
++	bool mo6_paste_rom_ok() const;
++	void mo6_paste_next_char();
++	void mo6_paste_done();
++	void mo6_paste_entry_tap(offs_t offset, uint8_t &data);
++	void mo6_paste_exit_tap(uint8_t data);
+ };
+ 
+ class mo5nr_state : public mo6_state
+diff --git a/src/mame/thomson/thomson_m.cpp b/src/mame/thomson/thomson_m.cpp
+index 873b7612..c740c4f2 100644
+--- a/src/mame/thomson/thomson_m.cpp
++++ b/src/mame/thomson/thomson_m.cpp
+@@ -13,6 +13,9 @@
+ #include "machine/6821pia.h"
+ #include "machine/ram.h"
+ 
++#include "natkeyboard.h"
++#include "video.h"
++
+ #include <cmath>
+ 
+ #define LOG_KBD    (1U << 1) /* TO8 / TO9 / TO9+ keyboard */
+@@ -2849,10 +2852,125 @@ void mo6_state::mo6_vreg_w(offs_t offset, uint8_t data)
+ 
+ 
+ 
++/* Clipboard paste. Characters are handed to the monitor's GETC routine
++   (SWI $0A, second monitor page) instead of being pressed on the key matrix,
++   so the ROM receives each one exactly when it asks for the next key and
++   nothing is lost while BASIC stores a line or scrolls the screen.
++   GETC starts at $F520 (LDA <$5C) and every exit runs
++   $F629: CLR <$5C / $F62B: STB 4,S / RTS, where B is the key returned (0 = none).
++   While text is pending, the opcode fetch at $F520 is replaced by LBRA $F629
++   with B already holding the next character, skipping the keyboard scan and
++   its debounce delay. The $F62B tap covers GETC calls that could not be
++   short-circuited (a multi-byte key sequence in progress).
++   The machine runs unthrottled until the pasted text is consumed. */
++
++bool mo6_state::mo6_paste(std::string_view text)
++{
++	m_paste_text.erase(0, m_paste_pos);
++	m_paste_pos = 0;
++	bool after_cr = false;
++	for (char const c : text)
++	{
++		uint8_t const ch = uint8_t(c);
++		if (ch == '\n')
++		{
++			if (!after_cr)
++				m_paste_text += '\r';
++			after_cr = false;
++			continue;
++		}
++		after_cr = (ch == '\r');
++		if (ch == '\r')
++			m_paste_text += '\r';
++		else if (ch == '\t')
++			m_paste_text += ' ';
++		else if (ch >= 0x20 && ch < 0x7f)
++			m_paste_text += char(ch);
++	}
++	if (!m_paste_text.empty() && !m_paste_unthrottled && machine().video().throttled())
++	{
++		machine().video().set_throttled(false);
++		m_paste_unthrottled = true;
++	}
++	return true;
++}
++
++void mo6_state::mo6_paste_done()
++{
++	m_paste_text.clear();
++	m_paste_pos = 0;
++	m_paste_lbra = false;
++	if (m_paste_unthrottled)
++	{
++		machine().video().set_throttled(true);
++		m_paste_unthrottled = false;
++	}
++}
++
++bool mo6_state::mo6_paste_rom_ok() const
++{
++	uint8_t const *const rom = static_cast<uint8_t const *>(m_biosbank->base());
++	return rom[0x520] == 0x96 && rom[0x521] == 0x5c &&
++			rom[0x629] == 0x0f && rom[0x62a] == 0x5c && rom[0x62b] == 0xe7 && rom[0x62c] == 0x64 && rom[0x62d] == 0x39;
++}
++
++void mo6_state::mo6_paste_next_char()
++{
++	m_maincpu->set_state_int(M6809_B, uint8_t(m_paste_text[m_paste_pos++]));
++	if (m_paste_pos >= m_paste_text.size())
++		mo6_paste_done();
++}
++
++void mo6_state::mo6_paste_entry_tap(offs_t offset, uint8_t &data)
++{
++	if (machine().side_effects_disabled())
++		return;
++
++	if (offset == 0xf520)
++	{
++		m_paste_lbra = false;
++		if (m_paste_pos >= m_paste_text.size() || !mo6_paste_rom_ok())
++			return;
++
++		// no pending accent/control sequence ($5C, $5D with DP=$20)
++		address_space &space = m_maincpu->space(AS_PROGRAM);
++		if (space.read_byte(0x205c) >= 0x20 || space.read_byte(0x205d) != 0)
++			return;
++
++		mo6_paste_next_char();
++		m_paste_lbra = true;
++		data = 0x16;                    // LBRA
++	}
++	else if (m_paste_lbra)
++	{
++		// offset $F629 - $F523
++		if (offset == 0xf521)
++			data = 0x01;
++		else
++		{
++			data = 0x06;
++			m_paste_lbra = false;
++		}
++	}
++}
++
++void mo6_state::mo6_paste_exit_tap(uint8_t data)
++{
++	if (m_paste_pos >= m_paste_text.size() || machine().side_effects_disabled())
++		return;
++	if (data != 0xe7 || !mo6_paste_rom_ok() || m_maincpu->state_int(M6809_B) != 0)
++		return;
++	mo6_paste_next_char();
++}
++
++
++
+ MACHINE_RESET_MEMBER( mo6_state, mo6 )
+ {
+ 	LOG("mo6: machine reset called\n");
+ 
++	mo6_paste_done();
++
+ 	/* subsystems */
+ 	mo6_game_reset();
+ 
+@@ -2907,6 +3025,15 @@ MACHINE_START_MEMBER( mo6_state, mo6 )
+ 	m_datalobank->configure_entries( 0, 8, ram + 0x2000, 0x4000 );
+ 	m_datahibank->configure_entries( 0, 8, ram + 0x0000, 0x4000 );
+ 	m_biosbank->configure_entries( 0, 2, mem + 0x3000, 0x4000 );
++	m_paste_tap = m_maincpu->space(AS_PROGRAM).install_read_tap(
++			0xf520, 0xf522, "paste_getc_entry",
++			[this] (offs_t offset, uint8_t &data, uint8_t mem_mask) { mo6_paste_entry_tap(offset, data); },
++			&m_paste_tap);
++	m_maincpu->space(AS_PROGRAM).install_read_tap(
++			0xf62b, 0xf62b, "paste_getc_exit",
++			[this] (offs_t offset, uint8_t &data, uint8_t mem_mask) { mo6_paste_exit_tap(data); },
++			&m_paste_tap);
++	machine().natkeyboard().set_paste_handler([this] (std::string_view text) { return mo6_paste(text); });
+ 	m_cartlobank->set_entry( 0 );
+ 	m_carthibank->set_entry( 0 );
+ 	m_vrambank->set_entry( 0 );

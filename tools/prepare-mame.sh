@@ -47,12 +47,17 @@ fi
 if ! git -C "$TARGET" cat-file -e "$BASE^{commit}" 2>/dev/null; then
   git -C "$TARGET" fetch --depth 1 origin "$BASE"
 fi
-# Keep local edits out of the way only if the tree is clean; otherwise stop.
-if [[ -n "$(git -C "$TARGET" status --porcelain --untracked-files=no | grep -v 'thmfc1\.\(cpp\|h\)$' || true)" ]]; then
-  echo "$TARGET has unrelated local changes; refusing to touch it." >&2; exit 1
+# Files our patches touch may differ (a previous run applied them); anything else means local work: stop.
+PATCHED_FILES="$(cat "$PATCH_DIR"/*.patch | sed -n 's|^+++ b/||p' | sort -u)"
+CHANGED_FILES="$(git -C "$TARGET" status --porcelain --untracked-files=no | awk '{print $2}')"
+UNRELATED="$(comm -23 <(sort -u <<<"$CHANGED_FILES" | sed '/^$/d') <(sed '/^$/d' <<<"$PATCHED_FILES"))"
+if [[ -n "$UNRELATED" ]]; then
+  echo "$TARGET has unrelated local changes; refusing to touch it:" >&2
+  echo "$UNRELATED" >&2; exit 1
 fi
 git -C "$TARGET" checkout -q -f "$BASE"
-git -C "$TARGET" checkout -q -- src/devices/machine/thmfc1.cpp src/devices/machine/thmfc1.h
+# shellcheck disable=SC2086
+git -C "$TARGET" checkout -q -- $PATCHED_FILES
 
 echo "== Applying patches"
 for p in "$PATCH_DIR"/*.patch; do

@@ -25,6 +25,6 @@ case "$kind" in
   *) echo "Unknown media: $kind" >&2; exit 1 ;;
 esac
 
-MAME=mame
-[[ -x tools/.local/mame/mame_thomson/thomson ]] && MAME=tools/.local/mame/mame_thomson/thomson
+MAME=tools/.local/mame/mame_thomson/thomson
+[[ -x "$MAME" ]] || { echo "Patched MAME not found at $MAME; build it with tools/prepare-mame.sh" >&2; exit 1; }
 exec "$MAME" "${args[@]}"

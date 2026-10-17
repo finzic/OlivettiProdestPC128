@@ -20,7 +20,7 @@ sudo apt install curl tar make build-essential python3 python3-pip python3-venv
 ```
 
 Other Linux distributions need equivalent packages. MAME is cloned and built locally in step 3;
-you do not need to install the distro MAME package for the standard workflow.
+every launcher in this repository uses that build and never falls back to a system `mame`.
 
 2. Obtain the original DCMOTO ROM downloads and put both files in `src-rom/` at the repository
 root. Create the directory if needed:
@@ -52,7 +52,7 @@ stages the CD90-640 ROM. The environment checker creates
 ./tools/prepare-mame.sh
 ```
 
-This clones the MAME commit pinned in `mame-patch/BASE_COMMIT`, applies the THMFC1 patch, and builds
+This clones the MAME commit pinned in `mame-patch/BASE_COMMIT`, applies the THMFC1 and paste patches, and builds
 the Thomson target under `tools/.local/mame/`. The default build uses at most 6 jobs; `--jobs N` sets
 an explicit limit.
 
@@ -79,7 +79,7 @@ ignored by Git.
 - `PC128: run BASIC (current file)`
 - `PC128: run ASM (current file)`
 - `PC128: run ASM (choose memory dump)`
-- `PC128: start MAME session (floppy/cassette/cartridge)`: interactive MAME window with storage inserted
+- `PC128: start MAME session (CD90-351 default)`: interactive MAME window; `floppy` remains the CD90-640 fallback
 - `PC128: create new floppy/cassette/cartridge`: create a blank image
 
 **Command line**
@@ -124,7 +124,10 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
    ```
 
    The image must already exist. The window runs with `-ui_active` and the key map in
-   `tools/mame-cfg/default.cfg`: **F11** opens the MAME menu, **F12** exits (Esc no longer quits).
+  `tools/mame-cfg/default.cfg`: **F9** toggles MAME UI controls, **F10** pastes host clipboard text
+  (fed straight to the ROM's GETC keyboard routine, no lost keys; the machine runs unthrottled until it is
+  typed in), **F11**
+  opens the MAME menu, and **F12** exits (Esc no longer quits).
    On the emulated keyboard, **Delete** is backspace, Tab is *Stop*, Home is *Home/Clear*, and the
    PC Backspace key is the `+ *` key.
 
@@ -136,8 +139,10 @@ Besides the scripted runs, you can use the emulator by hand and keep programs an
 
 ## Floppy images and `tools/fdtool.py`
 
-`tools/fdtool.py` creates and edits `.fd` images in the Microsoft BASIC DOS format (track 20: sector 1
-label, sector 2 FAT, sectors 3-16 directory). Pass `--tracks 80` to every command for 3.5" images.
+`tools/fdtool.py` creates and edits `.fd` images in the Microsoft BASIC DOS format used by DCMOTO
+(track 20: sector 1 label, sector 2 FAT, sectors 3-16 directory). Commands default to 80 tracks for
+the primary CD90-351; pass `--tracks 40` for the CD90-640. A 327680-byte image is ambiguous by size
+alone, so keep the geometry explicit when sharing disk images.
 
 ```bash
 python3 tools/fdtool.py new  media/d80.fd --sides 2 --tracks 80 --name LABEL
@@ -147,10 +152,24 @@ python3 tools/fdtool.py get  media/d80.fd HELLO.BAS out.bas --tracks 80
 python3 tools/fdtool.py cp   media/disk.fd media/d80.fd --name LABEL   # 40-track to 80-track, all files
 python3 tools/fdtool.py cp   media/d80.fd media/disk.fd --src-tracks 80 --dst-tracks 40
 python3 tools/fdtool.py ls   media/d80.fd --tracks 80 --layout interleaved   # override the two-sided track order
+mkdir -p /tmp/keyjoy-files
+cp pc128-basic-ext/examples/keyjoy/{demo.bas,keyjoy.bin,TURTKEYS.BAS} /tmp/keyjoy-files/
+python3 tools/fdtool.py pack /tmp/keyjoy-files media/keyjoy.fd --tracks 80 --name KEYJOY
+python3 tools/fdtool.py detokenize media/native.bas source.bas
+python3 tools/fdtool.py tokenize source.bas native.bas
 ```
 
 `ls` lists every side of a two-sided image (`--side 0|1` limits it to one); `put` and `get` default to side 0.
 `cp` creates the destination if it does not exist; use `--src-side`/`--dst-side` for two-sided images.
+`pack` creates a DCMOTO-compatible disk from the regular files in one folder: readable numbered `.BAS`
+files become native tokenized BASIC B by default, existing BASIC B files are preserved byte-for-byte,
+`.BIN` files are stored as binary, and other extensions as data. The PC128 ROM keyword table is used to
+encode and decode BASIC B. Use `--basic-format ascii` for numbered BASIC A with the CR/LF framing produced
+by `SAVE ...,A`; `fdtool put --ascii` provides the same format for an individual file. `tokenize` and
+`detokenize` convert between numbered source and native BASIC B. The original ROM is not copied into the
+repository. Run codec tests with
+`python3 -m unittest discover -s tests -p 'test_fdtool_basic.py'`.
+
 The label sector is written the way `DSKINI` and DCMOTO do: the 8-byte name, the constant bytes
 `8D 5E 25` (meaning unknown), then zeros. A 327680-byte image is two sides of 40 tracks for the CD90-640
 but one side of 80 tracks for the CD90-351, so the same file is read differently by each controller.
@@ -174,8 +193,10 @@ so `cp` from a 40-track to an 80-track image converts the order as well.
 - **Patched MAME.** Stock MAME's `THMFC1` exits on the write and format commands and reports the write-protect
   bit inverted. `tools/prepare-mame.sh` clones MAME at the commit in `mame-patch/BASE_COMMIT`, applies
   `mame-patch/0001-*.patch` (write sector, raw write/format, read header, idle byte-ready, write-protect fix;
-  the patched files are also in `mame-patch/src/`) and builds the `thomson` subtarget into `tools/.local/mame/`.
-  `pc128.py` and `run-mame.sh` use that binary automatically when `mame` in `config.json` is left at `mame`.
+  the patched files are also in `mame-patch/src/`) and `mame-patch/0002-*.patch` (clipboard paste through the
+  monitor's GETC routine), then builds the `thomson` subtarget into `tools/.local/mame/`.
+  `pc128.py`, the MCP server, `run-mame.sh`, `investigate.py` and the tests all use that binary when `mame` in
+  `config.json` is left at `mame`; if it is missing they stop with an error instead of using a system MAME.
   Needs git, python3, make, a C++17 compiler and SDL2 development files.
 - Verified with it on 80-track `.fd` images (`tests/floppy351/run_all.sh`): `DSKINI`, `SAVE`/`LOAD`/`SAVEM`/`LOADM`,
   `KILL`, a whole disk of files byte-exact, `BACKUP 0 TO 0` with disk swaps, `DSKI$`/`DSKO$` on track 79, `COPY`,
@@ -208,7 +229,7 @@ finish with `BRA *`.
 ## Known caveats
 
 - The standard workflow uses the repo-built MAME version pinned in `mame-patch/BASE_COMMIT` (0.289).
-  The system-MAME fallback and other versions have not been fully verified.
+  System MAME packages and other versions are not used and lack the CD 90-351 and paste patches.
 - If typed BASIC does not appear on screen, the machine may not map natural keyboard characters; try
   raising `boot_frames` first (the BASIC prompt must be up before typing starts).
 - `headless: true` adds `-video none`; screenshots may not be produced in that mode.

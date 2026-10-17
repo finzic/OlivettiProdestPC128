@@ -8,7 +8,7 @@ pat = bytes((i*7+3) & 255 for i in range(SZ))
 def expect(k):
     b = bytearray(pat); b[0] = k; b[16126] = k; return bytes(b)
 def cfgfor(img):
-    return {"mame": str(ROOT / "tools/.local/mame/thomson"), "rompath": "/tmp/pc128-mame-save-load-roms", "floppy": img, "line_gap_frames": 30,
+    return {"mame": str(pc128.LOCAL_MAME), "rompath": "/tmp/pc128-mame-save-load-roms", "floppy": img, "line_gap_frames": 30,
             "floppy_controller": "cd90_351", "menu_frames": 600, "headless": True, "timeout_s": 900, "extra_args": ["-log"]}
 def stats():
     log = open("/tmp/error.log", errors="replace").read()

@@ -18,9 +18,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 FPS = 50  # Thomson MO6 / PC128 video frame rate
+# The only supported MAME: built from source and patched by tools/prepare-mame.sh.
+LOCAL_MAME = ROOT / "tools" / ".local" / "mame" / "mame_thomson" / "thomson"
 
 DEFAULT_CONFIG = {
-    "mame": "mame",            # path to the MAME executable
+    "mame": "mame",            # "mame" = LOCAL_MAME (never a system MAME); or an explicit path
     "machine": "pro128",        # check: mame -listxml | grep -i -E "pc128|mo6"
     "rompath": "",             # folder with the Thomson ROM sets (MAME needs them)
     "lwasm": str(ROOT / "tools" / ".local" / "lwtools-4.24" / "lwasm" / "lwasm"),
@@ -47,9 +49,8 @@ def load_config(overrides=None):
     if path.exists():
         cfg.update(json.loads(path.read_text()))
     cfg.update({k: v for k, v in (overrides or {}).items() if v is not None})
-    local_mame = ROOT / "tools" / ".local" / "mame" / "mame_thomson" / "thomson"
-    if cfg["mame"] == "mame" and local_mame.exists():
-        cfg["mame"] = str(local_mame)  # built by tools/prepare-mame.sh (CD 90-351 write support)
+    if cfg["mame"] == "mame":
+        cfg["mame"] = str(LOCAL_MAME)
     lwasm_path = Path(cfg["lwasm"])
     cfg["lwasm"] = str(lwasm_path if lwasm_path.is_absolute() else ROOT / lwasm_path)
     cfg["rompath"] = os.path.expandvars(os.path.expanduser(cfg["rompath"]))
@@ -286,7 +287,7 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=int(cfg["timeout_s"]))
     except FileNotFoundError:
         return {"ok": False, "stage": "launch",
-                "error": "MAME not found (%r). Set 'mame' in config.json." % cfg["mame"]}
+                "error": "MAME not found (%r). Build it with tools/prepare-mame.sh." % cfg["mame"]}
     except subprocess.TimeoutExpired:
         return {"ok": False, "stage": "launch", "error": "MAME exceeded timeout_s=%s" % cfg["timeout_s"]}
 

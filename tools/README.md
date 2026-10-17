@@ -18,8 +18,8 @@ executable. Install it before assembling; they do not silently fall back to a sy
 Run `./tools/check-environment.sh` from any directory in the repository. It checks for
 Python 3.10 or newer, pip and the MCP package, the native tools needed to build LWTOOLS
 (`curl`, `tar`, `make`, and a C compiler), MAME, the configured MAME machine and ROM set,
-and the expected workspace configuration files. It prefers the prepared local MAME build and falls
-back to the configured system MAME executable. If the local `lwasm` is missing and its
+and the expected workspace configuration files. It checks the prepared local MAME build
+(`tools/.local/mame/mame_thomson/thomson`); a system MAME is never used. If the local `lwasm` is missing and its
 build prerequisites are available, the checker runs `setup-lwasm.sh` automatically.
 
 The checker reports missing prerequisites and exits non-zero; it does not install system
@@ -30,8 +30,9 @@ sudo apt update
 sudo apt install curl tar make build-essential python3 python3-pip python3-venv
 ```
 
-For the standard workflow, build the pinned, patched MAME locally with `./tools/prepare-mame.sh`;
-install the distro `mame` package only if you want the system-MAME fallback. `mame-tools` is optional;
+Build the pinned, patched MAME locally with `./tools/prepare-mame.sh`; it is the only MAME the
+repository uses (`pc128.py`, the MCP server, `run-mame.sh`, `investigate.py` and the tests all resolve
+`"mame": "mame"` in `config.json` to it). `mame-tools` is optional;
 its `floptool` converts
 between `.fd` and MAME's `.mfi` flux images if you need that.
 
@@ -54,7 +55,7 @@ image is split for older MAME and staged as `pro128.iw01`/`basico.iw02` for curr
 351 image is split by `tools/prepare-roms.py` into `cd-351-0..3.rom` under `roms/cd90_351/` and
 `roms/pro128/`. If present, `cd90-640.rom` is copied unchanged to `roms/cd90-640.rom` and
 `roms/pro128/`.
-The prepared local MAME executable (or configured system-MAME fallback) and the ROM set configured by
+The prepared local MAME executable and the ROM set configured by
 `machine` and `rompath` in `config.json` are required to run the emulator. See
 [../docs/mame-pc128.md](../docs/mame-pc128.md) for the ROM file details. The checker prepares the
 required CD90-351 pages; if supplied, it also copies the optional `cd90-640.rom` fallback into the ROM path.

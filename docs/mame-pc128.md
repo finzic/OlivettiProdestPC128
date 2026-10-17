@@ -153,10 +153,17 @@ python3 tools/rom_scan.py --rom roms/pro128/basico-2.rom@0xB000 \
 Which file is BASIC 128 and which is BASIC 1, and the exact base address of each bank, were not confirmed
 yet. Check them with `save` in the debugger before relying on the scan output.
 
-To load the extension, type or paste the generated BASIC loader `pc128-basic-ext/build/basext.bas` at the
-BASIC prompt. MAME's paste function is in the UI menu, bound by default to Scroll Lock + Shift+Ins; with
-`ui_active` on, check the binding under **Input Assignments (general)**. Another option is
-`-autoboot_command`, which types text for you at startup.
+For an interactive session started with `tools/run-mame.sh`, **F9** toggles MAME UI controls, **F10**
+pastes host clipboard text, **F11**
+opens the MAME menu, and **F12** exits.
+With the patched build (`mame-patch/0002-pc128-direct-paste.patch`) the text does not go through the key
+matrix: each character is returned by the monitor's GETC routine (SWI `$0A`, entry `$F520` in the second
+monitor page) when the ROM asks for the next key, so nothing is lost while BASIC stores a line or scrolls.
+Line feeds become Enter and tabs become spaces; other non-ASCII characters are dropped. The machine runs
+unthrottled until the text is consumed (a 60-line program takes a few seconds), then normal speed returns.
+Pasting only reaches software that reads keys through GETC (BASIC, INPUT, INKEY$), not programs that scan
+the keyboard matrix themselves. Other MAME launches may use the default Scroll Lock + Shift+Ins paste
+binding. For startup-only input, `-autoboot_command` is another option.
 
 ## Quick reference
 

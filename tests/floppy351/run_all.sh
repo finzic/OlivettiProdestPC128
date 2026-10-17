@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run from anywhere; needs tools/.local/mame/thomson (run tools/prepare-mame.sh first).
+# Run from anywhere; needs tools/.local/mame/mame_thomson/thomson (run tools/prepare-mame.sh first).
 cd "$(dirname "$0")" || exit 1
 python3 stage_roms.py || exit 1
 python3 write_whole_disk.py && python3 read_kill_full.py &&

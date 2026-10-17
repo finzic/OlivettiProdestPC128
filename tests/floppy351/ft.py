@@ -4,7 +4,7 @@ sys.path.insert(0, str(ROOT)); import pc128
 FD = str(ROOT / "tools/fdtool.py")
 def P(*a): print(*a, flush=True)
 def cfg(img, **kw):
-    c = {"mame": str(ROOT / "tools/.local/mame/thomson"), "rompath": "/tmp/pc128-mame-save-load-roms", "floppy": img,
+    c = {"mame": str(pc128.LOCAL_MAME), "rompath": "/tmp/pc128-mame-save-load-roms", "floppy": img,
          "line_gap_frames": 30, "char_gap_frames": 3, "floppy_controller": "cd90_351", "menu_frames": 600,
          "headless": True, "timeout_s": 900, "extra_args": ["-log"]}
     c.update(kw); return c

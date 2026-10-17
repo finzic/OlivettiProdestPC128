@@ -188,6 +188,10 @@ def main():
     a = ap.parse_args()
 
     cfg = json.loads(CONFIG.read_text())
+    sys.path.insert(0, str(HERE.parents[1]))
+    from pc128 import LOCAL_MAME
+    if cfg.get("mame", "mame") == "mame":
+        cfg["mame"] = str(LOCAL_MAME)
     if cfg.get("rompath"):
         rompath = Path(os.path.expandvars(os.path.expanduser(cfg["rompath"])))
         if not rompath.is_absolute():

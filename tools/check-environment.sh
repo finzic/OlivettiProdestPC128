@@ -110,7 +110,7 @@ print(json.load(open(sys.argv[1])).get(sys.argv[2], "mame"))
 PY
 )
     LOCAL_MAME="$ROOT/tools/.local/mame/mame_thomson/thomson"
-    if [ "$MAME" = "mame" ] && [ -x "$LOCAL_MAME" ]; then
+    if [ "$MAME" = "mame" ]; then
         MAME=$LOCAL_MAME
     fi
     MACHINE=$(python3 - "$ROOT/config.json" machine <<'PY'
@@ -174,7 +174,7 @@ PY
             fi
         fi
     else
-        fail "MAME executable '$MAME' (run tools/prepare-mame.sh, install system MAME, or set mame in config.json)"
+        fail "MAME executable '$MAME' (build the patched MAME with tools/prepare-mame.sh)"
         SYSTEM_PACKAGES_NEEDED=1
     fi
 else

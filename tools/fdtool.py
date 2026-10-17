@@ -14,8 +14,11 @@ all of side 0 then all of side 1 (verified in DCMOTO). Use --side 1 for the seco
 
 Use --tracks 80 on every command for 3.5in CD 90-351 images (655360 bytes for two sides).
 
-  fdtool.py new  DISK.fd [--name NAME] [--sides 1|2] [--tracks 40|80]
+    fdtool.py new  DISK.fd [--name NAME] [--sides 1|2] [--tracks 40|80]
   fdtool.py put  DISK.fd FILE [--as NAME.EXT] [--type 0-3] [--ascii] [--side 0|1]
+    fdtool.py pack FOLDER DISK.fd [--name NAME] [--sides 1|2] [--tracks 40|80]
+    fdtool.py tokenize FILE.bas OUT.bas [--rom pc128.rom]
+    fdtool.py detokenize FILE.bas OUT.bas [--rom pc128.rom]
   fdtool.py ls   DISK.fd [--side 0|1]     (default: every side of a two-sided image)
   fdtool.py get  DISK.fd NAME.EXT OUTFILE [--side 0|1]
   fdtool.py cp   SRC.fd DST.fd [--src-tracks 40|80] [--dst-tracks 40|80] [--src-side N] [--dst-side N]
@@ -24,11 +27,17 @@ Use --tracks 80 on every command for 3.5in CD 90-351 images (655360 bytes for tw
 --layout interleaved|sequential overrides the default two-sided track order of any command.
 
 `put` guesses the type from the extension: .BIN -> 2 (machine code, binary),
-.BAS -> 0 BASIC (sent as ASCII text with CR LF line ends, flag $FF), else 1 data.
+.BAS -> 0 BASIC (numbered source becomes native tokenized BASIC B by default; use --ascii
+or --basic-format ascii for BASIC A saved with SAVE ...,A), else 1 data.
+else 1 data.
 """
 import argparse
+import re
 import sys
 from pathlib import Path
+
+from basic_codec import (BasicCodecError, detokenize_file, is_native_basic,
+                        load_token_table, tokenize_source, validate_source)
 
 SECTOR, SPT = 256, 16
 # BASIC 128 DOS stores 255 data bytes per sector; the 256th is $00 (verified with SAVE/SAVEM)
@@ -177,6 +186,51 @@ def split_name(s):
         raise SystemExit("bad file name %r (8.3 max)" % s)
     return name, ext
 
+def ascii_basic_payload(data):
+    text = data.decode("latin-1")
+    lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    numbered = []
+    previous_line = -1
+    for line in lines:
+        if not line.strip():
+            continue
+        match = re.match(r"^\s*(\d+)(?:\s|$)", line)
+        if not match:
+            return None
+        line_number = int(match.group(1))
+        if line_number <= previous_line:
+            raise SystemExit("BASIC source line numbers must be strictly increasing")
+        previous_line = line_number
+        numbered.append(line.lstrip().rstrip())
+    if not numbered:
+        return None
+    return b"\r\n" + b"".join(line.encode("latin-1") + b"\r\n" for line in numbered)
+
+
+def prepare_file(data, ext, ftype=None, ascii_force=False, basic_format="tokenized", rom_path=None):
+    if ext == "BAS":
+        if ftype not in (None, 0):
+            raise SystemExit(".BAS files must use DOS BASIC type 0")
+        if is_native_basic(data):
+            return 0, False, data
+        if ascii_force:
+            payload = ascii_basic_payload(data)
+            if payload is None:
+                raise SystemExit("--ascii requires numbered ASCII BASIC source")
+            return 0, True, payload
+        payload = ascii_basic_payload(data)
+        if payload is None:
+            raise SystemExit("unrecognized .BAS file; expected numbered ASCII source or native tokenized BASIC B")
+        if basic_format == "ascii":
+            return 0, True, payload
+        try:
+            return 0, False, tokenize_source(data, load_token_table(rom_path))
+        except BasicCodecError as exc:
+            raise SystemExit(str(exc))
+    if ftype is None:
+        ftype = {"BIN": 2, "ASM": 3}.get(ext, 1)
+    return ftype, ascii_force, data
+
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -186,6 +240,21 @@ def main():
     p = sub.add_parser("put"); p.add_argument("disk"); p.add_argument("file")
     p.add_argument("--as", dest="as_name"); p.add_argument("--type", type=int, choices=range(4))
     p.add_argument("--ascii", action="store_true")
+    p.add_argument("--basic-format", choices=("tokenized", "ascii"), default="tokenized",
+                    help="format for plain-text .BAS files (default: tokenized BASIC B)")
+    p.add_argument("--rom", help="PC128 ROM used to tokenize BASIC source")
+    pack = sub.add_parser("pack", help="create a DCMOTO-compatible disk from a folder")
+    pack.add_argument("folder"); pack.add_argument("disk")
+    pack.add_argument("--name", default="")
+    pack.add_argument("--sides", type=int, choices=(1, 2), default=1)
+    pack.add_argument("--tracks", type=int, choices=(40, 80), default=80)
+    pack.add_argument("--basic-format", choices=("tokenized", "ascii"), default="tokenized",
+                      help="format for plain-text .BAS files (default: tokenized BASIC B)")
+    pack.add_argument("--rom", help="PC128 ROM used to tokenize BASIC source")
+    enc = sub.add_parser("tokenize", help="encode numbered BASIC source as native PC128 BASIC B")
+    enc.add_argument("file"); enc.add_argument("out"); enc.add_argument("--rom")
+    dec = sub.add_parser("detokenize", help="decode native PC128 BASIC B to numbered source")
+    dec.add_argument("file"); dec.add_argument("out"); dec.add_argument("--rom")
     l = sub.add_parser("ls"); l.add_argument("disk")
     g = sub.add_parser("get"); g.add_argument("disk"); g.add_argument("name"); g.add_argument("out")
     c = sub.add_parser("cp", help="copy all files between images, e.g. 40-track to 80-track")
@@ -202,11 +271,58 @@ def main():
         sp.add_argument("--side", type=int, choices=(0, 1), default=0)
     l.add_argument("--side", type=int, choices=(0, 1), help="default: all sides")
     for sp in (n, p, l, g):
-        sp.add_argument("--tracks", type=int, choices=(40, 80), default=40,
-                        help="40 = 5.25in (CD 90-640), 80 = 3.5in (CD 90-351)")
+        sp.add_argument("--tracks", type=int, choices=(40, 80), default=80,
+                        help="80 = 3.5in (CD 90-351, default), 40 = 5.25in (CD 90-640)")
         sp.add_argument("--layout", choices=("interleaved", "sequential"),
                         help="two-sided track order; default sequential for 80 tracks, interleaved for 40")
     a = ap.parse_args()
+
+    if a.cmd == "tokenize":
+        table = load_token_table(a.rom)
+        data = tokenize_source(Path(a.file).read_bytes(), table)
+        Path(a.out).write_bytes(data)
+        print("tokenized", a.file, "->", a.out)
+        return
+
+    if a.cmd == "detokenize":
+        table = load_token_table(a.rom)
+        try:
+            text = detokenize_file(Path(a.file).read_bytes(), table)
+        except BasicCodecError as exc:
+            raise SystemExit(str(exc))
+        Path(a.out).write_text(text, encoding="latin-1", newline="")
+        print("detokenized", a.file, "->", a.out)
+        return
+
+    if a.cmd == "pack":
+        folder, dpath = Path(a.folder), Path(a.disk)
+        if not folder.is_dir():
+            raise SystemExit("not a folder: %s" % folder)
+        if dpath.exists():
+            raise SystemExit("refusing to overwrite existing disk: %s" % dpath)
+        sources = sorted(p for p in folder.iterdir() if p.is_file() and not p.name.startswith("."))
+        if not sources:
+            raise SystemExit("folder contains no files: %s" % folder)
+        disk = Disk.blank(a.name, a.sides, a.tracks)
+        for source in sources:
+            name, ext = split_name(source.name)
+            data = source.read_bytes()
+            try:
+                ftype, ascii_flag, data = prepare_file(data, ext, basic_format=a.basic_format,
+                                                       rom_path=a.rom)
+            except SystemExit as exc:
+                raise SystemExit("%s: %s" % (source.name, exc))
+            try:
+                disk.put(name, ext, data, ftype, ascii_flag)
+            except SystemExit as exc:
+                raise SystemExit("%s: %s" % (source.name, exc))
+        dpath.parent.mkdir(parents=True, exist_ok=True)
+        dpath.write_bytes(disk.d)
+        print("packed %d files into %s" % (len(sources), dpath))
+        for _, name, ext, ftype, flag, first, last_bytes in disk.files():
+            print("  %s.%s type=%d ascii=%s bytes=%d" %
+                  (name, ext, ftype, bool(flag), len(disk.read(first, last_bytes))))
+        return
 
     if a.cmd == "cp":
         src = Disk(Path(a.src).read_bytes(), a.src_side, a.src_tracks, a.src_layout)
@@ -243,14 +359,8 @@ def main():
     elif a.cmd == "put":
         name, ext = split_name(a.as_name or a.file)
         data = Path(a.file).read_bytes()
-        ftype, ascii_flag = a.type, a.ascii
-        if ftype is None:
-            ftype = {"BIN": 2, "BAS": 0}.get(ext, 1)
-        if ext == "BAS" and a.type is None:
-            text = data.decode("ascii").replace("\r\n", "\n").split("\n")
-            # BASIC 128's own SAVE "x",A starts the file with CR LF
-            data = b"\r\n" + b"".join(l.encode("ascii") + b"\r\n" for l in text if l.strip())
-            ascii_flag = True
+        ftype, ascii_flag, data = prepare_file(data, ext, a.type, a.ascii,
+                                               a.basic_format, a.rom)
         disk.put(name, ext, data, ftype, ascii_flag)
         Path(a.disk).write_bytes(disk.d)
         print("added %s.%s (%d bytes)" % (name, ext, len(data)))

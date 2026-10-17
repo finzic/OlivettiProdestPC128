@@ -30,7 +30,7 @@
       "problemMatcher": []
     },
     {
-      "label": "PC128: start MAME session (floppy/cassette/cartridge)",
+      "label": "PC128: start MAME session (CD90-351 default)",
       "type": "shell",
       "command": "bash",
       "args": ["${workspaceFolder}/tools/run-mame.sh", "${input:mediaKind}", "${input:mediaFile}"],
@@ -63,9 +63,9 @@
     {
       "id": "mediaKind",
       "type": "pickString",
-      "description": "Storage medium to insert",
-      "options": ["floppy", "cassette", "cartridge", "none"],
-      "default": "floppy"
+      "description": "Choose floppy351 for the primary 80-track CD90-351; floppy is the 40-track CD90-640 fallback",
+      "options": ["floppy351", "floppy", "cassette", "cartridge", "none"],
+      "default": "floppy351"
     },
     {
       "id": "mediaFile",
