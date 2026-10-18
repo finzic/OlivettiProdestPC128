@@ -2,7 +2,7 @@
 2 PALETTE 1,4095
 10 CLEAR ,&H9EFF
 15 PRINT "Loading KEYJOY machine code..."
-20 LOAD M "KEYJOY"
+20 LOADM "KEYJOY"
 30 DEF USR 0=&H9F00
 35 PRINT "Preparing joystick data..."
 40 DIM DX(8),DY(8):FOR I=0 TO 8:READ DX(I),DY(I):NEXT

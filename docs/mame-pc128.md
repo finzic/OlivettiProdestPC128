@@ -176,3 +176,7 @@ mame pro128 -rompath ./roms -window -noconfirm_quit -ui_active -nomouse
 # debugging session
 mame pro128 -rompath ./roms -window -noconfirm_quit -ui_active -debug
 ```
+
+For scripted debugging (breakpoints by ROM page, BASIC line breakpoints, live assembly, VS Code
+integration) use the workspace debugger instead: `docs/debugger.md`. It runs MAME with
+`-debugger script` (patch `mame-patch/0003-script-debugger-module.patch`).

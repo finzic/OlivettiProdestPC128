@@ -63,3 +63,35 @@ required CD90-351 pages; if supplied, it also copies the optional `cd90-640.rom`
 LWTOOLS is downloaded as source and compiled locally. Its executable is placed under
 `tools/.local/`; both that directory and the suggested `.venv/` are excluded by
 `.gitignore`, so generated binaries and installed Python packages are not committed.
+## Renumber a BASIC listing
+
+`tools/renumber.py` renumbers an ASCII `.BAS` listing in place (default start 10, step 10) and
+rewrites the line numbers after `GOTO`/`GO TO`, `GOSUB`/`GO SUB`, `THEN`, `ELSE`, `RESTORE`,
+`RESUME`, `RUN`, `LIST` and `DELETE`, including `ON ... GOTO` lists and `LIST a-b` ranges. Strings,
+`REM`/`'` comments and `DATA` statements are left unchanged. References to missing lines are reported
+as warnings. Tokenized files are rejected.
+
+```bash
+python3 tools/renumber.py PROG.BAS --start 100 --step 5   # add --stdout to preview
+```
+
+In VS Code, run the task **PC128: renumber BASIC (current file)** or **PC128: renumber BASIC
+(choose start/step)**. To bind the first task to a key, add this to your `keybindings.json`:
+
+```json
+{ "key": "ctrl+alt+r", "command": "workbench.action.tasks.runTask",
+  "args": "PC128: renumber BASIC (current file)", "when": "resourceExtname =~ /\\.bas$/i" }
+```
+
+Save the file before running the task. VS Code reloads the renumbered file from disk.
+
+## Debugger
+
+`tools/debugger/` contains the PC128 debugger:
+- `pc128dbg.py`: terminal REPL
+- `dap.py`: VS Code debug adapter
+- `pc128_dbg.lua`: server inside MAME
+- disassembler, symbols, and the lwasm wrapper
+
+`tools/vscode-pc128-debug/` holds the VS Code extension; `build.py --install` packages and installs it.
+See `docs/debugger.md`.

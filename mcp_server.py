@@ -9,7 +9,13 @@ try:                                    # mcp >= 2
 except ImportError:                     # mcp 1.x
     from mcp.server.fastmcp import FastMCP, Image
 
-from pc128 import format_report, run_job
+import sys
+import threading
+from pathlib import Path
+
+from pc128 import ROOT, format_report, run_job
+
+sys.path.insert(0, str(ROOT / "tools" / "debugger"))
 
 mcp = FastMCP("pc128")
 
@@ -61,6 +67,141 @@ def run_asm(code: str, dump: list[str] | None = None, done_addr: str | None = No
         run_frames: max frames (50 per emulated second) to run. Default from config.
     """
     return _result(run_job("asm", code, dump, run_frames, None, done_addr))
+
+
+# ------------------------------------------------------------------ debugger --
+# One persistent MAME debug session (tools/debugger) shared by the debug_* tools.
+_dbg = None
+_dbg_log = []
+_dbg_lock = threading.Lock()
+
+
+def _dbg_session():
+    if _dbg is None or _dbg.state == "exited":
+        raise RuntimeError("no debug session: call debug_start first")
+    return _dbg
+
+
+def _dbg_text(text, s=None):
+    out = []
+    if _dbg_log:
+        out.append("\n".join(_dbg_log))
+        _dbg_log.clear()
+    if text:
+        out.append(text)
+    if s is not None:
+        out.append(s.status_line())
+    return "\n".join(out)
+
+
+@mcp.tool()
+def debug_start(code: str | None = None, kind: str = "asm", program: str | None = None,
+                stop_on_entry: bool = True, breakpoints: list[str] | None = None,
+                window: bool = False, boot: bool = True, floppy: str | None = None,
+                floppy2: str | None = None, floppy_controller: str | None = None,
+                cassette: str | None = None, cartridge: str | None = None) -> str:
+    """Start an interactive debug session on an emulated PC128 (MAME, 6809) and keep it alive.
+
+    Replaces any previous session. The machine boots into BASIC 128, then the program (if any)
+    is loaded: assembly is assembled with lwasm, stored in RAM ($6000-$9FFF goes to BANK 6) and
+    started with EXEC; BASIC is typed in and RUN. With stop_on_entry the session stops at the
+    entry point / first BASIC line. Continue with debug_command.
+
+    Args:
+        code: program source (lwasm 6809 assembly, or numbered BASIC lines when kind="basic").
+        kind: "asm" or "basic" (only used with `code`).
+        program: path of a .asm / .bas file instead of `code`.
+        stop_on_entry: stop at the entry point / first BASIC line.
+        breakpoints: set before the program starts, in debug_command syntax for `bp`, e.g.
+            ["PUTC", "9010", "mon0:F6D9 if a==0x41", "line 40"] ("line N" = BASIC line).
+        window: show the MAME window (default headless).
+        boot: go through the boot menu into BASIC 128 first.
+        floppy: .fd image for drive 0, e.g. "media/KEYJOY.FD" (programs can then LOADM/LOAD from it).
+        floppy2: .fd image for the second drive (cd90_351 only).
+        floppy_controller: "cd90_351" (3.5", 80 tracks, default) or "cd90_640" (5.25", 40 tracks).
+        cassette: cassette image.  cartridge: cartridge image (the boot menu is skipped).
+        Unset media fall back to config.json, like run_basic / run_asm.
+    """
+    global _dbg
+    from commands import Session
+    with _dbg_lock:
+        if _dbg is not None:
+            try:
+                _dbg.close()
+            except Exception:
+                pass
+            _dbg = None
+        _dbg_log.clear()
+        if code is not None:
+            tmp = ROOT / "build" / "dbg-mcp"
+            tmp.mkdir(parents=True, exist_ok=True)
+            program = str(tmp / ("prog.bas" if kind.lower().startswith("bas") else "prog.asm"))
+            Path(program).write_text(code if code.endswith("\n") else code + "\n")
+        s = Session()
+        s._quiet = True
+        media = {"floppy": floppy, "floppy2": floppy2, "controller": floppy_controller,
+                 "cassette": cassette, "cartridge": cartridge}
+        s.start(media=media, window=window, boot=boot, log=_dbg_log.append)
+        _dbg = s
+        if program and not program.lower().endswith((".bas", ".txt")):
+            s.assemble_program(program)
+        for spec in breakpoints or []:
+            spec = spec.strip()
+            _dbg_log.append(s.execute(("bl " + spec[5:]) if spec.lower().startswith("line ") else "bp " + spec))
+        if program:
+            s.load_program(program, stop_on_entry=stop_on_entry, log=_dbg_log.append,
+                           assembled=s.program if not program.lower().endswith((".bas", ".txt")) else None)
+            if stop_on_entry or breakpoints:
+                s.wait_stopped(60 if program.lower().endswith((".bas", ".txt")) else 20)
+        elif stop_on_entry:
+            s.pause()
+        return _dbg_text("debug session ready", s)
+
+
+@mcp.tool()
+def debug_command(command: str, wait_seconds: float = 10.0) -> list:
+    """Run a debugger command in the session started by debug_start; returns its text output.
+
+    Main commands (`help` lists all):
+      r [REG=val]          registers + CC flags + location (ROM page / symbol)   banks   where   line   bt
+      m ADDR[@view] [LEN]  hex dump       d [ADDR] [N]  disassemble (with symbols)
+      a ADDR asm | asm     assemble live into RAM, e.g. "a 9F00 LDA #$41 | SWI PUTC | RTS"
+      hex ADDR 12 34 ..    store bytes    str ADDR "TEXT\n\0"   fill ADDR LEN BYTE
+      bp ADDR|SYM [if COND]   bl LINE [if COND] (BASIC line)   bc N|all   bd/be N   wp ADDR [LEN] [r|w|rw]
+      g [ADDR]  s [N]  n (step over)  out  until ADDR  nl (next BASIC line)  stop  wait [SECS]
+      sym REGEX   type TEXT   key TEXT   status   snap   reset   mame RAWCMD
+    Addresses: hex (9F00, $9F00), symbols (PUTC), expressions (X+2), . = PC, page-qualified (mon0:F6D9).
+    Views in $6000-$9FFF: @1..@6 BASIC BANK n, @p0..@p7 RAM page, @cpu. Conditions use MAME syntax
+    (hex by default, e.g. "a==41 && x>9000").
+
+    After execution commands (g, s, n, out, until, nl) the tool waits up to wait_seconds for the
+    machine to stop and reports where it is. `snap` also returns the screenshot image.
+    """
+    with _dbg_lock:
+        s = _dbg_session()
+        out = s.execute(command)
+        verb = command.strip().split(" ", 1)[0].lower()
+        runs = verb in ("g", "c", "go", "s", "step", "n", "over", "out", "finish", "until", "nl", "nextline")
+        if runs:
+            if wait_seconds > 0:
+                s.wait_stopped(wait_seconds)
+            out = None                    # the fresh status below supersedes the command's own report
+        content = [_dbg_text(out, s if runs else None)]
+        if verb == "snap" and out and out.endswith(".png"):
+            content.append(Image(path=out))
+        return content
+
+
+@mcp.tool()
+def debug_stop() -> str:
+    """End the debug session started by debug_start (closes MAME)."""
+    global _dbg
+    with _dbg_lock:
+        if _dbg is None:
+            return "no debug session"
+        _dbg.close()
+        _dbg = None
+        return "debug session closed"
 
 
 if __name__ == "__main__":

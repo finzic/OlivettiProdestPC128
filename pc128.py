@@ -38,11 +38,69 @@ DEFAULT_CONFIG = {
     "floppy": "",              # .fd image for drive 0 (empty = no floppy controller)
     "floppy2": "",             # cd90_351 only: .fd image for the second drive (BASIC 2:/3:)
     "floppy_controller": "cd90_351",  # original 3.5" drive; cd90_640 is the optional fallback
+    "cassette": "",            # .k7 / .wav cassette image
+    "cartridge": "",           # .m7 / .rom cartridge image
     "extra_args": [],
 }
 
+# Media choices shared by tools/run-mame.sh, the VS Code tasks and the debugger.
+MEDIA_KINDS = ("floppy351", "floppy", "cassette", "cartridge", "none")
+FLOPPY_CONTROLLERS = ("cd90_351", "cd90_640")
+
 
 # ------------------------------------------------------------------ helpers --
+def media_from_kind(kind, image="", image2=""):
+    """run-mame.sh style choice (floppy351 / floppy / cassette / cartridge / none) -> media dict."""
+    kind = (kind or "none").strip().lower()
+    if kind not in MEDIA_KINDS:
+        raise ValueError("unknown media kind %r (use %s)" % (kind, ", ".join(MEDIA_KINDS)))
+    if kind == "none":
+        return {}
+    if not image:
+        raise ValueError("media kind %r needs an image file" % kind)
+    if kind == "floppy351":
+        return {"floppy": image, "floppy2": image2 or "", "controller": "cd90_351"}
+    if kind == "floppy":
+        return {"floppy": image, "controller": "cd90_640"}
+    return {"cassette" if kind == "cassette" else "cartridge": image}
+
+
+def mame_media_args(cfg, media=None):
+    """MAME arguments for the storage media: config.json values, overridden by `media`
+    ({"floppy", "floppy2", "controller", "cassette", "cartridge"}; "" or None = not set)."""
+    media = {k: v for k, v in (media or {}).items() if v}
+    floppy = media.get("floppy", cfg.get("floppy"))
+    floppy2 = media.get("floppy2", cfg.get("floppy2"))
+    ctl = media.get("controller") or cfg.get("floppy_controller") or "cd90_351"
+    cassette = media.get("cassette", cfg.get("cassette"))
+    cart = media.get("cartridge") or media.get("cart") or cfg.get("cartridge")
+    if ctl not in FLOPPY_CONTROLLERS:
+        raise ValueError("unknown floppy controller %r (use %s)" % (ctl, " or ".join(FLOPPY_CONTROLLERS)))
+
+    def image(path, what):
+        p = Path(os.path.expanduser(str(path)))
+        if not p.is_absolute() and not p.is_file():
+            p = ROOT / p                  # relative to the current directory, else to the repository
+        if not p.is_file():
+            raise ValueError("%s image not found: %s" % (what, path))
+        return str(p.resolve())
+
+    args = []
+    if floppy:
+        args += ["-extension", ctl, "-flop1", image(floppy, "floppy")]
+        if floppy2:
+            if ctl != "cd90_351":
+                raise ValueError("a second floppy drive needs the cd90_351 controller")
+            args += ["-extension:cd90_351:thmfc1:1", "dd90_352", "-flop2", image(floppy2, "second floppy")]
+    elif floppy2:
+        raise ValueError("floppy2 needs a floppy in drive 0 too")
+    if cassette:
+        args += ["-cassette", image(cassette, "cassette")]
+    if cart:
+        args += ["-cart", image(cart, "cartridge")]
+    return args
+
+
 def load_config(overrides=None):
     cfg = dict(DEFAULT_CONFIG)
     path = ROOT / "config.json"
@@ -277,10 +335,10 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
     cmd += ["-video", "none"] if cfg["headless"] else ["-window", "-resolution", "960x720", "-nomaximize"]
     if cfg["rompath"]:
         cmd += ["-rompath", cfg["rompath"]]
-    if cfg["floppy"]:
-        cmd += ["-extension", cfg["floppy_controller"], "-flop1", str(Path(cfg["floppy"]).resolve())]
-        if cfg["floppy2"] and cfg["floppy_controller"] == "cd90_351":
-            cmd += ["-extension:cd90_351:thmfc1:1", "dd90_352", "-flop2", str(Path(cfg["floppy2"]).resolve())]
+    try:
+        cmd += mame_media_args(cfg)
+    except ValueError as e:
+        return {"ok": False, "stage": "launch", "error": str(e)}
     cmd += list(cfg["extra_args"])
 
     try:
@@ -331,11 +389,16 @@ def main():
     ap.add_argument("--no-upcase", action="store_true", help="BASIC: do not uppercase typed text")
     ap.add_argument("--json", action="store_true", help="print raw JSON")
     ap.add_argument("--fd", help=".fd floppy image to mount in drive 0")
+    ap.add_argument("--fd2", help=".fd image for the second drive (cd90_351 only)")
+    ap.add_argument("--controller", choices=FLOPPY_CONTROLLERS, help="floppy controller (default from config.json)")
+    ap.add_argument("--cassette", help="cassette image")
+    ap.add_argument("--cart", help="cartridge image")
     a = ap.parse_args()
 
     code = Path(a.file).read_text()
     r = run_job(a.mode, code, a.dump, a.run_frames, a.boot_frames, a.done_addr, not a.no_upcase,
-                cfg_overrides={"floppy": a.fd})
+                cfg_overrides={"floppy": a.fd, "floppy2": a.fd2, "floppy_controller": a.controller,
+                               "cassette": a.cassette, "cartridge": a.cart})
     print(json.dumps(r, indent=2) if a.json else format_report(r))
     sys.exit(0 if r.get("ok") else 1)
 

@@ -1,0 +1,55 @@
+{
+  // Debug type "pc128" comes from tools/vscode-pc128-debug
+  // (install: task "PC128: build + install debugger extension", then reload the window).
+  // Media attributes are the same choices as a normal run: "media" + "image" (+ "image2"), or
+  // "floppy" / "floppy2" / "floppyController" / "cassette" / "cartridge"; unset = config.json.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pc128",
+      "request": "launch",
+      "name": "PC128: debug current file (.asm / .bas)",
+      "program": "${file}",
+      "stopOnEntry": true
+    },
+    {
+      "type": "pc128",
+      "request": "launch",
+      "name": "PC128: debug current file with media (choose)",
+      "program": "${file}",
+      "stopOnEntry": true,
+      "media": "${input:debugMediaKind}",
+      "image": "${input:debugMediaFile}"
+    },
+    {
+      "type": "pc128",
+      "request": "launch",
+      "name": "PC128: debug current file (run to breakpoints)",
+      "program": "${file}",
+      "stopOnEntry": false
+    },
+    {
+      "type": "pc128",
+      "request": "launch",
+      "name": "PC128: bare machine with media (choose)",
+      "stopOnEntry": true,
+      "media": "${input:debugMediaKind}",
+      "image": "${input:debugMediaFile}"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "debugMediaKind",
+      "type": "pickString",
+      "description": "Media: floppy351 = CD90-351 3.5\" (80 tracks), floppy = CD90-640 (40 tracks)",
+      "options": ["floppy351", "floppy", "cassette", "cartridge", "none"],
+      "default": "floppy351"
+    },
+    {
+      "id": "debugMediaFile",
+      "type": "promptString",
+      "description": "Image path (.fd / .k7 .wav / .rom .m7); ignored for 'none'",
+      "default": "${workspaceFolder}/media/"
+    }
+  ]
+}

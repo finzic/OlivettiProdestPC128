@@ -1,0 +1,13 @@
+{
+  "scopeName": "source.pc128basic",
+  "patterns": [
+    { "name": "constant.numeric.line-number.pc128basic", "match": "^\\s*\\d+" },
+    { "name": "comment.line.pc128basic", "match": "(?i)(\\bREM\\b|').*$" },
+    { "name": "string.quoted.double.pc128basic", "match": "\"[^\"]*\"?" },
+    { "name": "keyword.control.pc128basic", "match": "(?i)\\b(IF|THEN|ELSE|FOR|TO|STEP|NEXT|GOTO|GOSUB|RETURN|ON|END|STOP|RUN|WHILE|WEND|ERROR|RESUME)\\b" },
+    { "name": "support.function.pc128basic", "match": "(?i)\\b(ABS|ASC|ATN|CHR\\$|COS|EXP|FIX|FRE|HEX\\$|INKEY\\$|INSTR|INT|LEFT\\$|LEN|LOG|MID\\$|PEEK|POINT|RIGHT\\$|RND|SGN|SIN|SPACE\\$|SQR|STR\\$|STRING\\$|TAN|VAL|VARPTR|USR|EOF|LOC|LOF|PTRIG|STICK|STRIG|SCREEN|INPUT\\$)" },
+    { "name": "keyword.other.statement.pc128basic", "match": "(?i)\\b(AUTO|BANK|BEEP|BOX|CALL|CHAIN|CIRCLE|CLEAR|CLOSE|CLS|COLOR|CONSOLE|DATA|DEF|DEFINT|DEFSNG|DEFDBL|DEFSTR|DELETE|DIM|DRAW|EXEC|FIELD|FILES|GET|INPUT|KILL|LET|LINE|LIST|LOAD|LOCATE|MERGE|MOTOR|NEW|OPEN|PAINT|PALETTE|PLAY|POKE|PRINT|PSET|PRESET|PUT|READ|RESTORE|SAVE|SCREEN|SWAP|TRON|TROFF|USING|WIDTH|WRITE|ATTRB|LOADM|SAVEM)\\b" },
+    { "name": "constant.numeric.pc128basic", "match": "(?i)(&H[0-9A-F]+|&O?[0-7]+|\\b\\d+(\\.\\d*)?(E[+-]?\\d+)?\\b)" },
+    { "name": "keyword.operator.pc128basic", "match": "(?i)\\b(AND|OR|NOT|XOR|MOD|EQV|IMP)\\b|[-+*/^=<>]" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "scopeName": "source.asm6809",
+  "patterns": [
+    { "name": "comment.line.asm6809", "match": "(;|^\\*).*$" },
+    { "name": "string.quoted.asm6809", "match": "\"[^\"]*\"|'[^']*'|/[^/]*/(?=\\s*(;|$))" },
+    { "name": "entity.name.function.asm6809", "match": "^[A-Za-z_.@$][\\w.@$?]*:?" },
+    { "name": "keyword.control.directive.asm6809", "match": "(?i)\\b(org|equ|set|fcb|fdb|fcc|fcs|fcn|fqb|rmb|rmd|zmb|zmd|fill|end|include|includebin|setdp|align|macro|endm|if|ifdef|ifndef|else|endc|endif|section|endsection|export|import|struct|endstruct|pragma|opt|nam|ttl|db|dw|ds)\\b" },
+    { "name": "keyword.control.branch.asm6809", "match": "(?i)\\b(l?b(ra|rn|hi|ls|cc|hs|cs|lo|ne|eq|vc|vs|pl|mi|ge|lt|gt|le|sr)|jmp|jsr|rts|rti|swi[23]?|cwai|sync)\\b" },
+    { "name": "keyword.other.instruction.asm6809", "match": "(?i)\\b(abx|adc[ab]|add[abd]|and[ab]|andcc|asl[ab]?|asr[ab]?|bit[ab]|clr[ab]?|cmp[abdsuxy]|com[ab]?|daa|dec[ab]?|eor[ab]|exg|inc[ab]?|ld[abdsuxy]|lea[suxy]|lsl[ab]?|lsr[ab]?|mul|neg[ab]?|nop|or[ab]|orcc|psh[su]|pul[su]|rol[ab]?|ror[ab]?|sbc[ab]|sex|st[abdsuxy]|sub[abd]|tfr|tst[ab]?)\\b" },
+    { "name": "variable.language.register.asm6809", "match": "(?i)\\b(pcr|pc|dp|cc|[abdxyus])\\b" },
+    { "name": "constant.numeric.asm6809", "match": "(\\$[0-9A-Fa-f]+|%[01]+|@[0-7]+|\\b0x[0-9A-Fa-f]+\\b|\\b[0-9][0-9A-Fa-f]*[Hh]\\b|\\b\\d+\\b)" },
+    { "name": "keyword.operator.asm6809", "match": "#|<|>|,[+-]{0,2}|[+-]{1,2}(?=[xyus])" }
+  ]
+}

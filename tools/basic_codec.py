@@ -185,6 +185,14 @@ def _space_after(word, following):
             (following.isalnum() or following == '"') and not word.endswith("("))
 
 
+def _is_m_suffix(word, body, i):
+    """LOADM / SAVEM are stored as LOAD/SAVE + a plain M; keep them as one word (not M, MA, M$ ... variables)."""
+    if word not in ("LOAD", "SAVE") or body[i:i + 1] != b"M":
+        return False
+    nxt = body[i + 1:i + 2]
+    return not nxt or not (nxt.isalnum() or nxt in b"$%!#")
+
+
 def _decode_body(body, table, line_number):
     out = []
     i = 0
@@ -219,7 +227,7 @@ def _decode_body(body, table, line_number):
         if (word[0].isalnum() or word[0] in "'") and _space_before("".join(out)):
             out.append(" ")
         out.append(word)
-        if _space_after(word, following):
+        if _space_after(word, following) and not _is_m_suffix(word, body, i):
             out.append(" ")
         if word in ("REM", "'"):
             comment = True

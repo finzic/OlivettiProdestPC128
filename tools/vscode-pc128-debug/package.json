@@ -1,0 +1,240 @@
+{
+  "name": "pc128-debug",
+  "displayName": "PC128 Debugger (MAME)",
+  "description": "Debug 6809 assembly and BASIC 128 programs on an emulated Olivetti Prodest PC128 (MAME)",
+  "version": "0.2.0",
+  "publisher": "finzic",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Programming Languages"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onDebugResolve:pc128",
+    "onDebugDynamicConfigurations:pc128",
+    "onLanguage:asm6809",
+    "onLanguage:pc128basic"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "asm6809",
+        "aliases": [
+          "6809 Assembly",
+          "asm6809"
+        ],
+        "extensions": [
+          ".asm",
+          ".s",
+          ".a09"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "pc128basic",
+        "aliases": [
+          "PC128 BASIC",
+          "pc128basic"
+        ],
+        "extensions": [
+          ".bas"
+        ],
+        "configuration": "./language-configuration-basic.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "asm6809",
+        "scopeName": "source.asm6809",
+        "path": "./syntaxes/asm6809.tmLanguage.json"
+      },
+      {
+        "language": "pc128basic",
+        "scopeName": "source.pc128basic",
+        "path": "./syntaxes/pc128basic.tmLanguage.json"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "asm6809"
+      },
+      {
+        "language": "pc128basic"
+      }
+    ],
+    "configuration": {
+      "title": "PC128 Debugger",
+      "properties": {
+        "pc128.python": {
+          "type": "string",
+          "default": "python3",
+          "description": "Python interpreter used to run the debug adapter."
+        },
+        "pc128.adapterPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to tools/debugger/dap.py. Empty: <workspace>/tools/debugger/dap.py."
+        }
+      }
+    },
+    "debuggers": [
+      {
+        "type": "pc128",
+        "label": "PC128 (MAME)",
+        "languages": [
+          "asm6809",
+          "pc128basic"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": ".asm (assembled with lwasm, loaded, EXEC'd) or .bas (typed and RUN). Optional.",
+                "default": "${file}"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Stop at the program entry point / first BASIC line.",
+                "default": true
+              },
+              "noExec": {
+                "type": "boolean",
+                "description": "Load the program but don't run it.",
+                "default": false
+              },
+              "headless": {
+                "type": "boolean",
+                "description": "Run MAME without a window.",
+                "default": false
+              },
+              "boot": {
+                "type": "boolean",
+                "description": "Go through the boot menu into BASIC 128 first.",
+                "default": true
+              },
+              "symbols": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Extra symbol files (.sym, lwasm --symbol-dump output, .json).",
+                "default": []
+              },
+              "media": {
+                "type": "string",
+                "enum": [
+                  "floppy351",
+                  "floppy",
+                  "cassette",
+                  "cartridge",
+                  "none"
+                ],
+                "enumDescriptions": [
+                  "CD90-351 3.5\" drive (80 tracks); image2 = second drive",
+                  "CD90-640 5.25\" drive (40 tracks)",
+                  "cassette image",
+                  "cartridge image (skips the boot menu)",
+                  "no media"
+                ],
+                "description": "Media like a normal run (tools/run-mame.sh, task 'start MAME session'); the file goes in 'image'."
+              },
+              "image": {
+                "type": "string",
+                "description": "Image for 'media' (.fd / .k7 .wav / .rom .m7)."
+              },
+              "image2": {
+                "type": "string",
+                "description": "floppy351 only: image for the second drive (BASIC 2:/3:)."
+              },
+              "floppy": {
+                "type": "string",
+                "description": ".fd image for drive 0 (default: config.json 'floppy')."
+              },
+              "floppy2": {
+                "type": "string",
+                "description": ".fd image for the second drive (cd90_351 only)."
+              },
+              "floppyController": {
+                "type": "string",
+                "enum": [
+                  "cd90_351",
+                  "cd90_640"
+                ],
+                "description": "Floppy controller (default: config.json 'floppy_controller')."
+              },
+              "cassette": {
+                "type": "string",
+                "description": "Cassette image."
+              },
+              "cartridge": {
+                "type": "string",
+                "description": "Cartridge image."
+              },
+              "mameArgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [],
+                "description": "Extra MAME command-line arguments."
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "pc128",
+            "request": "launch",
+            "name": "PC128: debug current file",
+            "program": "${file}",
+            "stopOnEntry": true
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "PC128: debug current file",
+            "description": "Assemble/type the current .asm/.bas file and debug it in MAME",
+            "body": {
+              "type": "pc128",
+              "request": "launch",
+              "name": "PC128: debug current file",
+              "program": "^\"\\${file}\"",
+              "stopOnEntry": true
+            }
+          },
+          {
+            "label": "PC128: debug current file with a floppy",
+            "description": "Mount a disk image (same as a normal run) and debug the current file",
+            "body": {
+              "type": "pc128",
+              "request": "launch",
+              "name": "PC128: debug current file + floppy",
+              "program": "^\"\\${file}\"",
+              "stopOnEntry": true,
+              "media": "floppy351",
+              "image": "^\"\\${workspaceFolder}/media/DISK.FD\""
+            }
+          },
+          {
+            "label": "PC128: attach to a fresh machine",
+            "description": "Boot BASIC 128 and stop, without a program",
+            "body": {
+              "type": "pc128",
+              "request": "launch",
+              "name": "PC128: bare machine",
+              "stopOnEntry": true
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

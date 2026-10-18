@@ -1,0 +1,79 @@
+diff --git a/src/frontend/mame/luaengine_mem.cpp b/src/frontend/mame/luaengine_mem.cpp
+index bfac87d6..2e579c0a 100644
+--- a/src/frontend/mame/luaengine_mem.cpp
++++ b/src/frontend/mame/luaengine_mem.cpp
+@@ -735,6 +735,9 @@ void lua_engine::initialize_memory(sol::table &emu)
+ 	auto bank_type = sol().registry().new_usertype<memory_bank>("membank", sol::no_constructor);
+ 	bank_type["tag"] = sol::property(&memory_bank::tag);
+ 	bank_type["entry"] = sol::property(&memory_bank::entry, &memory_bank::set_entry);
++	// PC128 debugger: direct access to the memory behind the current bank entry (no read/write handlers)
++	bank_type.set_function("read_u8", [] (memory_bank &b, offs_t offset) -> u8 { return reinterpret_cast<u8 const *>(b.base())[offset]; });
++	bank_type.set_function("write_u8", [] (memory_bank &b, offs_t offset, u8 data) { reinterpret_cast<u8 *>(b.base())[offset] = data; });
+ 
+ 
+ 	auto region_type = sol().registry().new_usertype<memory_region>("region", sol::no_constructor);
+diff --git a/src/osd/modules/debugger/none.cpp b/src/osd/modules/debugger/none.cpp
+index 61bd1bbb..061803d7 100644
+--- a/src/osd/modules/debugger/none.cpp
++++ b/src/osd/modules/debugger/none.cpp
+@@ -13,6 +13,8 @@
+ #include "debug/debugcpu.h"
+ #include "debugger.h"
+ 
++#include "osdcore.h"
++
+ 
+ namespace osd {
+ 
+@@ -54,8 +56,39 @@ void debug_none::debugger_update()
+ {
+ }
+ 
++// "script": no user interface, and a stopped CPU stays stopped until a script
++// (Lua debugger API: cpu.debug:go()/step(), manager.machine.debugger) resumes it.
++// Lua periodic callbacks keep running while the CPU is stopped.
++class debug_script : public osd_module, public debug_module
++{
++public:
++	debug_script() :
++		osd_module(OSD_DEBUG_PROVIDER, "script"), debug_module(),
++		m_machine(nullptr)
++	{
++	}
++
++	virtual ~debug_script() { }
++
++	virtual int init(osd_interface &osd, const osd_options &options) override { return 0; }
++	virtual void exit() override { }
++
++	virtual void init_debugger(running_machine &machine) override { m_machine = &machine; }
++	virtual void wait_for_debugger(device_t &device, bool firststop) override
++	{
++		// keep the host window responsive, then yield
++		m_machine->osd().input_update(false);
++		osd_sleep(osd_ticks_per_second() / 1000 * 2);
++	}
++	virtual void debugger_update() override { }
++
++private:
++	running_machine *m_machine;
++};
++
+ } // anonymous namespace
+ 
+ } // namespace osd
+ 
+ MODULE_DEFINITION(DEBUG_NONE, osd::debug_none)
++MODULE_DEFINITION(DEBUG_SCRIPT, osd::debug_script)
+diff --git a/src/osd/modules/lib/osdobj_common.cpp b/src/osd/modules/lib/osdobj_common.cpp
+index 9625bae6..4656551a 100644
+--- a/src/osd/modules/lib/osdobj_common.cpp
++++ b/src/osd/modules/lib/osdobj_common.cpp
+@@ -288,6 +288,7 @@ void osd_common_t::register_options()
+ 	REGISTER_MODULE(m_mod_man, DEBUG_IMGUI);
+ 	REGISTER_MODULE(m_mod_man, DEBUG_GDBSTUB);
+ 	REGISTER_MODULE(m_mod_man, DEBUG_NONE);
++	REGISTER_MODULE(m_mod_man, DEBUG_SCRIPT);
+ #endif
+ 
+ 	REGISTER_MODULE(m_mod_man, NETDEV_TAPTUN);

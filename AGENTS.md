@@ -9,6 +9,21 @@ You can run code on an emulated machine with the `pc128` MCP tools, or from a te
 
 Both boot a fresh machine every call (a few seconds) and return registers, memory dumps and a screenshot.
 
+Interactive debugging keeps one machine alive across calls (see `docs/debugger.md`):
+- `debug_start(code?, kind="asm"|"basic", program?, stop_on_entry=True, breakpoints?, window=False,
+  floppy?, floppy2?, floppy_controller?, cassette?, cartridge?)`
+  boots, loads the program (asm via `EXEC` from BANK 6, BASIC typed and `RUN`) and stops at entry.
+  Mount media the program needs (e.g. `floppy="media/KEYJOY.FD"` for `LOADM "KEYJOY"`); unset media fall back to config.json.
+  Example breakpoints: `["PUTC", "9010 if a==41", "line 40"]`.
+- `debug_command(command, wait_seconds=10)` runs debugger commands:
+  - inspect: `r`, `m 9F00@6 16`, `d`, `where`, `bt`, `banks`, `line`
+  - patch: `a 9F80@6 LDA #$41 | SWI PUTC | RTS`, `hex`, `str`
+  - breakpoints: `bp`, `bl`, `wp`
+  - run: `s`, `n`, `out`, `g`, `until`, `nl`
+  - other: `snap`, `help`
+  Run commands wait for the next stop and report registers plus the current instruction with its ROM symbol.
+- `debug_stop()` closes the machine.
+
 ## Conventions
 - The screen is graphical: you cannot read printed text back. Put results in RAM and read them with `dump`
   (for example `["9F00:16"]`, hex address, decimal length). Look at the screenshot for visual output.

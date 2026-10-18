@@ -1,0 +1,124 @@
+; Built-in PC128 symbols for the debugger (see tools/debugger/symbols.py for the key syntax).
+; BASIC statement handlers (KW_xxx) are generated from the ROM image at load time.
+
+; ---- monitor ROM: hardware vectors and handlers (both pages) ----
+mon0:FFF2  VEC_SWI3
+mon0:FFF4  VEC_SWI2
+mon0:FFF6  VEC_FIRQ
+mon0:FFF8  VEC_IRQ
+mon0:FFFA  VEC_SWI
+mon0:FFFC  VEC_NMI
+mon0:FFFE  VEC_RESET
+mon1:FFF2  VEC_SWI3
+mon1:FFF4  VEC_SWI2
+mon1:FFF6  VEC_FIRQ
+mon1:FFF8  VEC_IRQ
+mon1:FFFA  VEC_SWI
+mon1:FFFC  VEC_NMI
+mon1:FFFE  VEC_RESET
+mon0:F000  SWI_DISPATCH      ; SWI service dispatcher (RAM $205E points here)
+mon1:F000  SWI_DISPATCH      ; SWI service dispatcher (RAM $205E points here)
+mon0:F053  RTI_STUB          ; SWI3/NMI vector
+mon1:F053  RTI_STUB          ; SWI2/SWI3/NMI vector
+mon0:F059  SWI_TABLE         ; service table, 2 bytes per even code
+mon1:F059  SWI_TABLE         ; service table, 2 bytes per even code
+mon0:F09D  SWI_HANDLER       ; JMP [$205E]
+mon1:F09D  SWI_HANDLER       ; JMP [$205E]
+mon0:F0A1  FIRQ_HANDLER      ; JMP [$2067]
+mon1:F0A1  FIRQ_HANDLER      ; JMP [$2067]
+mon0:F0B9  IRQ_HANDLER       ; 50 Hz frame interrupt
+mon1:F0B9  IRQ_HANDLER       ; 50 Hz frame interrupt
+mon0:F197  RESET             ; cold start (page 0)
+mon0:FF93  SWI2_HANDLER
+
+; ---- monitor SWI services (SWI followed by the service byte) ----
+mon1:F19F  MENU              ; SWI $00  boot menu / reset (page 1)
+mon0:F6D9  PUTC              ; SWI $02  B = char to print
+mon0:FC22  FRM0              ; SWI $04  select pixel (form) memory
+mon0:FC19  FRM1              ; SWI $06  select colour memory
+mon0:FBB2  BIIP              ; SWI $08  beep
+mon0:F520  GETC              ; SWI $0A  B = key (0 if none)
+mon1:F2C3  KTST              ; SWI $0C  C=1 if a key is pressed
+mon1:F669  DRAW              ; SWI $0E  draw line
+mon1:F4A3  PLOT              ; SWI $10  plot point
+mon1:F4C1  CHPL              ; SWI $12  character plot
+mon1:F4E7  GETP              ; SWI $14  get point colour
+mon1:F7FA  LPIN              ; SWI $16  light pen
+mon1:F824  GETL              ; SWI $18  light pen coordinates
+mon0:FE79  GETS              ; SWI $1A  screen character
+mon1:FAC1  JOYS              ; SWI $1C  joysticks
+mon1:F95A  NOTE              ; SWI $1E  play note
+mon1:F344  K7CO              ; SWI $20  cassette control
+mon1:F464  K7MO              ; SWI $22  cassette motor
+mon1:F9D2  PRCO              ; SWI $24  printer
+ext:A004   DKCO              ; SWI $26  disk controller
+ext:A007   DKBOOT            ; SWI $28  disk boot
+ext:A00A   DKFMT             ; SWI $2A  disk format
+ext:A00D   LECFA             ; SWI $34  read FAT
+ext:A010   RECFI             ; SWI $38  find file
+ext:A013   RECUP             ; SWI $3A  free space
+ext:A016   ECRSE             ; SWI $30  write sector
+ext:A019   ALLOD             ; SWI $2E  allocate directory entry
+ext:A01C   ALLOB             ; SWI $2C  allocate block
+ext:A01F   MAJCL             ; SWI $36  update clusters
+ext:A022   FINTR             ; SWI $32  end of transfer
+mon1:FC71  SETP              ; SWI $3C  set palette
+mon1:FCE2  MOUSEB            ; SWI $3E  mouse buttons
+mon1:FCF7  MOUSE             ; SWI $40  mouse position
+mon1:FAE7  RSCO              ; SWI $42  RS232
+
+; ---- monitor RAM (DP = $20) ----
+205E  MON_SWI_VEC            ; SWI dispatcher address
+2067  MON_FIRQ_VEC           ; FIRQ handler address
+206A  MON_SWI_TABLE          ; pointer to the SWI service table
+2086  SAVTOUR                ; saved border colour
+
+; ---- BASIC 128 RAM (DP = $21 while BASIC runs) ----
+2131  B_CURLIN               ; current BASIC line number ($FFFF in direct mode)
+2133  B_OLDLIN
+2138  B_STMTPTR              ; text pointer at start of statement
+2175  SAVSTK                 ; saved stack for the error trap
+2185  ZPERR                  ; error trap vector
+21C0  B_CHRGET               ; get next text character (RAM routine)
+21C6  B_CHRGOT               ; re-read current character
+21C7  B_TXTPTR               ; BASIC text pointer
+2773  B_STMT_TABLE           ; pointer to the statement dispatch table
+2775  KWPTR                  ; keyword descriptor chain
+277D  B_HOOK_FUNC            ; unknown-token function hook vector
+27C7  B_STMT_HOOK            ; JSR'ed before each statement dispatch
+27CA  HOOK                   ; unknown statement token hook
+
+; ---- BASIC 128 ROM (page 1 is the one mapped while programs run) ----
+b128.1:B0E5  STMT_DISPATCH_TABLE
+b128.1:B7CF  B_LET           ; implicit assignment
+b128.1:B8F4  B_SNERR         ; ?Syntax error (also FC error path)
+b128.1:CFEC  B_NEXTLINE      ; follow line link, U = line number
+b128.1:D005  B_NEWSTT_LOOP   ; main interpreter loop
+b128.1:D01E  B_SETLINE       ; STU <$31: a new BASIC line starts (U = line number)
+b128.1:D04B  B_NEWSTT        ; execute one statement
+b128.1:D6A2  B_OUTCH
+b128.1:D6A4  B_GETEXPR
+b128.1:D6C6  B_FAC2U16
+b128.0:D808  KW_NAMES        ; statement keyword names (bit 7 marks last char)
+b128.0:D944  FN_NAMES        ; function keyword names
+b128.1:EFFB  EXTRAMON        ; ROM page toggle BASIC <-> EXTRAMON
+b128.0:EFFB  EXTRAMON        ; ROM page toggle BASIC <-> EXTRAMON
+
+; ---- I/O ----
+A7C0  PIA_SYS_PRA            ; system PIA port A (bit 5: monitor ROM page)
+A7C1  PIA_SYS_PRB            ; system PIA port B (keyboard scan)
+A7C2  PIA_SYS_CRA
+A7C3  PIA_SYS_CRB
+A7CC  PIA_GAME_PRA           ; music/game PIA port A (joysticks)
+A7CD  PIA_GAME_PRB           ; 6-bit DAC
+A7CE  PIA_GAME_CRA
+A7CF  PIA_GAME_CRB           ; DAC enable
+A7DA  PALETTE_DATA
+A7DB  PALETTE_ADDR
+A7DC  VIDEO_MODE
+A7DD  VIDEO_BORDER           ; border colour / video page
+A7E4  GA_STATUS              ; gate array
+A7E5  GA_RAM_PAGE            ; RAM page at $6000-$9FFF
+A7E6  GA_ROM_PAGE            ; cartridge-space ROM/RAM page
+A7E7  GA_INIT
+A7F0  EXP_IO                 ; expansion devices $A7F0-$A7FF

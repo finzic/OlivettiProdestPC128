@@ -36,6 +36,14 @@ class BasicCodecTests(unittest.TestCase):
         self.assertEqual(tokenize_source(detokenize_file(encoded, self.tokens), self.tokens), encoded)
         self.assertEqual(self.tokens.by_bytes[b"\xec"], "*")
 
+    def test_loadm_savem_detokenize_without_space(self):
+        source = ('10 LOADM "KEYJOY"\n20 SAVEM"X",&H9F00,&H9FFF,&H9F00:LOADM\n'
+                  '30 LOAD M$\n40 SAVE MA$\n50 LOAD "P"\n')
+        encoded = tokenize_source(source, self.tokens)
+        decoded = detokenize_file(encoded, self.tokens)
+        self.assertEqual(decoded, source)
+        self.assertEqual(tokenize_source(decoded, self.tokens), encoded)
+
     def test_native_basic_header_and_numbered_source(self):
         encoded = tokenize_source("10 PRINT \"OK\"\n20 DO\n30 LOOP", self.tokens)
         self.assertTrue(is_native_basic(encoded))
