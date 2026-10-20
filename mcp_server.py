@@ -69,6 +69,27 @@ def run_asm(code: str, dump: list[str] | None = None, done_addr: str | None = No
     return _result(run_job("asm", code, dump, run_frames, None, done_addr))
 
 
+@mcp.tool()
+def run_c(code: str, dump: list[str] | None = None, done_addr: str | None = None,
+          run_frames: int | None = None) -> list:
+    """Compile C with CMOC + the Olivetti library (pc128-c/, #include <olivetti.h>) and run it on a PC128.
+
+    The program is linked at $6000 (limit $9F00), loaded into BASIC BANK 6 and started with EXEC;
+    returning from main() goes back to the BASIC prompt. The library wraps the ROM monitor
+    (ol_putc, ol_puts, ol_locate, ol_plot, ol_line, ol_getc, ol_beep, ...) and the extramonitor
+    (xm_begin, xm_box, xm_ellipse, xm_from_int, xm_op, xm_to_str, ...); printf works too.
+    Finish with ol_done() (writes 1 to $9F01) and pass done_addr="9F01"; store results with
+    ol_debug_byte/ol_debug_word(i, v) ($9F10+i) and read them with dump ["9F10:16"].
+
+    Args:
+        code: C source with main(). Extra asm/C files are not available here (use the CLI).
+        dump: memory ranges to read back, "HEXADDR:LENGTH" (BANK 6 by default, "@n" for another bank).
+        done_addr: hex address the program writes a non-zero byte to when finished.
+        run_frames: max frames (50 per emulated second) to run. Default from config.
+    """
+    return _result(run_job("c", code, dump, run_frames, None, done_addr))
+
+
 # ------------------------------------------------------------------ debugger --
 # One persistent MAME debug session (tools/debugger) shared by the debug_* tools.
 _dbg = None
@@ -108,9 +129,11 @@ def debug_start(code: str | None = None, kind: str = "asm", program: str | None 
     entry point / first BASIC line. Continue with debug_command.
 
     Args:
-        code: program source (lwasm 6809 assembly, or numbered BASIC lines when kind="basic").
-        kind: "asm" or "basic" (only used with `code`).
-        program: path of a .asm / .bas file instead of `code`.
+        code: program source (lwasm 6809 assembly, C with <olivetti.h> when kind="c",
+            or numbered BASIC lines when kind="basic").
+        kind: "asm", "c" or "basic" (only used with `code`). C programs support source breakpoints
+            ("prog.c:12") and source stepping (debug_command "sn" / "si").
+        program: path of a .asm / .c / .bas file instead of `code`.
         stop_on_entry: stop at the entry point / first BASIC line.
         breakpoints: set before the program starts, in debug_command syntax for `bp`, e.g.
             ["PUTC", "9010", "mon0:F6D9 if a==0x41", "line 40"] ("line N" = BASIC line).
@@ -135,7 +158,8 @@ def debug_start(code: str | None = None, kind: str = "asm", program: str | None 
         if code is not None:
             tmp = ROOT / "build" / "dbg-mcp"
             tmp.mkdir(parents=True, exist_ok=True)
-            program = str(tmp / ("prog.bas" if kind.lower().startswith("bas") else "prog.asm"))
+            ext = {"basic": "bas", "bas": "bas", "c": "c"}.get(kind.lower(), "asm")
+            program = str(tmp / ("prog." + ext))
             Path(program).write_text(code if code.endswith("\n") else code + "\n")
         s = Session()
         s._quiet = True
@@ -168,7 +192,9 @@ def debug_command(command: str, wait_seconds: float = 10.0) -> list:
       a ADDR asm | asm     assemble live into RAM, e.g. "a 9F00 LDA #$41 | SWI PUTC | RTS"
       hex ADDR 12 34 ..    store bytes    str ADDR "TEXT\n\0"   fill ADDR LEN BYTE
       bp ADDR|SYM [if COND]   bl LINE [if COND] (BASIC line)   bc N|all   bd/be N   wp ADDR [LEN] [r|w|rw]
+      bp FILE:LINE (C/asm source line, e.g. prog.c:12)
       g [ADDR]  s [N]  n (step over)  out  until ADDR  nl (next BASIC line)  stop  wait [SECS]
+      sn / si  step over / into one C or asm source line     src [N]  source around PC
       sym REGEX   type TEXT   key TEXT   status   snap   reset   mame RAWCMD
     Addresses: hex (9F00, $9F00), symbols (PUTC), expressions (X+2), . = PC, page-qualified (mon0:F6D9).
     Views in $6000-$9FFF: @1..@6 BASIC BANK n, @p0..@p7 RAM page, @cpu. Conditions use MAME syntax
@@ -181,7 +207,7 @@ def debug_command(command: str, wait_seconds: float = 10.0) -> list:
         s = _dbg_session()
         out = s.execute(command)
         verb = command.strip().split(" ", 1)[0].lower()
-        runs = verb in ("g", "c", "go", "s", "step", "n", "over", "out", "finish", "until", "nl", "nextline")
+        runs = verb in ("g", "c", "go", "s", "step", "n", "over", "out", "finish", "until", "nl", "nextline", "sn", "si")
         if runs:
             if wait_seconds > 0:
                 s.wait_stopped(wait_seconds)

@@ -6,11 +6,15 @@ You can run code on an emulated machine with the `pc128` MCP tools, or from a te
 ## Tools
 - `run_basic(code, dump?, done_addr?, run_frames?)`: PC128 BASIC 128 (boot menu choice set by `menu_key` in config.json), numbered lines.
 - `run_asm(code, dump?, done_addr?, run_frames?)`: 6809 assembly in lwasm syntax.
+- `run_c(code, dump?, done_addr?, run_frames?)`: C (CMOC) with `#include <olivetti.h>`, the Olivetti
+  library of ROM monitor (`ol_*`) and extramonitor (`xm_*`) wrappers; see `pc128-c/README.md`.
+  Linked at `$6000`, started with `EXEC`; end with `ol_done()` and `done_addr="9F01"`,
+  store results with `ol_debug_byte/ol_debug_word(i, v)` (`$9F10+i`).
 
-Both boot a fresh machine every call (a few seconds) and return registers, memory dumps and a screenshot.
+They all boot a fresh machine every call (a few seconds) and return registers, memory dumps and a screenshot.
 
 Interactive debugging keeps one machine alive across calls (see `docs/debugger.md`):
-- `debug_start(code?, kind="asm"|"basic", program?, stop_on_entry=True, breakpoints?, window=False,
+- `debug_start(code?, kind="asm"|"c"|"basic", program?, stop_on_entry=True, breakpoints?, window=False,
   floppy?, floppy2?, floppy_controller?, cassette?, cartridge?)`
   boots, loads the program (asm via `EXEC` from BANK 6, BASIC typed and `RUN`) and stops at entry.
   Mount media the program needs (e.g. `floppy="media/KEYJOY.FD"` for `LOADM "KEYJOY"`); unset media fall back to config.json.
@@ -18,8 +22,8 @@ Interactive debugging keeps one machine alive across calls (see `docs/debugger.m
 - `debug_command(command, wait_seconds=10)` runs debugger commands:
   - inspect: `r`, `m 9F00@6 16`, `d`, `where`, `bt`, `banks`, `line`
   - patch: `a 9F80@6 LDA #$41 | SWI PUTC | RTS`, `hex`, `str`
-  - breakpoints: `bp`, `bl`, `wp`
-  - run: `s`, `n`, `out`, `g`, `until`, `nl`
+  - breakpoints: `bp`, `bp prog.c:12`, `bl`, `wp`
+  - run: `s`, `n`, `out`, `g`, `until`, `nl`; C/asm source lines: `sn` (over), `si` (into), `src`
   - other: `snap`, `help`
   Run commands wait for the next stop and report registers plus the current instruction with its ROM symbol.
 - `debug_stop()` closes the machine.

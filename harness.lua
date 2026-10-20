@@ -3,7 +3,7 @@
 -- to MAME with -autoboot_script. Do not run it by hand.
 --
 -- CONFIG fields:
---   mode           "basic" | "asm"
+--   mode           "basic" | "asm" | "exec" (load segments, then type basic_lines, e.g. EXEC &H6000)
 --   boot_frames    frames to wait for the machine to reach the boot menu
 --   menu_key       key typed at the boot menu ("1" = BASIC 128, "2" = BASIC 1.0)
 --   menu_frames    frames to wait after menu_key for the BASIC prompt
@@ -16,6 +16,7 @@
 --   basic_lines    (basic) lines to type, already including NEW / RUN
 --   segments       (asm) { {addr=..., hex="..."}, ... }
 --   entry          (asm) address to jump to
+--   load_page      (exec) RAM page that receives segment bytes at $6000-$9FFF (BASIC bank)
 --   result_path    file the results are written to
 
 local CFG = CONFIG
@@ -69,7 +70,16 @@ local function read_u8(addr, page)
     return with_page(addr, page, function() return mem:read_u8(addr) end)
 end
 
+-- CPU-space writes at $6000-$9FFF land in the gate-array page, not the bank entry: store into the
+-- page itself with membank:write_u8 (mame-patch/0003) when it is available.
 local function write_u8(addr, value, page)
+    if page and addr >= 0x6000 and addr <= 0x9FFF then
+        local bank = machine.memory.banks[CFG.data_banks[addr < 0x8000 and 1 or 2]]
+        if bank and bank.write_u8 then
+            with_page(addr, page, function() bank:write_u8(addr - (addr < 0x8000 and 0x6000 or 0x8000), value) end)
+            return
+        end
+    end
     with_page(addr, page, function() mem:write_u8(addr, value) end)
 end
 
@@ -81,11 +91,17 @@ local function nk_busy()
     return false
 end
 
-local function load_segments()
+local function load_segments(page)
     for _, seg in ipairs(CFG.segments or {}) do
         local h = seg.hex
         for i = 1, #h, 2 do
-            mem:write_u8(seg.addr + (i - 1) // 2, tonumber(h:sub(i, i + 1), 16))
+            local a = seg.addr + (i - 1) // 2
+            local v = tonumber(h:sub(i, i + 1), 16)
+            if page and a >= 0x6000 and a <= 0x9FFF then
+                write_u8(a, v, page)
+            else
+                mem:write_u8(a, v)
+            end
         end
     end
 end
@@ -123,9 +139,12 @@ local function write_result()
     f:close()
 end
 
+local snap_at = nil
 local function begin_finish()
-    pcall(function() machine.video:snapshot() end)   -- PNG lands in -snapshot_directory
-    finish_at = frame + 3                             -- let the snapshot happen
+    -- The frame just rendered may predate the program's last screen writes: snapshot a
+    -- couple of frames later, then give MAME time to write the PNG.
+    snap_at = frame + 2
+    finish_at = frame + 5
 end
 
 -- ------------------------------------------------------------ frame loop ----
@@ -133,6 +152,10 @@ local function on_frame()
     frame = frame + 1
 
     if finish_at then
+        if snap_at and frame >= snap_at then
+            snap_at = nil
+            pcall(function() machine.video:snapshot() end)   -- PNG lands in -snapshot_directory
+        end
         if frame >= finish_at then
             write_result()
             machine:exit()
@@ -160,6 +183,10 @@ local function on_frame()
             load_segments()
             set_reg("PC", CFG.entry)
             phase, run_start = "run", frame
+        elseif CFG.mode == "exec" then
+            -- like LOADM + EXEC: bytes go to the BASIC bank, then BASIC calls the entry point
+            load_segments(CFG.load_page)
+            phase = "type"
         else
             phase = "type"
         end

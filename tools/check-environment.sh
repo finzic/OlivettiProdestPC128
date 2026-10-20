@@ -195,6 +195,14 @@ else
     fail "local lwasm is absent and its build prerequisites are missing"
 fi
 
+# CMOC (C compiler for pc128-c/) is optional: the BASIC/asm workflow doesn't need it.
+CMOC="$ROOT/tools/.local/cmoc-0.1.100/bin/cmoc"
+if [ -x "$CMOC" ]; then
+    ok "repository-local cmoc (C toolchain, pc128-c/)"
+else
+    printf 'optional: cmoc (C toolchain for pc128-c/) is not installed; build it with tools/setup-cmoc.sh\n'
+fi
+
 if [ "$SYSTEM_PACKAGES_NEEDED" -eq 1 ]; then
     if [ -n "$USER_COMMANDS" ]; then
         USER_COMMANDS="sudo apt install curl tar make build-essential python3 python3-pip python3-venv mame

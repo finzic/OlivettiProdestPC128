@@ -371,17 +371,29 @@ class Adapter:
         return bool(self.s.basic_file) and self.s.last_stop.get("kind") in ("basic-line", "nextline", "entry") \
             and self.s.last_stop.get("pc") == SETLINE
 
+    def _in_program_source(self):
+        try:
+            return self.s.program_source_at(self.s.regs()["PC"]) is not None
+        except DebugError:
+            return False
+
     def req_next(self, req, a):
         self.respond(req)
-        if a.get("granularity") != "instruction" and self._in_basic_context():
+        line_step = a.get("granularity") != "instruction"
+        if line_step and self._in_basic_context():
             self.s.next_basic_line(wait=False)
+        elif line_step and self._in_program_source():
+            self.s.step_source(over=True, wait=False)
         else:
             self.s.step_over(wait=False)
 
     def req_stepIn(self, req, a):
         self.respond(req)
-        if a.get("granularity") != "instruction" and self._in_basic_context():
+        line_step = a.get("granularity") != "instruction"
+        if line_step and self._in_basic_context():
             self.s.next_basic_line(wait=False)
+        elif line_step and self._in_program_source():
+            self.s.step_source(over=False, wait=False)
         else:
             self.s.step(1, wait=False)
 
@@ -395,11 +407,7 @@ class Adapter:
 
     def _program_source(self, addr, loc):
         """Source line of the loaded program at addr, if the program's bytes are what is mapped there."""
-        if loc.kind in ("rom", "ext"):
-            return None
-        if loc.kind == "page" and loc.space != "p%d" % (int(self.s.cfg["default_bank"]) + 1):
-            return None
-        return self.s.addr_to_source(addr)
+        return self.s.program_source_at(addr, loc)
 
     def req_stackTrace(self, req, a):
         s = self.s

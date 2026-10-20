@@ -13,6 +13,14 @@ Git and should not be committed.
 executable. Install it before assembling; they do not silently fall back to a system-wide
 `lwasm`.
 
+## C compiler (CMOC)
+
+`./tools/setup-cmoc.sh` builds CMOC 0.1.100 into `tools/.local/cmoc-0.1.100/` (and runs
+`setup-lwasm.sh`, whose `lwlink`/`lwar` CMOC needs). It requires a C++ compiler and bison + flex;
+without root it fetches the Debian bison/flex packages with `apt-get download` and unpacks them
+locally. `tools/pc128cc.py` is the build driver for C programs and the Olivetti library; see
+[pc128-c/README.md](../pc128-c/README.md). `pc128.py c FILE.c` builds and runs a C program.
+
 ## Check the workspace environment
 
 Run `./tools/check-environment.sh` from any directory in the repository. It checks for
@@ -91,7 +99,7 @@ Save the file before running the task. VS Code reloads the renumbered file from 
 - `pc128dbg.py`: terminal REPL
 - `dap.py`: VS Code debug adapter
 - `pc128_dbg.lua`: server inside MAME
-- disassembler, symbols, and the lwasm wrapper
+- disassembler, symbols, and the lwasm wrapper (`.c` files go through `pc128cc.py`)
 
 `tools/vscode-pc128-debug/` holds the VS Code extension; `build.py --install` packages and installs it.
 See `docs/debugger.md`.

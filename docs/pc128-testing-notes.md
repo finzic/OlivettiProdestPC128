@@ -15,6 +15,17 @@ Facts verified with MAME 0.264 (`pro128`) and the scripted harness (`pc128.py`, 
   only the tests run MAME.
 - Floppy tooling and image formats: see the floppy section of the top-level [README](../README.md).
 
+## EXEC mode (C programs, `asm --exec`)
+
+- `pc128.py c FILE.c` and `pc128.py asm FILE.asm --exec` boot into BASIC, write the program into
+  RAM (`$6000-$9FFF` goes to `BANK 6`, the power-on bank) and type `EXEC &Hxxxx`. The program runs
+  with BASIC's stack and DP, and an `RTS` returns to the `OK` prompt.
+- Plain `asm` mode sets PC directly instead and never returns to BASIC.
+- The screenshot is taken 2 frames after the done byte is written, and the run stops 3 frames
+  later, so text printed just before `ol_done()` is on the picture.
+- If a run times out while the screenshot still shows the boot menu, the program crashed or hung
+  before writing the done byte. Debug it with `pc128dbg.py FILE.c --stop` and breakpoints.
+
 ## BASIC typing and syntax quirks under the harness
 
 - A typed line that **ends in `)`** makes the next typed line lose its first character. Slowing the typing

@@ -31,7 +31,7 @@ function activate(context) {
     resolveDebugConfiguration(folder, config) {
       if (!config.type && !config.request && !config.name) {    // F5 without launch.json
         const editor = vscode.window.activeTextEditor;
-        if (editor && ['asm6809', 'pc128basic'].includes(editor.document.languageId)) {
+        if (editor && ['asm6809', 'pc128basic', 'c'].includes(editor.document.languageId)) {
           Object.assign(config, { type: 'pc128', request: 'launch', name: 'PC128: debug current file',
                                   program: '${file}', stopOnEntry: true });
         }

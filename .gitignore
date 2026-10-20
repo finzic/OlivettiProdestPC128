@@ -34,3 +34,7 @@ pc128-basic-ext/investigate/*.bin
 pc128-basic-ext/examples/*/*.bin
 pc128-basic-ext/examples/*/*.lst
 tools/mame-cfg/pro128.cfg
+
+# pc128-c: the Olivetti C library lives in lib/ and include/ (ignored globally above)
+!/pc128-c/lib/
+!/pc128-c/include/

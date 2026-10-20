@@ -158,8 +158,12 @@ def assemble_snippet(text, org, cfg, symtab=None):
 
 
 def assemble_file(path, cfg):
-    """Assemble a program file; listing lines keep the real file paths for source breakpoints."""
+    """Assemble a program file; listing lines keep the real file paths for source breakpoints.
+
+    .c files are compiled with CMOC through tools/pc128cc.py: lines then map to C source lines."""
     path = Path(path).resolve()
+    if path.suffix.lower() == ".c":
+        return build_c_file(path)
     res = _lwasm(cfg, path)
     candidates = [path] + [p.resolve() for p in path.parent.rglob("*") if p.suffix.lower() in (".asm", ".inc", ".s", ".a09")]
     cache = {}
@@ -170,6 +174,17 @@ def assemble_file(path, cfg):
             cache[key] = hit
         ln.file = cache[key]
     return res
+
+
+def build_c_file(path):
+    sys.path.insert(0, str(ROOT / "tools"))
+    import pc128cc
+    try:
+        res = pc128cc.build([path])
+    except pc128cc.CBuildError as e:
+        raise AsmError(str(e))
+    lines = [ListLine(l.addr, l.data, l.file, l.line, l.source) for l in res.lines]
+    return AsmResult(res.segments, res.entry, lines, dict(res.symbols), res.warnings)
 
 
 def parse_hex_bytes(text):

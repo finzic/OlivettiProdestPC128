@@ -5,10 +5,21 @@ TOOLS_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 VERSION=4.24
 INSTALL_DIR="$TOOLS_DIR/.local/lwtools-$VERSION"
 LWASM="$INSTALL_DIR/lwasm/lwasm"
+LWLINK="$INSTALL_DIR/lwlink/lwlink"
+LWAR="$INSTALL_DIR/lwar/lwar"
+BIN_DIR="$INSTALL_DIR/bin"
 ARCHIVE_URL="https://www.lwtools.ca/releases/lwtools/lwtools-$VERSION.tar.gz"
 
-if [ -x "$LWASM" ]; then
-    printf 'lwasm already installed: %s\n' "$LWASM"
+link_bin() {
+    mkdir -p "$BIN_DIR"
+    for tool in lwasm lwlink lwar; do
+        ln -sf "../$tool/$tool" "$BIN_DIR/$tool"
+    done
+}
+
+if [ -x "$LWASM" ] && [ -x "$LWLINK" ] && [ -x "$LWAR" ]; then
+    link_bin
+    printf 'LWTOOLS already installed: %s (lwasm, lwlink, lwar)\n' "$BIN_DIR"
     exit 0
 fi
 
@@ -42,11 +53,13 @@ fi
 printf 'Building LWTOOLS %s...\n' "$VERSION"
 make -C "$SOURCE_DIR" CC="${CC:-cc}"
 
-if [ ! -x "$SOURCE_DIR/lwasm/lwasm" ]; then
-    printf 'LWTOOLS build did not produce lwasm/lwasm.\n' >&2
-    exit 1
-fi
-
-mkdir -p "$(dirname -- "$LWASM")"
-install -m 755 "$SOURCE_DIR/lwasm/lwasm" "$LWASM"
-printf 'Installed local lwasm: %s\n' "$LWASM"
+for tool in lwasm lwlink lwar; do
+    if [ ! -x "$SOURCE_DIR/$tool/$tool" ]; then
+        printf 'LWTOOLS build did not produce %s/%s.\n' "$tool" "$tool" >&2
+        exit 1
+    fi
+    mkdir -p "$INSTALL_DIR/$tool"
+    install -m 755 "$SOURCE_DIR/$tool/$tool" "$INSTALL_DIR/$tool/$tool"
+done
+link_bin
+printf 'Installed local LWTOOLS: %s (lwasm, lwlink, lwar)\n' "$BIN_DIR"

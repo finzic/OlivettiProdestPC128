@@ -50,6 +50,7 @@ Put a page prefix on a breakpoint to make it bank-qualified: bp mon0:F6D9, bp b1
             str ADDR[@view] "TEXT"        store a string (\\n = $0D, \\0 = NUL)
             fill ADDR[@view] LEN BYTE     fill memory
  Breaks     bp [ADDR [if COND]]           set / list breakpoints (COND: MAME expression)
+            bp FILE:LINE [if COND]        break at a C/asm source line (bp main.c:12)
             bl LINE [if COND]             break when BASIC line LINE starts
             bc N|all  be N  bd N          clear / enable / disable breakpoints
             wp ADDR [LEN] [r|w|rw] [if C] watchpoint;  wc N|all
@@ -59,11 +60,13 @@ Put a page prefix on a breakpoint to make it bank-qualified: bp mon0:F6D9, bp b1
             out | finish                  run until return
             until ADDR                    run to ADDR (temporary breakpoint)
             nl | nextline                 run to the next BASIC line
+            sn | si                       source step over / into (C or asm program line)
+            src | list [N]                program source around PC (N lines of context)
             stop | pause                  break into the debugger
             wait [SECONDS]                wait until the machine stops (scripts)
  Symbols    sym [REGEX]                   search symbols;  sym load FILE
  Machine    type TEXT  key TEXT  snap  reset [hard]  throttle on|off
-            load FILE.asm|FILE.bas [noexec]  assemble+load+EXEC / type+RUN a program
+            load FILE.asm|FILE.c|FILE.bas [noexec]  build+load+EXEC / type+RUN a program
             mame COMMAND                  raw MAME debugger command
 """
 
@@ -523,6 +526,82 @@ class Session:
         self.client.mame("out")
         return self.wait_stopped(10) if wait else True
 
+    def program_source_at(self, addr, loc=None):
+        """(file, line) of the loaded program at addr, if the program's bytes are what is mapped there."""
+        if not self.addr_to_src:
+            return None
+        loc = loc or self.locate(addr)
+        if loc.kind in ("rom", "ext"):
+            return None
+        if loc.kind == "page" and loc.space != "p%d" % (int(self.cfg["default_bank"]) + 1):
+            return None
+        return self.addr_to_source(addr)
+
+    def step_source(self, over=True, wait=True, max_steps=20000):
+        """Source-level step (C or asm program): run until the program's source line changes.
+
+        over=True steps over calls (JSR/BSR/SWI ...); over=False enters calls whose target has
+        source (C or asm in the program/library) and steps over calls into ROM.
+        Intermediate stops are silent; one 'stopped' event is reported at the end.
+        """
+        self.require_stopped()
+        start = self.program_source_at(self.regs()["PC"])
+        if start is None:
+            return self.step_over(wait) if over else self.step(1, wait)
+        if wait:
+            return self._step_source_loop(start, over, max_steps)
+        threading.Thread(target=self._step_source_loop, args=(start, over, max_steps), daemon=True).start()
+        return True
+
+    def _step_source_loop(self, start, over, max_steps):
+        self._silent = True
+        self._emit("running", {})
+        info = None
+        try:
+            for _ in range(max_steps):
+                pc = self.regs()["PC"]
+                ins = self.disasm_at(pc)
+                if "call" in ins.flags:
+                    ret = (pc + ins.length) & 0xFFFF
+                    if over:
+                        self.step_over(False)
+                        self.wait_stopped()      # a call may wait for a key: 'pause' interrupts it
+                    else:
+                        self.step(1, True)
+                        if self.last_stop.get("kind") == "step" and \
+                                self.program_source_at(self.regs()["PC"]) is None:
+                            self.run_until(ret, self._space_at(pc), wait=False)
+                            self.wait_stopped()
+                else:
+                    self.step(1, True)
+                if self.state == "exited":
+                    return False
+                if not self.is_stopped:
+                    self.pause()
+                kind = self.last_stop.get("kind")
+                if kind in ("breakpoint", "watchpoint", "basic-line", "pause"):
+                    info = dict(self.last_stop)
+                    break
+                cur = self.program_source_at(self.regs()["PC"])
+                if cur is None or cur != start:
+                    break
+            else:
+                self._emit("output", {"text": "step: %d instructions without leaving %s:%d\n" % (
+                    max_steps, Path(start[0]).name, start[1])})
+        except Exception as e:
+            self._emit("output", {"text": "step error: %s\n" % e})
+        finally:
+            self._silent = False
+        if info is None:
+            info = dict(self.last_stop, kind="step", reason="step", description="", bp=[])
+            src = self.program_source_at(info.get("pc", self.regs()["PC"]))
+            if src:
+                info["description"] = "%s:%d" % (Path(src[0]).name, src[1])
+            self.last_stop = info
+        if self.state != "exited":
+            self._emit("stopped", info)
+        return True
+
     def run_until(self, addr, space=None, wait=False):
         self.require_stopped()
         self._action = "until"
@@ -711,7 +790,29 @@ class Session:
         r = self.regs()
         head = "stopped (%s%s)" % (info.get("kind", "?"), ": " + info["description"] if info.get("description") else "")
         ins = self.disasm_at(r["PC"])
-        return head + "\n" + self.format_regs(r) + "\n" + self.format_insn(ins, pc=r["PC"])
+        out = head + "\n" + self.format_regs(r)
+        src = self.program_source_at(r["PC"])
+        if src:
+            out += "\n     source %s:%d%s" % (Path(src[0]).name, src[1], self._source_text(*src))
+        return out + "\n" + self.format_insn(ins, pc=r["PC"])
+
+    def _source_text(self, file, line):
+        try:
+            text = Path(file).read_text(errors="replace").splitlines()
+            return "  " + text[line - 1].strip() if 0 < line <= len(text) else ""
+        except OSError:
+            return ""
+
+    def find_source_file(self, name):
+        """Resolve a source name (path or bare file name) to a file known to the program's source map."""
+        p = Path(name)
+        if p.exists():
+            return str(p.resolve())
+        files = {f for f, _ in self.src_to_addr}
+        for f in sorted(files):
+            if Path(f).name == p.name or f.endswith("/" + name):
+                return f
+        return name
 
     # ----------------------------------------------------------- command --
     def execute(self, line):
@@ -868,6 +969,13 @@ def cmd_bp(s, rest):
             return "no breakpoints"
         return "\n".join(bp.describe(s) for bp in sorted(s.bps.values(), key=lambda b: b.index))
     target, cond = _split_if(rest)
+    m = re.fullmatch(r"(.+\.(?:c|h|asm|s|inc)):(\d+)", target, re.I)
+    if m:
+        hit = s.source_line_to_addr(s.find_source_file(m.group(1)), int(m.group(2)))
+        if hit is None:
+            raise DebugError("no code at or after %s" % target)
+        bp = s.set_breakpoint(hit[0], None, cond, source=(s.find_source_file(m.group(1)), hit[1]))
+        return "breakpoint " + bp.describe(s)
     addr, _, space = s.parse_addr(target, allow_view=False)
     bp = s.set_breakpoint(addr, space, cond)
     return "breakpoint " + bp.describe(s)
@@ -957,6 +1065,31 @@ def cmd_until(s, rest):
     return _after_run(s, s.run_until(addr, space, wait=True))
 
 
+def cmd_source_next(s, rest):
+    return _after_run(s, s.step_source(over=True))
+
+
+def cmd_source_step(s, rest):
+    return _after_run(s, s.step_source(over=False))
+
+
+def cmd_src(s, rest):
+    s.require_stopped()
+    src = s.program_source_at(s.regs()["PC"])
+    if src is None:
+        return "no program source at PC"
+    around = int(rest) if rest.isdigit() else 3
+    try:
+        text = Path(src[0]).read_text(errors="replace").splitlines()
+    except OSError as e:
+        return "%s:%d (%s)" % (src[0], src[1], e)
+    lo, hi = max(1, src[1] - around), min(len(text), src[1] + around)
+    out = [str(src[0])]
+    for n in range(lo, hi + 1):
+        out.append("%s%5d  %s" % ("=>" if n == src[1] else "  ", n, text[n - 1]))
+    return "\n".join(out)
+
+
 def cmd_nextline(s, rest):
     return _after_run(s, s.next_basic_line(wait=True))
 
@@ -1037,6 +1170,7 @@ COMMANDS = {
     "wp": cmd_wp, "wc": cmd_wc,
     "g": cmd_go, "c": cmd_go, "go": cmd_go, "s": cmd_step, "step": cmd_step, "n": cmd_over, "over": cmd_over,
     "out": cmd_out, "finish": cmd_out, "until": cmd_until, "nl": cmd_nextline, "nextline": cmd_nextline,
+    "sn": cmd_source_next, "si": cmd_source_step, "src": cmd_src, "list": cmd_src,
     "stop": cmd_stop, "pause": cmd_stop, "status": cmd_status, "wait": cmd_wait,
     "sym": cmd_sym, "type": cmd_type, "key": cmd_key, "snap": cmd_snap, "reset": cmd_reset,
     "throttle": cmd_throttle, "load": cmd_load, "mame": cmd_mame,

@@ -37,6 +37,14 @@
       "problemMatcher": []
     },
     {
+      "label": "PC128: run C (current file)",
+      "type": "shell",
+      "command": "python3",
+      "args": ["${workspaceFolder}/pc128.py", "c", "${file}", "--done-addr", "9F01", "--dump", "9F10:16"],
+      "presentation": { "reveal": "always", "panel": "shared", "clear": true },
+      "problemMatcher": []
+    },
+    {
       "label": "PC128: run ASM (choose memory dump)",
       "type": "shell",
       "command": "python3",

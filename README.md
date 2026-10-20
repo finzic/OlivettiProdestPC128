@@ -58,12 +58,16 @@ See [tools/README.md](tools/README.md) for details and [docs/mame-pc128.md](docs
 for ROM format and MAME configuration notes. Local LWTOOLS output, `.venv/`, and ROM files are
 ignored by Git.
 
+4. Optional, for C programs ([pc128-c/README.md](pc128-c/README.md)): build the CMOC compiler with
+`./tools/setup-cmoc.sh` (needs g++, bison and flex; see [tools/README.md](tools/README.md)).
+
 ## Documentation
 
 - [PC128 system calls and ROM calling reference](docs/pc128-system-calls.md)
 - [Configuration of local environment](docs/mame-pc128.md)
 - [Testing approach, harness quirks, relocation and key codes](docs/pc128-testing-notes.md)
 - [Debugger: breakpoints, stepping, banking, ROM symbols, live patching](docs/debugger.md)
+- [C programs: CMOC toolchain and the Olivetti library (ROM monitor / extramonitor wrappers)](pc128-c/README.md)
 
 ## Use it
 
@@ -71,6 +75,7 @@ ignored by Git.
 - `PC128: run BASIC (current file)`
 - `PC128: run ASM (current file)`
 - `PC128: run ASM (choose memory dump)`
+- `PC128: run C (current file)`: build with CMOC + the Olivetti library and run
 - `PC128: start MAME session (floppy/cassette/cartridge)`: interactive MAME window with storage inserted
 - `PC128: create new floppy/cassette/cartridge`: create a blank image
 
@@ -78,10 +83,11 @@ ignored by Git.
 ```
 python3 pc128.py asm   examples/hello.asm --done-addr 9F01 --dump 9F00:16
 python3 pc128.py basic examples/hello.bas  --done-addr 9F01 --dump 9F00:16
+python3 pc128.py c     pc128-c/examples/hello.c --done-addr 9F01 --dump 9F10:16
 ```
 
 **Coding assistant (MCP)**: `.vscode/mcp.json` (VS Code / Copilot) and `.mcp.json` (Claude Code)
-register the server `pc128` with two tools, `run_basic` and `run_asm`. `AGENTS.md` tells the
+register the server `pc128` with the tools `run_basic`, `run_asm` and `run_c`. `AGENTS.md` tells the
 assistant how to use them.
 
 **Debugger** ([docs/debugger.md](docs/debugger.md)):
@@ -89,7 +95,7 @@ assistant how to use them.
 - Registers, memory and banking views; addresses correlated with the ROM pages and their symbols.
 - Live assembly, hex and string patching.
 
-It is available in VS Code (debug type `pc128`, `F5` on a `.asm`/`.bas` file), in the terminal
+It is available in VS Code (debug type `pc128`, `F5` on a `.asm`/`.c`/`.bas` file), in the terminal
 (`python3 tools/debugger/pc128dbg.py examples/hello.asm --stop`) and through the MCP tools
 `debug_start` / `debug_command` / `debug_stop`. Install the VS Code side once with the task
 `PC128: build + install debugger extension`. It mounts the same media as a normal run (floppy,

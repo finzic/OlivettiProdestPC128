@@ -3,7 +3,8 @@
 
 CLI:
     python3 pc128.py basic examples/hello.bas [--dump 9F00:16] [--done-addr 9F01]
-    python3 pc128.py asm   examples/hello.asm [--dump 9F00:16] [--done-addr 9F01]
+    python3 pc128.py asm   examples/hello.asm [--dump 9F00:16] [--done-addr 9F01] [--exec]
+    python3 pc128.py c     pc128-c/examples/hello.c [--dump 9F00:16] [--done-addr 9F01]
 
 Each run boots a fresh emulated machine, runs the program, and returns:
 status (done/timeout), CPU registers, requested memory dumps, and a screenshot.
@@ -147,7 +148,7 @@ def resolve_page(addr, bank, cfg, mode):
     if not 0x6000 <= addr <= 0x9FFF or str(bank).lower() == "cpu":
         return None
     if bank is None:
-        if mode != "basic" or cfg["menu_key"] != "1":
+        if mode not in ("basic", "exec") or cfg["menu_key"] != "1":
             return None
         bank = cfg["default_bank"]
     n = int(bank)
@@ -263,12 +264,35 @@ def parse_result(path):
 
 
 # --------------------------------------------------------------------- main --
+def build_c(code=None, path=None, cfg=None):
+    """Compile C (source text or a .c file) with tools/pc128cc.py: {"ok", "segments", "entry", ...}."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    import pc128cc
+    try:
+        if path is None:
+            src = ROOT / "build" / "prog.c"
+            src.parent.mkdir(parents=True, exist_ok=True)
+            src.write_text(code)
+            path = src
+        res = pc128cc.build([path])
+    except pc128cc.CBuildError as e:
+        return {"ok": False, "error": str(e)}
+    return {"ok": True, "segments": res.segments, "entry": res.entry, "listing": str(res.binary),
+            "warnings": res.warnings}
+
+
 def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
-            done_addr=None, upcase=True, cfg_overrides=None):
-    """Run BASIC (mode='basic') or 6809 assembly (mode='asm'); returns a dict."""
-    if mode not in ("basic", "asm"):
-        raise ValueError("mode must be 'basic' or 'asm'")
+            done_addr=None, upcase=True, cfg_overrides=None, exec_=False, path=None):
+    """Run BASIC (mode='basic'), 6809 assembly (mode='asm') or C (mode='c'); returns a dict.
+
+    asm with exec_=True and C programs are loaded into memory and started with BASIC's EXEC,
+    so they run in the BASIC bank and an RTS returns to the BASIC prompt.
+    `path` (mode 'c'): compile this .c file instead of `code` (keeps its directory for includes)."""
+    if mode not in ("basic", "asm", "c"):
+        raise ValueError("mode must be 'basic', 'asm' or 'c'")
     cfg = load_config(cfg_overrides)
+    use_exec = mode == "c" or exec_
+    job_mode = "exec" if use_exec else mode
     build, out = ROOT / "build", ROOT / "out"
     for d in (build, out, build / "cfg", build / "nvram"):
         d.mkdir(parents=True, exist_ok=True)
@@ -282,12 +306,12 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
     dump_list = []
     for spec in dumps or []:
         d = parse_dump(spec)
-        page = resolve_page(d["addr"], d["bank"], cfg, mode)
+        page = resolve_page(d["addr"], d["bank"], cfg, job_mode)
         label = "%04X:%d" % (d["addr"], d["len"]) + ("@%d" % (page - 1) if page else "")
         dump_list.append({"addr": d["addr"], "len": d["len"], "page": page, "label": label})
     done = parse_dump(str(done_addr)) if done_addr not in (None, "") else None
     job = {
-        "mode": mode,
+        "mode": job_mode,
         "boot_frames": boot_frames,
         "menu_key": cfg["menu_key"],
         "menu_frames": int(cfg["menu_frames"]),
@@ -297,7 +321,7 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
         "poke_swap": cfg.get("poke_swap"),
         "run_frames": run_frames,
         "done_addr": done["addr"] if done else None,
-        "done_page": resolve_page(done["addr"], done["bank"], cfg, mode) if done else None,
+        "done_page": resolve_page(done["addr"], done["bank"], cfg, job_mode) if done else None,
         "dumps": dump_list,
         "data_banks": list(cfg["data_banks"]),
         "result_path": str(result_path),
@@ -311,9 +335,14 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
         typing_frames = n_lines * (job["line_gap_frames"] + 12) + \
             (job["char_gap_frames"] + 4 if job["char_gap_frames"] else 0) * sum(len(l) + 1 for l in job["basic_lines"])
     else:
-        asm = assemble(code, cfg)
-        if not asm["ok"]:
-            return {"ok": False, "stage": "assemble", "error": asm["error"]}
+        if mode == "c":
+            asm = build_c(code, path, cfg)
+            if not asm["ok"]:
+                return {"ok": False, "stage": "compile", "error": asm["error"]}
+        else:
+            asm = assemble(code, cfg)
+            if not asm["ok"]:
+                return {"ok": False, "stage": "assemble", "error": asm["error"]}
         job["segments"] = [{"addr": a, "hex": d.hex()} for a, d in asm["segments"]]
         job["entry"] = asm["entry"]
         reply.update(entry="%04X" % asm["entry"], listing=asm["listing"],
@@ -321,6 +350,10 @@ def run_job(mode, code, dumps=None, run_frames=None, boot_frames=None,
         if asm["warnings"]:
             reply["assembler_output"] = asm["warnings"]
         typing_frames = 0
+        if use_exec:
+            job["load_page"] = int(cfg["default_bank"]) + 1 if cfg["menu_key"] == "1" else None
+            job["basic_lines"] = ["EXEC &H%04X" % asm["entry"]]
+            typing_frames = job["line_gap_frames"] + 40
 
     total_frames = boot_frames + int(cfg["menu_frames"]) + typing_frames + run_frames + 20
     job_lua = build / "job.lua"
@@ -380,7 +413,7 @@ def format_report(r):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["basic", "asm"])
+    ap.add_argument("mode", choices=["basic", "asm", "c"])
     ap.add_argument("file")
     ap.add_argument("--dump", action="append", default=[], help="HEXADDR:LEN, repeatable")
     ap.add_argument("--done-addr", help="hex address; program writes non-zero there to finish early")
@@ -393,12 +426,15 @@ def main():
     ap.add_argument("--controller", choices=FLOPPY_CONTROLLERS, help="floppy controller (default from config.json)")
     ap.add_argument("--cassette", help="cassette image")
     ap.add_argument("--cart", help="cartridge image")
+    ap.add_argument("--exec", action="store_true",
+                    help="asm: load the program and start it with BASIC's EXEC (C programs always do)")
     a = ap.parse_args()
 
     code = Path(a.file).read_text()
     r = run_job(a.mode, code, a.dump, a.run_frames, a.boot_frames, a.done_addr, not a.no_upcase,
                 cfg_overrides={"floppy": a.fd, "floppy2": a.fd2, "floppy_controller": a.controller,
-                               "cassette": a.cassette, "cartridge": a.cart})
+                               "cassette": a.cassette, "cartridge": a.cart},
+                exec_=a.exec, path=Path(a.file) if a.mode == "c" else None)
     print(json.dumps(r, indent=2) if a.json else format_report(r))
     sys.exit(0 if r.get("ok") else 1)
 

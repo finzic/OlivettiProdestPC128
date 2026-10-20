@@ -2,7 +2,7 @@
   "name": "pc128-debug",
   "displayName": "PC128 Debugger (MAME)",
   "description": "Debug 6809 assembly and BASIC 128 programs on an emulated Olivetti Prodest PC128 (MAME)",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "finzic",
   "license": "MIT",
   "engines": {
@@ -20,7 +20,8 @@
     "onDebugResolve:pc128",
     "onDebugDynamicConfigurations:pc128",
     "onLanguage:asm6809",
-    "onLanguage:pc128basic"
+    "onLanguage:pc128basic",
+    "onLanguage:c"
   ],
   "contributes": {
     "languages": [
@@ -67,6 +68,9 @@
       },
       {
         "language": "pc128basic"
+      },
+      {
+        "language": "c"
       }
     ],
     "configuration": {
@@ -90,14 +94,15 @@
         "label": "PC128 (MAME)",
         "languages": [
           "asm6809",
-          "pc128basic"
+          "pc128basic",
+          "c"
         ],
         "configurationAttributes": {
           "launch": {
             "properties": {
               "program": {
                 "type": "string",
-                "description": ".asm (assembled with lwasm, loaded, EXEC'd) or .bas (typed and RUN). Optional.",
+                "description": ".asm (assembled with lwasm), .c (built with CMOC + libolivetti, see pc128-c/README.md), loaded and EXEC'd; or .bas (typed and RUN). Optional.",
                 "default": "${file}"
               },
               "stopOnEntry": {
@@ -201,7 +206,7 @@
         "configurationSnippets": [
           {
             "label": "PC128: debug current file",
-            "description": "Assemble/type the current .asm/.bas file and debug it in MAME",
+            "description": "Assemble/type the current .asm/.c/.bas file and debug it in MAME",
             "body": {
               "type": "pc128",
               "request": "launch",

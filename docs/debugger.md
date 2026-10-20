@@ -6,7 +6,7 @@ server, and has three front ends sharing one command language:
 
 | Front end | Start it with |
 |---|---|
-| VS Code (debug type `pc128`) | `F5` on a `.asm` / `.bas` file, or a configuration in `.vscode/launch.json` |
+| VS Code (debug type `pc128`) | `F5` on a `.asm` / `.c` / `.bas` file, or a configuration in `.vscode/launch.json` |
 | Terminal REPL | `python3 tools/debugger/pc128dbg.py [program] [--stop] [--media floppy351 DISK.FD]` or task `PC128: debugger REPL (current file)` |
 | Coding assistant (MCP) | tools `debug_start`, `debug_command`, `debug_stop` |
 
@@ -29,7 +29,7 @@ python3 tools/debugger/pc128dbg.py [program] [options]
 
 | Option | Meaning |
 |---|---|
-| `program` | `.asm` (assembled with lwasm, loaded into BANK 6, `EXEC`ed) or `.bas` (typed, then `RUN`) |
+| `program` | `.asm` (assembled with lwasm), `.c` (built with CMOC + `libolivetti`, see [pc128-c/README.md](../pc128-c/README.md)), loaded into BANK 6 and `EXEC`ed; or `.bas` (typed, then `RUN`) |
 | `--stop` | stop at the program entry / first BASIC line |
 | `--noexec` | load the program but do not run it |
 | `--headless` | no MAME window |
@@ -52,7 +52,7 @@ program may never stop, and follow it with `stop` to inspect anyway.
 
 ## Coding assistant (MCP)
 
-- `debug_start(code?, kind="asm"|"basic", program?, stop_on_entry=True, breakpoints?, window=False,
+- `debug_start(code?, kind="asm"|"c"|"basic", program?, stop_on_entry=True, breakpoints?, window=False,
   boot=True, floppy?, floppy2?, floppy_controller?, cassette?, cartridge?)` boots one machine, loads
   the program and stops at entry. Example breakpoints: `["PUTC", "9010 if a==41", "line 40"]`.
 - `debug_command(command, wait_seconds=10)` runs any command below and waits up to `wait_seconds`
@@ -136,7 +136,7 @@ Type them in the VS Code debug console, the REPL or `debug_command`. `help` prin
 | | `type TEXT` | type on the keyboard, line by line like the harness, and wait until done (`\r` = ENTER) |
 | | `key TEXT` | post keys immediately, no pacing |
 | | `snap`, `reset [hard]`, `throttle on\|off` | screenshot (window mode), reset, emulation speed |
-| | `load FILE.asm\|FILE.bas [noexec]` | assemble+load+EXEC, or type+RUN |
+| | `load FILE.asm\|FILE.c\|FILE.bas [noexec]` | build+load+EXEC, or type+RUN |
 | | `mame COMMAND` | raw MAME debugger command |
 
 Aliases: `x` = `m`, `u` = `d`, `poke` = `hex`, `b` = `bp`, `h` / `?` = `help`.
@@ -155,6 +155,25 @@ page is mapped. Symbols carry their page, so `bp PUTC` is qualified automaticall
 
 **Conditions** use MAME expression syntax; numbers are hex by default: `bp 9010 if a==41 && x>9000`.
 Unknown symbols are rejected when the breakpoint is set.
+
+## C programs
+
+`.c` programs are built by `tools/pc128cc.py` (CMOC, see [pc128-c/README.md](../pc128-c/README.md)).
+The debugger loads every C and asm symbol, both `_name` and `name` (`bp main`, `bp sum_bytes`).
+It also loads an address-to-line map covering the program's C files, its asm modules and the
+Olivetti library.
+
+| Command | Meaning |
+|---|---|
+| `bp FILE:LINE [if COND]` | break at the first code at or after a source line (`bp mixed.c:25`, `bp asmlib.asm:27`) |
+| `sn` | source step over: run until the C/asm source line changes, stepping over calls |
+| `si` | source step into: enter calls to code with source; ROM calls are stepped over |
+| `src [N]` | the source around PC (N lines of context, default 3) |
+
+Each stop shows `source FILE:LINE  text` under the registers. Source stepping is a series of
+silent instruction steps, so a breakpoint, a watchpoint or `stop` ends it early. Local variables
+have no names; read them relative to U (CMOC's frame pointer) using the offsets in the comments
+of `build/pc128-c/<prog>/<prog>.lst`.
 
 ## Banking and BASIC 128
 
@@ -206,11 +225,11 @@ printed back.
 
 ## VS Code
 
-Launch attributes: `program` (`.asm` or `.bas`, optional), `stopOnEntry`, `noExec`, `headless`, `boot`,
+Launch attributes: `program` (`.asm`, `.c` or `.bas`, optional), `stopOnEntry`, `noExec`, `headless`, `boot`,
 `symbols`, and the media attributes `media`/`image`/`image2`, `floppy`, `floppy2`, `floppyController`,
 `cassette`, `cartridge`, `mameArgs` (see [Media](#media-floppy-cassette-cartridge)). Supported features:
 
-- breakpoints in `.asm` and `.bas` files, conditional too (MAME syntax)
+- breakpoints in `.asm`, `.c` and `.bas` files, conditional too (MAME syntax)
 - function breakpoints: `PUTC`, `F6D9`, `mon0:F6D9`, `line 40`
 - data breakpoints (watchpoints) from the Variables view, and instruction breakpoints in the
   Disassembly view
@@ -223,7 +242,9 @@ Launch attributes: `program` (`.asm` or `.bas`, optional), `stopOnEntry`, `noExe
 - Memory view (hex editor) and the Disassembly view, both annotated with symbols
 - Debug console: every command above
 
-Stepping in a `.asm` file is per instruction (`F10` steps over subroutine calls and SWI services).
+In C and asm programs `F10`/`F11` step by source line: `F10` steps over calls (`JSR`/`BSR`/`SWI`),
+`F11` enters calls whose target has source (C or asm, including the library) and steps over ROM calls.
+The Disassembly view steps by instruction.
 Stopped at a BASIC line, `F10`/`F11` run to the next BASIC line. Use the Disassembly view for
 instruction steps inside the interpreter.
 

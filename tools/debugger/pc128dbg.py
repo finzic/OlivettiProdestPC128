@@ -3,6 +3,7 @@
 
     python3 tools/debugger/pc128dbg.py                    boot to BASIC 128, then prompt
     python3 tools/debugger/pc128dbg.py prog.asm --stop    assemble, load, EXEC, stop at entry
+    python3 tools/debugger/pc128dbg.py prog.c --stop      build with CMOC (pc128-c), load, EXEC, stop at entry
     python3 tools/debugger/pc128dbg.py prog.bas           type the program and RUN it
     python3 tools/debugger/pc128dbg.py -x "bp PUTC" -x g  run commands before the prompt
     python3 tools/debugger/pc128dbg.py prog.bas --media floppy351 media/KEYJOY.FD   with a disk (also --floppy, --cassette, --cart ...)
@@ -29,7 +30,7 @@ except ImportError:
 
 def main():
     ap = argparse.ArgumentParser(description="PC128 debugger (MAME)")
-    ap.add_argument("program", nargs="?", help=".asm (assembled with lwasm, loaded, EXECed) or .bas (typed + RUN)")
+    ap.add_argument("program", nargs="?", help=".asm (lwasm) or .c (CMOC, pc128-c) built, loaded and EXECed; or .bas (typed + RUN)")
     ap.add_argument("--stop", action="store_true", help="stop at the program entry / first BASIC line")
     ap.add_argument("--noexec", action="store_true", help="load the program but do not run it")
     ap.add_argument("--headless", action="store_true", help="no MAME window")
